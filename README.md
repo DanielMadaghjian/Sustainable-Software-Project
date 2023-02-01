@@ -1,4 +1,5 @@
 # Sustainable-Software-Project
+## Project Description
 This project defines, implements and tests a model for measuring power usage of a desktop app. 
 
 The carbon footprint of apps can be significantly reduced. The carbon cost of network traffic is measurable. Our aim is to develop a solution to measure the energy use of a single app running on a desktop computer. 
