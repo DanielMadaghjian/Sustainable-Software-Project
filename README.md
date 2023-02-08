@@ -19,7 +19,7 @@ In order to submit your code, you should use a workflow like this. This makes su
 10. Assign some other person to review the code, and then they will merge the code.
 11. In your own feature branch you can start all over again by using `git pull`
 
-##Backend Setup
+## Backend Setup
 1. pip install pythonnet.
 2. download openhardwaretool from https://openhardwaremonitor.org/downloads/
 3. extract the OpenHardwareMonitorLib.dll into the backend folder of the project
