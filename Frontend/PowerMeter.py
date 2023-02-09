@@ -5,6 +5,7 @@ root = tk.Tk()
 root.geometry("878x535")
 root.title("Power Meter")
 root.configure(background="white")
+root.resizable(False, False)
 
 durationInput = 5
 wattInput = 175
