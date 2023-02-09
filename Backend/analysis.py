@@ -1,3 +1,6 @@
+from statistics import mean
+import time
+
 gpuList = [] 
 cpuList = [] 
 ramList = []
@@ -102,4 +105,27 @@ gpuList.append(sample10.get("gpu usage"))
 cpuList.append(sample10.get("cpu usage"))
 ramList.append(sample10.get("ram usage"))
 
-print(cpuList)
+#print(cpuList)
+
+
+def dataAnalysis(t):
+  # integrated gpu will be part of cpu
+  '''while t:
+      print(t)
+      time.sleep(1)
+      currentData = fetch_dict(t)
+      gpuList.append(currentData.get("gpu usage"))
+      cpuList.append(currentData.get("cpu usage"))
+      ramList.append(currentData.get("ram usage"))
+      t -= 1
+  '''
+  values = []
+  gpuAverage = mean(gpuList)
+  cpuAverage = mean(cpuList)
+  ramAverage = mean(ramList)
+  power = gpuAverage + cpuAverage + ramAverage
+  values.append(power)
+  print(values[0], "Watts")
+  return values
+
+dataAnalysis(5)
