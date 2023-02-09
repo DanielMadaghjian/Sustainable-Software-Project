@@ -43,7 +43,8 @@ def fetch_stats(c):
     #    j += 1
         
 
-def fetch_dict(c):
+def fetch_dict():
+    initialize_openhardwaremonitor()
     CPU = c.Hardware[1]
     CPU.Update()
     RAM = c.Hardware[2]
@@ -71,4 +72,4 @@ if __name__ == "__main__":
     print("CPU Power Draw:")
     c = initialize_openhardwaremonitor()
     fetch_stats(c)
-    fetch_dict(c)
+    fetch_dict()
