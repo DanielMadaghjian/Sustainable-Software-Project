@@ -44,14 +44,14 @@ def fetch_stats(c):
         
 
 def fetch_dict():
-    initialize_openhardwaremonitor()
+    c = initialize_openhardwaremonitor()
     CPU = c.Hardware[1]
     CPU.Update()
     RAM = c.Hardware[2]
     RAM.Update()
     GPU = c.Hardware[3]
     GPU.Update()
-    sensor = GPU.Sensors[12]
+    sensor = GPU.Sensors[1]     ##need error handling 
     if sensor != None:
         if ((sensor.Value != None) and (sensor.Value != 0)):
             GPU_power = sensor.Value

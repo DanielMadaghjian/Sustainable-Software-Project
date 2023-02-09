@@ -24,3 +24,4 @@ In order to submit your code, you should use a workflow like this. This makes su
 2. download openhardwaretool from https://openhardwaremonitor.org/downloads/
 3. extract the OpenHardwareMonitorLib.dll into the backend folder of the project
 4. run your code editor as administrator 
+5. If you get an error about .NET framwork, youll need to find where your .dll file is, right click and go to properties, and then check the unblock box. 
