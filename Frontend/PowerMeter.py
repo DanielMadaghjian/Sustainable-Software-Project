@@ -26,11 +26,13 @@ def start5SecondTest():
     peakWattInput = wattInput + random.randint(0,50)
     time.sleep(5)
     canvas.create_oval(15, 15, 385, 385, outline="white", fill="#EEEEEE")
-    wattText = canvas.create_text(200, 200, text="%d W" %wattInput, font=('Arial Bold', 64), fill="black", justify="center")
-    peakWattText = canvas.create_text(200, 245, text="PEAK %d W" %peakWattInput, font=('Arial Light', 18), fill="gray", justify="center")
-    backArc = canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
+    canvas.create_text(200, 200, text="%d W" %wattInput, font=('Arial Bold', 64), fill="black", justify="center")
+    canvas.create_text(200, 245, text="PEAK %d W" %peakWattInput, font=('Arial Light', 18), fill="gray", justify="center")
+    # backArc
+    canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
     # The arc starts from the right and is a total of 270°, so 270-((avg/peak) * 270) in grey will give the percentage visually
-    progressArc = canvas.create_arc(5, 5, 395, 395, outline="#EEEEEE", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/peakWattInput)*270)))
+    # progressArc
+    canvas.create_arc(5, 5, 395, 395, outline="#EEEEEE", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/peakWattInput)*270)))
     print(round(270-((wattInput/peakWattInput)*270)))
 
 durationLabel = tk.Label(root, text="%d SECOND" %durationInput, font=('Arial Light', 18), bg="white", fg="gray")
