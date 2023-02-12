@@ -1,12 +1,11 @@
-# NB -  Install pyautogui by running:
-#       macOS/Linux: 'python3 -m pip install pyautogui'
-#       Windows:     'py -m pip install pyautogui'
-#       If you are using macOS, install Quartz with 'python3 -m pip install pyobjc-framework-Quartz'
-#       Ensure no GUI are open,
+# NB -  Install required libraries by running:
+#       macOS/Linux: PyAutoGUI - 'python3 -m pip install pyautogui'
+#                    Quartz    - 'python3 -m pip install pyobjc-framework-Quartz'
+#       Windows:     PyAutoGUI - 'py -m pip install pyautogui'
+#       Ensure no other GUIs are blocking the "Start" button,
 #       Run PowerMeter.py,
-#       then run this file in debug mode
+#       Finally, run this file in debug mode.
 
-import time
 import pyautogui as gui
 macOS = False
 try:
@@ -88,3 +87,4 @@ else:
 # testOpenGUI()
 testStartButton()
 testSettings()
+print("Tests complete!")
