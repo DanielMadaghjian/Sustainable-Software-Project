@@ -2,6 +2,7 @@ import random
 import time
 import tkinter as tk
 import platform as os
+import backend_analysis
 root = tk.Tk()
 # root.geometry("878x535")
 root.title("Power Meter")
@@ -27,9 +28,10 @@ def navToSettings():
 
 def start5SecondTest():
     durationInput = 5
-    wattInput = random.randint(50,120)
-    peakWattInput = wattInput + random.randint(0,50)
-    time.sleep(5)
+    ##Calling the analysis function
+    wattInput = backend_analysis.dataAnalysis(durationInput)
+    peakWattInput = backend_analysis.dataAnalysis(durationInput)
+    ##
     canvas.create_oval(15, 15, 385, 385, outline="white", fill="#EEEEEE")
     canvas.create_text(200, 200, text="%d W" %wattInput, font=('Arial Bold', 64), fill="black", justify="center")
     canvas.create_text(200, 245, text="PEAK %d W" %peakWattInput, font=('Arial Light', 18), fill="gray", justify="center")
