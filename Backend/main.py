@@ -70,33 +70,47 @@ def fetch_dict():
         elif hardware.HardwareType == Hardware.HardwareType.RAM:
             hardware.Update()
             for sensor in hardware.Sensors:
-                if(sensor.SensorType == Hardware.SensorType.Power and "RAM Package" in sensor.Name):
-                    print(sensor.Value)
+                RAM_mem=0
+                current_RAM_usage=0
+                if(sensor.SensorType == Hardware.SensorType.Data and "Used Memory" in sensor.Name):
+                    RAM_mem += sensor.Value()
+                elif(sensor.SensorType == Hardware.SensorType.Data and "Available Memory" in sensor.Name):
+                    RAM_mem+= sensor.Value()
+                elif(sensor.SensorType == Hardware.SensorType.Load and "Memory" in sensor.Name):
+                    current_RAM_usage=sensor.Value()
+            max_RAM_power = (3/8) * RAM_mem
+            RAM_power = max_RAM_power * (current_RAM_usage/100)
         elif(hardware.HardwareType == Hardware.HardwareType.GpuAti or hardware.HardwareType == Hardware.HardwareType.GpuNvidia):
             hardware.Update()
             for sensor in hardware.Sensors:
                 if(sensor.SensorType == Hardware.SensorType.Clock and "GPU Core" in sensor.Name):
-                    print(sensor.Value)
-    CPU = c.Hardware[1]
-    CPU.Update()
+                    if sensor != None:
+                        if ((sensor.Value != None) and (sensor.Value != 0)):
+                            GPU_power = sensor.Value
+                        else:
+                            GPU_power = None
+                    else: 
+                        GPU_power = None
+   #CPU = c.Hardware[1]
+    #CPU.Update()
 
-    RAM = c.Hardware[2]
-    RAM.Update()
-    RAM_mem = RAM.Sensors[1].Value + RAM.Sensors[2].Value
-    max_RAM_power = (3/8) * RAM_mem #3w per 8gb of ddr3, 4.5w per 8gb of ddr2, 5.5 per 8gb of ddr1 (worst cases)
-    current_RAM_usage = RAM.Sensors[0].Value
-    RAM_power = max_RAM_power * (current_RAM_usage/100)
+    #RAM = c.Hardware[2]
+    #RAM.Update()
+    #RAM_mem = RAM.Sensors[1].Value + RAM.Sensors[2].Value
+    #max_RAM_power = (3/8) * RAM_mem #3w per 8gb of ddr3, 4.5w per 8gb of ddr2, 5.5 per 8gb of ddr1 (worst cases)
+    #current_RAM_usage = RAM.Sensors[0].Value
+    #RAM_power = max_RAM_power * (current_RAM_usage/100)
 
-    GPU = c.Hardware[3]
-    GPU.Update()
-    sensor = GPU.Sensors[1]     ##need error handling 
-    if sensor != None:
-        if ((sensor.Value != None) and (sensor.Value != 0)):
-            GPU_power = sensor.Value
-        else:
-            GPU_power = None
-    else: 
-        GPU_power = None
+    #GPU = c.Hardware[3]
+    #GPU.Update()
+    #sensor = GPU.Sensors[1]     ##need error handling 
+    #if sensor != None:
+    #    if ((sensor.Value != None) and (sensor.Value != 0)):
+    #        GPU_power = sensor.Value
+    #    else:
+    #        GPU_power = None
+    #else: 
+    #    GPU_power = None
 
     stats_dict = {
         "cpu usage" : cpu, #Power Usage
