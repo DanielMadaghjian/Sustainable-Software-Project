@@ -1,2 +1,3 @@
 Backend/OpenHardwareMonitorLib.dll
 Backend/OpenHardwareMonitorLib.sys
+Backend/__pycache__/*
