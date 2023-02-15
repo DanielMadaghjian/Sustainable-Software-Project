@@ -1,12 +1,10 @@
 import clr #package pythonnet, not clr
 import os
+file = os.getcwd() + '/Backend/OpenHardwareMonitorLib'
+clr.AddReference(file)
+from OpenHardwareMonitor import Hardware
 
 def initialize_openhardwaremonitor():
-
-    file = os.getcwd() + '/Backend/OpenHardwareMonitorLib'
-    clr.AddReference(file)
-    from OpenHardwareMonitor import Hardware
-
     c = Hardware.Computer()
     c.MainboardEnabled = True
     c.CPUEnabled = True
@@ -17,19 +15,34 @@ def initialize_openhardwaremonitor():
     c.Open()
     return c
 
-
 def fetch_stats(c):
     #for i in c.Hardware:
     #    print (i)
     CPU = c.Hardware[1]
+    #if CPU.HardwareType == HardwareType.CPU:
+    #    CPU.Update()
+    #    for sensor in CPU.Sensors:
+    #            if(sensor.SensorType == SensorType.Power and sensor.Name.Contains("CPU Package")):
+    #                print(sensor.Value)
     CPU.Update()
     sensor = CPU.Sensors[5]
     print(sensor.Value)
     RAM = c.Hardware[2]
+    #if RAM.HardwareType == HardwareType.RAM:
+    #    RAM.Update()
+    #    for sensor in RAM.Sensors:
+    #        if (sensor.SensorType == SensorType.Power and sensor.Name.Contains("RAM Package")):
+    #            print(sensor.Value)
     RAM.Update()
     sensor = RAM.Sensors[0]
     print(round(sensor.Value,2))
     GPU = c.Hardware[3]
+    #if (GPU.HardwareType == HardwareType.GpuAti or HardwareType.GpuNvidia):
+    #    GPU.Update() 
+    #    for sensor in GPU.Sensors:
+    #        if (sensor.SensorType==SensorType.Clock and sensor.Name.Constains("GPU Memory")):
+    #            if ((sensor.Value != None) and (sensor.Value != 0)):
+    #                print (sensor.Value) 
     GPU.Update()
     sensor = GPU.Sensors[12]
     if ((sensor.Value != None) and (sensor.Value != 0)):
@@ -46,7 +59,24 @@ def fetch_stats(c):
         
 
 def fetch_dict():
-    initialize_openhardwaremonitor()
+    c = initialize_openhardwaremonitor()
+
+    for hardware in c.Hardware:
+        if hardware.HardwareType == Hardware.HardwareType.CPU:
+            hardware.Update()
+            for sensor in hardware.Sensors:
+                if(sensor.SensorType == Hardware.SensorType.Power and "CPU Package" in sensor.Name):
+                    cpu = sensor.Value
+        elif hardware.HardwareType == Hardware.HardwareType.RAM:
+            hardware.Update()
+            for sensor in hardware.Sensors:
+                if(sensor.SensorType == Hardware.SensorType.Power and "RAM Package" in sensor.Name):
+                    print(sensor.Value)
+        elif(hardware.HardwareType == Hardware.HardwareType.GpuAti or hardware.HardwareType == Hardware.HardwareType.GpuNvidia):
+            hardware.Update()
+            for sensor in hardware.Sensors:
+                if(sensor.SensorType == Hardware.SensorType.Clock and "GPU Core" in sensor.Name):
+                    print(sensor.Value)
     CPU = c.Hardware[1]
     CPU.Update()
 
@@ -59,7 +89,7 @@ def fetch_dict():
 
     GPU = c.Hardware[3]
     GPU.Update()
-    sensor = GPU.Sensors[12]
+    sensor = GPU.Sensors[1]     ##need error handling 
     if sensor != None:
         if ((sensor.Value != None) and (sensor.Value != 0)):
             GPU_power = sensor.Value
@@ -69,7 +99,7 @@ def fetch_dict():
         GPU_power = None
 
     stats_dict = {
-        "cpu usage" : CPU.Sensors[5].Value, #Power Usage
+        "cpu usage" : cpu, #Power Usage
         "ram usage" : RAM_power, #Approx Power Usage
         "gpu usage" : GPU_power #Power Usage
     }
@@ -80,5 +110,5 @@ def fetch_dict():
 if __name__ == "__main__":
     print("CPU Power Draw:")
     c = initialize_openhardwaremonitor()
-    fetch_stats(c)
+    ##fetch_stats(c)
     fetch_dict()
