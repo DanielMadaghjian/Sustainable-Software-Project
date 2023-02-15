@@ -15,49 +15,6 @@ def initialize_openhardwaremonitor():
     c.Open()
     return c
 
-def fetch_stats(c):
-    #for i in c.Hardware:
-    #    print (i)
-    CPU = c.Hardware[1]
-    #if CPU.HardwareType == HardwareType.CPU:
-    #    CPU.Update()
-    #    for sensor in CPU.Sensors:
-    #            if(sensor.SensorType == SensorType.Power and sensor.Name.Contains("CPU Package")):
-    #                print(sensor.Value)
-    CPU.Update()
-    sensor = CPU.Sensors[5]
-    print(sensor.Value)
-    RAM = c.Hardware[2]
-    #if RAM.HardwareType == HardwareType.RAM:
-    #    RAM.Update()
-    #    for sensor in RAM.Sensors:
-    #        if (sensor.SensorType == SensorType.Power and sensor.Name.Contains("RAM Package")):
-    #            print(sensor.Value)
-    RAM.Update()
-    sensor = RAM.Sensors[0]
-    print(round(sensor.Value,2))
-    GPU = c.Hardware[3]
-    #if (GPU.HardwareType == HardwareType.GpuAti or HardwareType.GpuNvidia):
-    #    GPU.Update() 
-    #    for sensor in GPU.Sensors:
-    #        if (sensor.SensorType==SensorType.Clock and sensor.Name.Constains("GPU Memory")):
-    #            if ((sensor.Value != None) and (sensor.Value != 0)):
-    #                print (sensor.Value) 
-    GPU.Update()
-    sensor = GPU.Sensors[12]
-    if ((sensor.Value != None) and (sensor.Value != 0)):
-        print (sensor.Value) 
-    #total = 0
-    #for i in RAM.Sensors:
-    #    total += 1
-    #j = 0
-    #while j < total:
-    #    print(RAM.Sensors[j].Name)
-    #    j += 1
-
-    #ram generally 3w per 8 gb
-        
-
 def fetch_dict():
     c = initialize_openhardwaremonitor()
 
@@ -66,40 +23,32 @@ def fetch_dict():
             hardware.Update()
             for sensor in hardware.Sensors:
                 if(sensor.SensorType == Hardware.SensorType.Power and "CPU Package" in sensor.Name):
-                    cpu = sensor.Value
+                    CPU_power = sensor.Value
         elif hardware.HardwareType == Hardware.HardwareType.RAM:
             hardware.Update()
             for sensor in hardware.Sensors:
                 if(sensor.SensorType == Hardware.SensorType.Power and "RAM Package" in sensor.Name):
-                    print(sensor.Value)
+                    RAM_power = sensor.Value
+                    break
+                elif(sensor.SensorType == Hardware.SensorType.Data and "Used Memory" in sensor.Name):
+                    RAM_Umem = sensor.Value
+                elif(sensor.SensorType == Hardware.SensorType.Data and "Available Memory" in sensor.Name):
+                    RAM_Amem = sensor.Value
+                elif(sensor.SensorType == Hardware.SensorType.Load and "Memory" in sensor.Name):
+                    RAM_Load = sensor.Value
         elif(hardware.HardwareType == Hardware.HardwareType.GpuAti or hardware.HardwareType == Hardware.HardwareType.GpuNvidia):
             hardware.Update()
+            GPU_power = 0
             for sensor in hardware.Sensors:
-                if(sensor.SensorType == Hardware.SensorType.Clock and "GPU Core" in sensor.Name):
-                    print(sensor.Value)
-    CPU = c.Hardware[1]
-    CPU.Update()
+                if(sensor.SensorType == Hardware.SensorType.Power and "GPU Package" in sensor.Name):
+                    GPU_power = sensor.Value
 
-    RAM = c.Hardware[2]
-    RAM.Update()
-    RAM_mem = RAM.Sensors[1].Value + RAM.Sensors[2].Value
+    RAM_mem = RAM_Amem + RAM_Umem
     max_RAM_power = (3/8) * RAM_mem #3w per 8gb of ddr3, 4.5w per 8gb of ddr2, 5.5 per 8gb of ddr1 (worst cases)
-    current_RAM_usage = RAM.Sensors[0].Value
-    RAM_power = max_RAM_power * (current_RAM_usage/100)
-
-    GPU = c.Hardware[3]
-    GPU.Update()
-    sensor = GPU.Sensors[1]     ##need error handling 
-    if sensor != None:
-        if ((sensor.Value != None) and (sensor.Value != 0)):
-            GPU_power = sensor.Value
-        else:
-            GPU_power = None
-    else: 
-        GPU_power = None
+    RAM_power = max_RAM_power * (RAM_Load/100)
 
     stats_dict = {
-        "cpu usage" : cpu, #Power Usage
+        "cpu usage" : CPU_power, #Power Usage
         "ram usage" : RAM_power, #Approx Power Usage
         "gpu usage" : GPU_power #Power Usage
     }
@@ -107,8 +56,7 @@ def fetch_dict():
     return (stats_dict)
 
    
+##Main Function For Testing 
 if __name__ == "__main__":
-    print("CPU Power Draw:")
     c = initialize_openhardwaremonitor()
-    ##fetch_stats(c)
     fetch_dict()
