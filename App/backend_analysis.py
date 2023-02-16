@@ -31,5 +31,3 @@ def dataAnalysis(t):
   values.append(power)
   print(values[0], "Watts")
   return values
-
-dataAnalysis(5)
