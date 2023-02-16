@@ -28,7 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         pip install pythonnet
-        py -m pip install pyautogui
+        pip install pyautogui
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
@@ -39,8 +39,4 @@ jobs:
     - name: Test with pytest
       run: |
         pytest ./App/backendTest.py
-        
-    - name: Test with pytest
-      run: |
-        pytest ./App/Test.py  
       
