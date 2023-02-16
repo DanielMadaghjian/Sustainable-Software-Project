@@ -18,3 +18,10 @@ In order to submit your code, you should use a workflow like this. This makes su
 9. Go the repository on github.com, and make a pull request to either the frontend, data-gathering or data-analysis BRANCH. 
 10. Assign some other person to review the code, and then they will merge the code.
 11. In your own feature branch you can start all over again by using `git pull`
+
+## Backend Setup
+1. pip install pythonnet OR py -m pip install pythonnet
+2. download openhardwaretool from https://openhardwaremonitor.org/downloads/
+3. extract the OpenHardwareMonitorLib.dll into the App folder of the project
+4. run your code editor as administrator 
+5. If you get an error about .NET framwork, youll need to find where your .dll file is, right click and go to properties, and then check the unblock box. 
