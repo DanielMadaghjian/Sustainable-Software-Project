@@ -1,3 +1,2 @@
 clr
-os
 tkinter
