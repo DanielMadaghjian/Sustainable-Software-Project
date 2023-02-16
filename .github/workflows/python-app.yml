@@ -36,9 +36,9 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        pytest backendTest.py
+        pytest /App/backendTest.py
         
     - name: Test with pytest
       run: |
-        pytest Test.py  
+        pytest /App/Test.py  
         
