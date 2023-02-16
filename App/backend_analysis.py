@@ -17,18 +17,17 @@ def dataAnalysis(t):
   while t:
       print(t)
       time.sleep(1)
-      ##currentData = backend_getData.fetch_dict()
-      ##gpuList.append(currentData.get("gpu usage"))
-      ##cpuList.append(currentData.get("cpu usage"))
-      ##ramList.append(currentData.get("ram usage"))
+      currentData = backend_getData.fetch_dict()
+      gpuList.append(currentData.get("gpu usage"))
+      cpuList.append(currentData.get("cpu usage"))
+      ramList.append(currentData.get("ram usage"))
       t -= 1
   
   values = []
-  ##gpuAverage = mean(gpuList)
-  ##cpuAverage = mean(cpuList)
-  ##ramAverage = mean(ramList)
-  ##power = gpuAverage + cpuAverage + ramAverage
-  power = 66
+  gpuAverage = mean(gpuList)
+  cpuAverage = mean(cpuList)
+  ramAverage = mean(ramList)
+  power = gpuAverage + cpuAverage + ramAverage
   values.append(power)
   print(values[0], "Watts")
   return values
