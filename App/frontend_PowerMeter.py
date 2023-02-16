@@ -59,8 +59,8 @@ def startTest(durationInput):
     peakWattInput = wattInput
     ##
     canvas.create_oval(15, 15, 385, 385, outline="white", fill="#EEEEEE")
-    canvas.create_text(200, 200, text=str(wattInput) + " W", font=('Arial Bold', boldFontSize+16), fill="black", justify="center")
-    canvas.create_text(200, 245, text="PEAK " + str(peakWattInput) + " W", font=('Arial Light', 18), fill="gray", justify="center")
+    canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', boldFontSize+16), fill="black", justify="center")
+    canvas.create_text(200, 245, text="PEAK " + str(round(peakWattInput, 2)) + " W", font=('Arial Light', 18), fill="gray", justify="center")
     # backArc
     canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
     # The arc starts from the right and is a total of 270°, so 270-((avg/peak) * 270) in grey will give the percentage visually
