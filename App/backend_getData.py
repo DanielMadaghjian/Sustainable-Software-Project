@@ -17,7 +17,7 @@ def initialize_openhardwaremonitor():
 
 def fetch_dict():
     c = initialize_openhardwaremonitor()
-
+    GPU_power = 0
     for hardware in c.Hardware:
         if hardware.HardwareType == Hardware.HardwareType.CPU:
             hardware.Update()
@@ -38,7 +38,7 @@ def fetch_dict():
                     RAM_Load = sensor.Value
         elif(hardware.HardwareType == Hardware.HardwareType.GpuAti or hardware.HardwareType == Hardware.HardwareType.GpuNvidia):
             hardware.Update()
-            GPU_power = 0
+            
             for sensor in hardware.Sensors:
                 if(sensor.SensorType == Hardware.SensorType.Power and "GPU Package" in sensor.Name):
                     GPU_power = sensor.Value
