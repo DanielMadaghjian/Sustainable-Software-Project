@@ -6,14 +6,17 @@ gpuList = []
 cpuList = [] 
 ramList = []
 
+# Method that calculates the average power 
+def getPower(gpuList, cpuList, ramList):
+  gpuAverage = mean(gpuList)
+  cpuAverage = mean(cpuList)
+  ramAverage = mean(ramList)
+  power = gpuAverage + cpuAverage + ramAverage
+  return power
 
 
-
-#print(cpuList)
-
-
+# Method that collects the raw data and filters it
 def dataAnalysis(t):
-  # integrated gpu will be part of cpu
   while t:
       print(t)
       time.sleep(1)
@@ -24,10 +27,7 @@ def dataAnalysis(t):
       t -= 1
   
   values = []
-  gpuAverage = mean(gpuList)
-  cpuAverage = mean(cpuList)
-  ramAverage = mean(ramList)
-  power = gpuAverage + cpuAverage + ramAverage
+  power = getPower(gpuList, cpuList, ramList)
   values.append(power)
   print(values[0], "Watts")
   return values
