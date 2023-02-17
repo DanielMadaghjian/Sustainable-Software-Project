@@ -31,7 +31,7 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile
-          push: true
+          load: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}
 
       - name: Image digest
