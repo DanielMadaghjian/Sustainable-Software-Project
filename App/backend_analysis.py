@@ -1,6 +1,8 @@
 from statistics import mean
 import time
 import backend_getData
+import requests
+import json
 
 gpuList = [] 
 cpuList = [] 
@@ -31,3 +33,19 @@ def dataAnalysis(t):
   values.append(power)
   print(values[0], "Watts")
   return values
+
+
+headers = {
+    'Authorization': 'Bearer VDK57KAYZ7MT1AM7NQD1MPX6PMQQ',
+    'Content-Type': 'application/x-www-form-urlencoded',
+}
+
+data = '{\n  "emission_factor": {\n    "id": "electricity-energy_source_grid_mix",\n    "region": "IE"\n  },\n  "parameters": {\n    "energy": 0.001,\n    "energy_unit": "kWh"\n  }\n}'
+
+response = requests.post('https://beta3.api.climatiq.io/estimate', headers=headers, data=data)
+output = response.json()
+
+with open('{}.json'.format("test"), 'w', encoding='utf-8') as f:
+    json.dump(output, f, ensure_ascii=False, indent=4)
+
+print(output)
