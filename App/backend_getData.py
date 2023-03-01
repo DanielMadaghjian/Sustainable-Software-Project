@@ -16,9 +16,6 @@ def initialize_openhardwaremonitor():
     return c
 
 def fetch_dict():
-    CPU_power = 0
-    RAM_power = 0
-    GPU_power = 0
     c = initialize_openhardwaremonitor()
 
     for hardware in c.Hardware:
