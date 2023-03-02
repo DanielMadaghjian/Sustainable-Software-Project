@@ -30,9 +30,9 @@ def fetch_dict():
             hardware.Update()
             for sensor in hardware.Sensors:
                 if(sensor.SensorType == Hardware.SensorType.Power and "CPU Package" in sensor.Name):
-                    CPU_power =+ sensor.Value
+                    CPU_power = CPU_power + sensor.Value
                 elif (sensor.SensorType == Hardware.SensorType.Power and "CPU Cores" in sensor.Name):
-                    CPU_power =+ sensor.Value
+                    CPU_power = CPU_power + sensor.Value
                 elif (sensor.SensorType == Hardware.SensorType.Power and "CPU DRAM" in sensor.Name):
                     RAM_power = sensor.Value
 
