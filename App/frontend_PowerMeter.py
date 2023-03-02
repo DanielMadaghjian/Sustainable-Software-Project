@@ -20,6 +20,7 @@ wattInput = 175
 peakWattInput = 200
 country = ["Ireland", "France", "Great Britain"]
 intCountry = 0
+country = "IE"
 
 Windows = False
 if os.platform().__contains__("Windows"):
@@ -60,7 +61,7 @@ def previousCountry(event):
 
 def updateCountry(index):
     for x in country:
-        canvas.create_text(200, 200, text=country[intCountry], font=('Arial Bold', boldFontSize+10), fill="black", justify="center")
+        canvas.create_text(200, 200, text=country[intCountry], font=('Arial Bold', boldFontSize), fill="black", justify="center")
 
 def graphToDisplay():
     # graphScreen = tk.Toplevel(root)
@@ -125,12 +126,13 @@ settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
     
 def startTest(durationInput):
     ##Calling the analysis function
-    wattInput = backend_analysis.dataAnalysis(durationInput)[0]
-    peakWattInput = wattInput + randint(0,25)
+    backendData = backend_analysis.dataAnalysis(durationInput, country)
+    wattInput = backendData[0]
+    carbonEmissions = (((backendData[1])/60)/12)*1000
     ##
     canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
     canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', boldFontSize+16), fill="black", justify="center")
-    canvas.create_text(200, 245, text="PEAK " + str(round(peakWattInput, 2)) + " W", font=('Arial Light', 18), fill="gray", justify="center")
+    canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " gCO₂", font=('Arial Light', 18), fill="gray", justify="center")
     canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
     # backArc
     canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
