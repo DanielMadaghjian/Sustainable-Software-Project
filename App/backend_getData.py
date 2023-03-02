@@ -18,8 +18,12 @@ def initialize_openhardwaremonitor():
 def fetch_dict():
     c = initialize_openhardwaremonitor()
     CPU_power = 0
-    RAM_power = 0
     GPU_power = 0
+    RAM_power = 0
+    RAM_Umem = 0
+    RAM_Amem = 0
+    RAM_Load = 0
+
     for hardware in c.Hardware:
         if hardware.HardwareType == Hardware.HardwareType.CPU:
     
