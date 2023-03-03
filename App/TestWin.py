@@ -17,6 +17,9 @@ screenWidth, screenHeight = gui.size()
 
 #     gui.moveTo(1350,20)
 #     gui.click()
+if not is_python3():
+  input = raw_input
+  input = raw_input  # noqa: F821
 
 def testStartButton():
     #Bug - does not show mouse clicked but shows number change
