@@ -55,5 +55,4 @@ def dataAnalysis(t, country):#add a country here
   print(values[1])
   return values
 
-#print(output)
-#dataAnalysis(5,"IE")
+
