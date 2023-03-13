@@ -19,6 +19,7 @@ durationInput = 5
 wattInput = 175
 peakWattInput = 200
 country = ["Ireland", "France", "Great Britain"]
+countryID = ["IE", "FR", "GB"]
 intCountry = 0
 # country = "IE"
 
@@ -126,7 +127,7 @@ settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
     
 def startTest(durationInput):
     ##Calling the analysis function
-    backendData = backend_analysis.dataAnalysis(durationInput, "IE")
+    backendData = backend_analysis.dataAnalysis(durationInput, countryID[intCountry])
     wattInput = backendData[0]
     carbonEmissions = (((backendData[1])/60)/12)*1000
     ##
