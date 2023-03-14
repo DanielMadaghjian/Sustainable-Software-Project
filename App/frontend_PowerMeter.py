@@ -18,8 +18,8 @@ root.resizable(False, False)
 durationInput = 5
 wattInput = 175
 peakWattInput = 200
-country = ["Ireland", "France", "Great Britain"]
-countryID = ["IE", "FR", "GB"]
+country = ["Ireland", "France", "Germany", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand"]
+countryID = ["IE", "FR", "GR", "GB", "RU", "AU", "BR", "NZ"]
 intCountry = 0
 # country = "IE"
 
