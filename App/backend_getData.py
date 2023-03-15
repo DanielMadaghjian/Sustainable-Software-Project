@@ -11,7 +11,7 @@ def initialize_openhardwaremonitor():
     ##Dedicated RAM produces power usage
     c.RAMEnabled = True
     c.GPUEnabled = True
-    ##c.HDDEnabled = True
+    c.HDDEnabled = True
     c.Open()
     return c
 
@@ -23,7 +23,8 @@ def fetch_dict():
     RAM_Umem = 0
     RAM_Amem = 0
     RAM_Load = 0
-
+    HDD_Load = 0
+    Disk_power=0
     for hardware in c.Hardware:
         if hardware.HardwareType == Hardware.HardwareType.CPU:
     
@@ -61,11 +62,23 @@ def fetch_dict():
             for sensor in hardware.Sensors:
                 if(sensor.SensorType == Hardware.SensorType.Power and "GPU Power" in sensor.Name):
                     GPU_power = sensor.Value
-
+        elif(hardware.HardwareType == Hardware.HardwareType.HDD):
+            hardware.Update()
+            for sensor in hardware.Sensors:
+                if(sensor.SensorType == Hardware.SensorType.Load and "Used Space" in sensor.Name):
+                    HDD_Load=sensor.Value
+    
+    disk_type = "HDD" #Has to be changed later to integrate with user's input
+    if(disk_type == "HDD"):
+        Disk_power = 6.5 #Average power use of HDD, in process of looking for better estimation
+    elif(disk_type=="SSD"):
+        Disk_power = 3 #Average idle state power use of SSD, in process of looking for better estimation
+            
     stats_dict = {
         "cpu usage" : CPU_power, #Power Usage
         "ram usage" : RAM_power, #Approx Power Usage
-        "gpu usage" : GPU_power #Power Usage
+        "gpu usage" : GPU_power, #Power Usage
+        "disk usage" : Disk_power   #Approx Power Usage
     }
     print(stats_dict)
     return (stats_dict)
