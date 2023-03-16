@@ -18,8 +18,8 @@ root.resizable(False, False)
 durationInput = 5
 wattInput = 175
 peakWattInput = 200
-country = ["Ireland", "France", "Germany", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand"]
-countryID = ["IE", "FR", "GR", "GB", "RU", "AU", "BR", "NZ"]
+country = ["Ireland", "France", "Germany", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy"]
+countryID = ["IE", "FR", "DE", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT"]
 intCountry = 0
 liveGPU = 0
 liveCPU = 0
