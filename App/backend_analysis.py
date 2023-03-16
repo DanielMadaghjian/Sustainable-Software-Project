@@ -18,7 +18,7 @@ def getPower(gpuList, cpuList, ramList):
 
 def getCarbon(region):#add a country here
   headers = {
-    'Authorization': 'Bearer SDYPAH2Y3J45T9PVE3E6PPC2NT0H',
+    'Authorization': 'Bearer ZF80SPH7WHM6CJQG0J9KQ4QR3Q5Z',
     'Content-Type': 'application/x-www-form-urlencoded',
   }
 
@@ -51,9 +51,18 @@ def dataAnalysis(t, country):#add a country here
   values.append(power)
   emission = getCarbon(country) * power
   values.append(emission)
-  print(values[0])
-  print(values[1])
+
+  values.append(mean(gpuList)) # adds gpu value (position 2)
+  values.append(mean(cpuList)) # adds cpu value (position 3)
+  values.append(mean(ramList)) # adds gpu value (position 4)
+
+
+  #print(values[0])
+  #print(values[1])
+  #print("Auxiliary Values")
+  #print(values[2])
+  #print(values[3])
+  #print(values[4])
   return values
 
-#print(output)
-#dataAnalysis(5,"IE")
+

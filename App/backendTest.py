@@ -1,4 +1,4 @@
-from analysis import dataAnalysis, getPower
+from backend_analysis import getPower
 
 
 def testFunction():
