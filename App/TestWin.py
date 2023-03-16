@@ -18,9 +18,10 @@ screenWidth, screenHeight = gui.size()
 #     gui.moveTo(1350,20)
 #     gui.click()
 
+
 def testStartButton():
     #Bug - does not show mouse clicked but shows number change
-    gui.moveTo((windowX + 140) * offset, (windowY + 380) * offset + windowHeader)
+    gui.moveTo((windowX + 140) * offset, (windowY + 380) * offset + windowHeader) # noqa: F821
     gui.sleep(0.5)
     gui.click()
     gui.sleep(0.1)
@@ -30,20 +31,20 @@ def testStartButton():
 
 def testSettings():
     gui.sleep(1)
-    gui.moveTo((windowX + windowWidth) - 75 * offset, (windowY + windowHeight) - 30 * offset)
+    gui.moveTo((windowX + windowWidth) - 75 * offset, (windowY + windowHeight) - 30 * offset)# noqa: F821
     gui.click()
 
     print("Window found! Running tests...")
-    windowHeight = windowBounds['Height']
-    windowWidth = windowBounds['Width']
-    windowX = windowBounds['X']
-    windowY = windowBounds['Y']
-    windowHeader = 25
-    offset = 1 
+    windowHeight = windowBounds['Height'] # noqa: F821
+    windowWidth = windowBounds['Width'] # noqa: F821
+    windowX = windowBounds['X'] # noqa: F821
+    windowY = windowBounds['Y'] # noqa: F821
+    windowHeader = 25 # noqa: F821
+    offset = 1 # noqa: F821
 
     try:
-        window = pgw.getWindowsWithTitle('Power Meter')[0]
-        window.moveTo(30,30)
+        window = pgw.getWindowsWithTitle('Power Meter')[0] # noqa: F821
+        window.moveTo(30,30) # noqa: F821
         print("Window found! Running tests...")
         
     except:
