@@ -18,8 +18,8 @@ root.resizable(False, False)
 durationInput = 5
 wattInput = 175
 peakWattInput = 200
-country = ["Ireland", "France", "Great Britain"]
-countryID = ["IE", "FR", "GB"]
+country = ["Ireland", "France", "Germany", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand"]
+countryID = ["IE", "FR", "GR", "GB", "RU", "AU", "BR", "NZ"]
 intCountry = 0
 # country = "IE"
 
@@ -105,9 +105,9 @@ carbonButton['command'] = lambda: startTest(5)
 graphImage = tk.PhotoImage(file='App/Graph.png')
 graphImage = graphImage.subsample(2)
 
-graphButton = tk.Button(root, text="View Graph", image=graphImage, height=150, width=150, borderwidth=0,command=graphToDisplay)
 carbonButton.grid(row = 2, column = 0, sticky = tk.E, padx = 40, pady = 2)
-graphButton.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
+# graphButton = tk.Button(root, text="View Graph", image=graphImage, height=150, width=150, borderwidth=0,command=graphToDisplay)
+# graphButton.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
 canvas = tk.Canvas(root, background=backgroundColour, height=400, width=400, highlightthickness=0)
 intCircle = canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
 backArc = canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
@@ -119,6 +119,16 @@ startText = canvas.create_text(200, 200, text='Press "Start"', font=('Arial Bold
 subtitleText = canvas.create_text(200, 245, text="TO START A 5-SECOND TEST", font=('Arial Light', 18), fill="gray", justify="center")
 canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
 
+# value 2 = GPU
+# value 3 = CPU 
+# value 4 = ram 
+values = tk.Canvas(root, background=backgroundColour,height=150, width=150, highlightthickness=0)
+hardware = values.create_rectangle(5, 5, 150, 250, fill='white')
+GPU = values.create_text(35,40,text = "GPU",font =('Arial Bold', 18),fill="black", justify="center")
+CPU = values.create_text(35,80,text = "CPU",font =('Arial Bold', 18),fill="black", justify="center")
+GPU = values.create_text(35,120,text = "RAM",font =('Arial Bold', 18),fill="black", justify="center")
+values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
+
 settingsImage = tk.PhotoImage(file='App/Settings.png')
 settingsImage = settingsImage.subsample(3)
 
@@ -129,11 +139,11 @@ def startTest(durationInput):
     ##Calling the analysis function
     backendData = backend_analysis.dataAnalysis(durationInput, countryID[intCountry])
     wattInput = backendData[0]
-    carbonEmissions = (((backendData[1])/60)/12)*1000
+    carbonEmissions = (((backendData[1])/60)/12)*1000000
     ##
     canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
     canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', boldFontSize+16), fill="black", justify="center")
-    canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " gCO₂", font=('Arial Light', 18), fill="gray", justify="center")
+    canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " mgCO₂", font=('Arial Light', 18), fill="gray", justify="center")
     canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
     # backArc
     canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
