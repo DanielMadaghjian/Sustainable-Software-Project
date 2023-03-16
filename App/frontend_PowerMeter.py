@@ -158,7 +158,10 @@ def startTest(durationInput):
     values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
     values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
     values.create_text(40,120,text = "RAM :",font =('Arial Bold', 18),fill="black", justify="center")
-    values.create_text(100,40,text = str(round(backendData[2],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
+    if backendData[2] == 0:
+        values.create_text(100,40,text = "N/A",font =('Arial Light', 12),fill="black", justify="center")
+    else:
+        values.create_text(100,40,text = str(round(backendData[2],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
     values.create_text(100,80,text = str(round(backendData[3],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
     values.create_text(100,120,text = str(round(backendData[4],2))+ " W",font =('Arial Light', 12),fill="black", justify="center")
 
