@@ -18,12 +18,14 @@ root.resizable(False, False)
 durationInput = 5
 wattInput = 175
 peakWattInput = 200
+<<<<<<< HEAD
 country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
 countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
+=======
+country = ["Ireland", "France", "Germany", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "Spain", "Portugal", "Germany", "Italy", "United States"]
+countryID = ["IE", "FR", "GR", "GB", "RU", "AU", "BR", "NZ", "ES", "PT", "DE", "IT", "US"]
+>>>>>>> d9f433611a0bbf8221d0de4841e7dc16156a7c96
 intCountry = 0
-liveGPU = 0
-liveCPU = 0
-liveRAM = 0
 # country = "IE"
 
 Windows = False
@@ -130,9 +132,9 @@ hardware = values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill
 GPU = values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
 CPU = values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
 GPU = values.create_text(40,120,text = "RAM :",font =('Arial Bold', 18),fill="black", justify="center")
-GPU_values = values.create_text(100,40,text = liveGPU,font =('Arial Light', 12),fill="black", justify="center")
-CPU_values = values.create_text(100,80,text = liveCPU,font =('Arial Light', 12),fill="black", justify="center")
-GPU_values = values.create_text(100,120,text = liveRAM,font =('Arial Light', 12),fill="black", justify="center")
+GPU_values = values.create_text(100,40,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+CPU_values = values.create_text(100,80,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+GPU_values = values.create_text(100,120,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
 values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
 
 settingsImage = tk.PhotoImage(file='App/Settings.png')
@@ -157,8 +159,15 @@ def startTest(durationInput):
     # progressArc
     canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/peakWattInput)*270)))
     print(round(270-((wattInput/peakWattInput)*270)))
-    liveGPU = backendData[2]
-    liveCPU = backendData[2]
-    liveRAM = backendData[2]
+    values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill=backgroundColour)
+    values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
+    values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
+    values.create_text(40,120,text = "RAM :",font =('Arial Bold', 18),fill="black", justify="center")
+    if backendData[2] == 0:
+        values.create_text(100,40,text = "N/A",font =('Arial Light', 12),fill="black", justify="center")
+    else:
+        values.create_text(100,40,text = str(round(backendData[2],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
+    values.create_text(100,80,text = str(round(backendData[3],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
+    values.create_text(100,120,text = str(round(backendData[4],2))+ " W",font =('Arial Light', 12),fill="black", justify="center")
 
 root.mainloop()
