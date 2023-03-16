@@ -129,11 +129,11 @@ def startTest(durationInput):
     ##Calling the analysis function
     backendData = backend_analysis.dataAnalysis(durationInput, countryID[intCountry])
     wattInput = backendData[0]
-    carbonEmissions = (((backendData[1])/60)/12)*1000
+    carbonEmissions = (((backendData[1])/60)/12)*1000000
     ##
     canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
     canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', boldFontSize+16), fill="black", justify="center")
-    canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " gCO₂", font=('Arial Light', 18), fill="gray", justify="center")
+    canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " mgCO₂", font=('Arial Light', 18), fill="gray", justify="center")
     canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
     # backArc
     canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
