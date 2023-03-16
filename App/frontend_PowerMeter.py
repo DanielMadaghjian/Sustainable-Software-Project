@@ -21,6 +21,9 @@ peakWattInput = 200
 country = ["Ireland", "France", "Germany", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand"]
 countryID = ["IE", "FR", "GR", "GB", "RU", "AU", "BR", "NZ"]
 intCountry = 0
+liveGPU = 0
+liveCPU = 0
+liveRAM = 0
 # country = "IE"
 
 Windows = False
@@ -123,10 +126,13 @@ canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 
 # value 3 = CPU 
 # value 4 = ram 
 values = tk.Canvas(root, background=backgroundColour,height=150, width=150, highlightthickness=0)
-hardware = values.create_rectangle(5, 5, 150, 250, fill='white')
-GPU = values.create_text(35,40,text = "GPU",font =('Arial Bold', 18),fill="black", justify="center")
-CPU = values.create_text(35,80,text = "CPU",font =('Arial Bold', 18),fill="black", justify="center")
-GPU = values.create_text(35,120,text = "RAM",font =('Arial Bold', 18),fill="black", justify="center")
+hardware = values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill=backgroundColour)
+GPU = values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
+CPU = values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
+GPU = values.create_text(40,120,text = "RAM :",font =('Arial Bold', 18),fill="black", justify="center")
+GPU_values = values.create_text(100,40,text = liveGPU,font =('Arial Light', 12),fill="black", justify="center")
+CPU_values = values.create_text(100,80,text = liveCPU,font =('Arial Light', 12),fill="black", justify="center")
+GPU_values = values.create_text(100,120,text = liveRAM,font =('Arial Light', 12),fill="black", justify="center")
 values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
 
 settingsImage = tk.PhotoImage(file='App/Settings.png')
@@ -151,5 +157,8 @@ def startTest(durationInput):
     # progressArc
     canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/peakWattInput)*270)))
     print(round(270-((wattInput/peakWattInput)*270)))
+    liveGPU = backendData[2]
+    liveCPU = backendData[2]
+    liveRAM = backendData[2]
 
 root.mainloop()
