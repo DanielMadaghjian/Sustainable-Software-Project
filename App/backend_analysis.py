@@ -57,12 +57,12 @@ def dataAnalysis(t, country):#add a country here
   values.append(mean(ramList)) # adds gpu value (position 4)
 
 
-  print(values[0])
-  print(values[1])
-  print("Auxiliary Values")
-  print(values[2])
-  print(values[3])
-  print(values[4])
+  #print(values[0])
+  #print(values[1])
+  #print("Auxiliary Values")
+  #print(values[2])
+  #print(values[3])
+  #print(values[4])
   return values
 
 
