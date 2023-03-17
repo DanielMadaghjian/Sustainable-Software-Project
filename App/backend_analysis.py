@@ -16,13 +16,13 @@ def getPower(gpuList, cpuList, ramList):
   power = gpuAverage + cpuAverage + ramAverage
   return power
 
-def getCarbon(country):#add a country here
+def getCarbon(region):#add a country here
   headers = {
-    'Authorization': 'Bearer SDYPAH2Y3J45T9PVE3E6PPC2NT0H',
+    'Authorization': 'Bearer ZF80SPH7WHM6CJQG0J9KQ4QR3Q5Z',
     'Content-Type': 'application/x-www-form-urlencoded',
   }
 
-  data = '{\n  "emission_factor": {\n    "id": "electricity-energy_source_grid_mix",\n    "region": "IE"\n  },\n  "parameters": {\n    "energy": 0.001,\n    "energy_unit": "kWh"\n  }\n}'#.format(country)
+  data = '{\n  "emission_factor": {\n    "id": "electricity-energy_source_grid_mix",\n    "region": "' + region + '"\n  },\n  "parameters": {\n    "energy": 0.001,\n    "energy_unit": "kWh"\n  }\n}'
 
   #remove after finish
   response = requests.post('https://beta3.api.climatiq.io/estimate', headers=headers, data=data)
@@ -51,8 +51,18 @@ def dataAnalysis(t, country):#add a country here
   values.append(power)
   emission = getCarbon(country) * power
   values.append(emission)
-  print(values[0])
-  print(values[1])
+
+  values.append(mean(gpuList)) # adds gpu value (position 2)
+  values.append(mean(cpuList)) # adds cpu value (position 3)
+  values.append(mean(ramList)) # adds gpu value (position 4)
+
+
+  #print(values[0])
+  #print(values[1])
+  #print("Auxiliary Values")
+  #print(values[2])
+  #print(values[3])
+  #print(values[4])
   return values
 
 

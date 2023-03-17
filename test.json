@@ -1,17 +1,17 @@
 {
-    "co2e": 0.0003771,
+    "co2e": 0.00022225,
     "co2e_unit": "kg",
     "co2e_calculation_method": "ar4",
     "co2e_calculation_origin": "source",
     "emission_factor": {
         "name": "Electricity supplied from grid - production mix",
         "activity_id": "electricity-energy_source_grid_mix",
-        "uuid": "bfda3baf-81e8-4d9e-afe3-402ce657fa77",
+        "uuid": "37d3c4d2-1e68-461f-acd2-fd1bb67a61db",
         "id": "electricity-energy_source_grid_mix",
         "access_type": "public",
         "source": "AIB",
         "year": "2022",
-        "region": "IE",
+        "region": "GB",
         "category": "Electricity",
         "lca_activity": "electricity_generation",
         "data_quality_flags": [
@@ -19,7 +19,7 @@
         ]
     },
     "constituent_gases": {
-        "co2e_total": 0.0003771,
+        "co2e_total": 0.00022225,
         "co2e_other": null,
         "co2": null,
         "ch4": null,
