@@ -9,9 +9,17 @@ import matplotlib.pyplot as plt
 import platform as os
 import backend_analysis
 
+global intCountry
+global boldFontSize
+boldFontSize = 40
+#boldFontSize = 48
+#        if Windows:
+#            boldFontSize = 40
 class screenSetup(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
+        self.title('Power Meter')
+        self.resizable(False,False)
         self._mainCanvas = None
         self._allCanvases = dict() #Not continuously "creating and destroying" screens
         self.switch_Canvas(Home)
@@ -40,9 +48,8 @@ class Screen1(tk.Frame):
     def __init__(self, master, *args, **kwargs):
         tk.Frame.__init__(self,master, *args, **kwargs)
         backgroundColour = '#DAEFD2'
-        self.canvas = tk.Canvas(self,bg=backgroundColour)
+        #self.canvas = tk.Canvas(self,bg=backgroundColour)
         self.configure(background=backgroundColour)
-        #self.resizable(False,False)
 
         durationLabel = tk.Label(self, text="%d SECOND" %durationInput, font=('Arial Light', 18), bg=backgroundColour, fg="black")
         titleLabel = tk.Label(self, text="Power Consumption", font=('Arial Bold', 32), bg=backgroundColour, fg="black")
@@ -52,28 +59,27 @@ class Screen1(tk.Frame):
         if Windows: 
             buttonWidth = 15
 
-        startImage = tk.PhotoImage(file='App/Test.png')
-        startImage = startImage.subsample(2)
-
-        carbonButton = tk.Button(self, text="Start", image=startImage, height=150, width=150, borderwidth=0)
-        carbonButton['command'] = lambda: startTest(5)
-
-        graphImage = tk.PhotoImage(file='App/Graph.png')
-        graphImage = graphImage.subsample(2)
-
-        carbonButton.grid(row = 2, column = 0, sticky = tk.E, padx = 40, pady = 2)
-        # graphButton = tk.Button(root, text="View Graph", image=graphImage, height=150, width=150, borderwidth=0,command=graphToDisplay)
-        # graphButton.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         intCircle = canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         backArc = canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
         # wattText = canvas.create_text(200, 210, text='Click "Start" to run\na 5-second test', font=('Arial Bold', 28), fill="black", justify="center")
-        boldFontSize = 48
-        if Windows:
-            boldFontSize = 40
         startText = canvas.create_text(200, 200, text='Press "Start"', font=('Arial Bold', boldFontSize), fill="black", justify="center")
         subtitleText = canvas.create_text(200, 245, text="TO START A 5-SECOND TEST", font=('Arial Light', 18), fill="gray", justify="center")
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
+
+
+        startImage = tk.PhotoImage(file='App/Test.png')
+        startImage = startImage.subsample(2)
+
+        carbonButton = tk.Button(self, text="Start", image=startImage, height=150, width=150, borderwidth=0)
+        carbonButton['command'] = lambda: startTest(5, canvas)
+        carbonButton.image = startImage
+        carbonButton.grid(row = 2, column = 0, sticky = tk.E, padx = 40, pady = 2)
+
+        graphImage = tk.PhotoImage(file='App/Graph.png')
+        graphImage = graphImage.subsample(2)
+        # graphButton = tk.Button(root, text="View Graph", image=graphImage, height=150, width=150, borderwidth=0,command=graphToDisplay)
+        # graphButton.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
 
         # value 2 = GPU
         # value 3 = CPU 
@@ -91,7 +97,8 @@ class Screen1(tk.Frame):
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
 
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height=50, width=100, borderwidth=0, command=lambda: navToSettings())
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, borderwidth=0, command=lambda: navToSettings(canvas))
+        settingsButton.image = settingsImage
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
 
 
@@ -113,8 +120,9 @@ intCountry = 0
 Windows = False
 if os.platform().__contains__("Windows"):
     Windows = True
+    
 
-def navToSettings():
+def navToSettings(canvas):
     # navSettings = tk.Toplevel(root)
     # navSettings.geometry("878x535")
     # navSettings.configure(background="white")
@@ -125,11 +133,11 @@ def navToSettings():
     canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
     canvas.create_text(200, 130, text="↑", font=('Arial',45),fill="grey", justify="center")
     canvas.create_text(200, 290, text="↓", font=('Arial',45),fill="grey", justify="center")
-    updateCountry(intCountry)
+    updateCountry(intCountry, canvas)
     canvas.create_text(200, 245, text="SELECTED COUNTRY", font=('Arial Light', 18), fill="gray", justify="center")
     # button = tk.Button(canvas, text="Settings", image=settingsImage, height=50, width=100, borderwidth=0)
-    root.bind('<Up>', nextCountry)
-    root.bind('<Down>', previousCountry)
+    root.bind('<Up>', nextCountry())
+    root.bind('<Down>', previousCountry())
 
 def nextCountry(event):
     global intCountry
@@ -147,7 +155,7 @@ def previousCountry(event):
         intCountry -= 1
     navToSettings()
 
-def updateCountry(index):
+def updateCountry(index,canvas):
     for x in country:
         canvas.create_text(200, 200, text=country[intCountry], font=('Arial Bold', boldFontSize), fill="black", justify="center")
 
@@ -177,7 +185,7 @@ def graphToDisplay():
 
 
     
-def startTest(durationInput):
+def startTest(durationInput, canvas):
     ##Calling the analysis function
     backendData = backend_analysis.dataAnalysis(durationInput, countryID[intCountry])
     wattInput = backendData[0]
