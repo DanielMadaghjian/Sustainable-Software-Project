@@ -18,15 +18,9 @@ root.resizable(False, False)
 durationInput = 5
 wattInput = 175
 peakWattInput = 200
-<<<<<<< HEAD
 country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
 countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
-=======
-country = ["Ireland", "France", "Germany", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "Spain", "Portugal", "Germany", "Italy", "United States"]
-countryID = ["IE", "FR", "GR", "GB", "RU", "AU", "BR", "NZ", "ES", "PT", "DE", "IT", "US"]
->>>>>>> d9f433611a0bbf8221d0de4841e7dc16156a7c96
 intCountry = 0
-# country = "IE"
 
 Windows = False
 if os.platform().__contains__("Windows"):
@@ -124,9 +118,6 @@ startText = canvas.create_text(200, 200, text='Press "Start"', font=('Arial Bold
 subtitleText = canvas.create_text(200, 245, text="TO START A 5-SECOND TEST", font=('Arial Light', 18), fill="gray", justify="center")
 canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
 
-# value 2 = GPU
-# value 3 = CPU 
-# value 4 = ram 
 values = tk.Canvas(root, background=backgroundColour,height=150, width=150, highlightthickness=0)
 hardware = values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill=backgroundColour)
 GPU = values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
