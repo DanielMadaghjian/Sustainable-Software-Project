@@ -89,8 +89,8 @@ class StartPage(tk.Frame):
         backgroundColour = '#DAEFD2'
         tk.Frame.__init__(self, parent, background=backgroundColour)
 
-        button1 = ttk.Button(self, text ="Continuous Usage",command = lambda : controller.show_frame(Page1))
-        button2 = ttk.Button(self, text ="Individual Usage",command = lambda : controller.show_frame(Page2))
+        button1 = tk.Button(self, text ="Continuous Usage",command = lambda : controller.show_frame(Page1))
+        button2 = tk.Button(self, text ="Individual Usage",command = lambda : controller.show_frame(Page2))
 
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
@@ -110,7 +110,7 @@ class Page1(tk.Frame):
         # backgroundColour = '#DAEFD2' 
         tk.Frame.__init__(self, parent)
 
-        button1 = ttk.Button(self, text ="StartPage",command = lambda : controller.show_frame(StartPage))
+        button1 = tk.Button(self, text ="StartPage",command = lambda : controller.show_frame(StartPage))
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
@@ -145,7 +145,7 @@ class Page2(tk.Frame):
         #command = lambda : controller.navToSettings())
         settingsButton.image = settingsImage
 
-        returnButton = ttk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
 
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
@@ -173,7 +173,19 @@ class Page2(tk.Frame):
 class SettingsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
-        returnButton = ttk.Button(self, text ="Return",command = lambda : controller.show_frame(previousScreen))
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(previousScreen))
+
+        irlButton = tk.Button(self, text ="Ireland",command = lambda : controller.show_frame(previousScreen))
+        fraButton = tk.Button(self, text ="France",command = lambda : controller.show_frame(previousScreen))
+        ukButton = tk.Button(self, text ="United Kingdom",command = lambda : controller.show_frame(previousScreen))
+        rusButton = tk.Button(self, text ="Russia",command = lambda : controller.show_frame(previousScreen))
+        ausButton = tk.Button(self, text ="Australia",command = lambda : controller.show_frame(previousScreen))
+
+        irlButton.grid(row = 1, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        fraButton.grid(row = 1, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        ukButton.grid(row = 1, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        rusButton.grid(row = 1, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        ausButton.grid(row = 1, column = 4,sticky=tk.NW, padx = 5, pady = 5)
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         
 
