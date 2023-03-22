@@ -147,7 +147,7 @@ if (screen == 1):
     GPU_values = values.create_text(100,40,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
     CPU_values = values.create_text(100,80,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
     GPU_values = values.create_text(100,120,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
-    values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
+    values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2) 
 
     settingsImage = tk.PhotoImage(file='App/Settings.png')
     settingsImage = settingsImage.subsample(3)
