@@ -2,175 +2,48 @@
 # 'python3 -m pip install matplotlib'
 
 import tkinter as tk
-from random import randint
-# import time
-import matplotlib.pyplot as plt
-import platform as os
+from tkinter import ttk
 import backend_analysis
 
-root = tk.Tk()
-# root.geometry("878x535")
-root.title("Power Meter")
+LARGEFONT =('Arial',45)
 backgroundColour = '#DAEFD2'
-root.configure(background=backgroundColour)
-# root.configure(background='white')
-root.resizable(False, False)
+previousScreen = tk.Frame
 
-screen = 0
-durationInput = 5
-wattInput = 175
-peakWattInput = 200
-country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
-countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
-intCountry = 0
+class tkinterApp(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        container = tk.Frame(self) 
+        container.pack(side = "top", fill = "both", expand = True)
+  
+        container.grid_rowconfigure(0, weight = 1)
+        container.grid_columnconfigure(0, weight = 1)
+        self.frames = {} 
 
-Windows = False
-if os.platform().__contains__("Windows"):
-    Windows = True
+        for F in (StartPage, Page1, Page2, SettingsPage):
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row = 0, column = 0, sticky ="nsew")
+  
+        self.show_frame(StartPage)
+  
 
-def navToSettings():
-    # navSettings = tk.Toplevel(root)
-    # navSettings.geometry("878x535")
-    # navSettings.configure(background="white")
-    # navSettings.title("Settings")
-    # settingsLabel = tk.Label(navSettings, text ="<", font=('Arial Light', 18), bg=backgroundColour, fg="gray")
-    # settingsLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
-    # tk.Label(navSettings, text ="Settings", font=('Arial Bold', 32), bg="white", fg="black").pack()
-    canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-    canvas.create_text(200, 130, text="↑", font=('Arial',45),fill="grey", justify="center")
-    canvas.create_text(200, 290, text="↓", font=('Arial',45),fill="grey", justify="center")
-    updateCountry(intCountry)
-    canvas.create_text(200, 245, text="SELECTED COUNTRY", font=('Arial Light', 18), fill="gray", justify="center")
-    # button = tk.Button(canvas, text="Settings", image=settingsImage, height=50, width=100, borderwidth=0)
-    root.bind('<Up>', nextCountry)
-    root.bind('<Down>', previousCountry)
-
-def nextCountry(event):
-    global intCountry
-    if intCountry == len(country)-1:
-        intCountry = 0
-    else:
-        intCountry += 1
-    navToSettings()
-
-def previousCountry(event):
-    global intCountry
-    if intCountry == 0:
-        intCountry = len(country)-1
-    else:
-        intCountry -= 1
-    navToSettings()
-
-def updateCountry(index):
-    for x in country:
-        canvas.create_text(200, 200, text=country[intCountry], font=('Arial Bold', boldFontSize), fill="black", justify="center")
-
-def graphToDisplay():
-    # graphScreen = tk.Toplevel(root)
-    # graphScreen.geometry("878x535")
-    # graphScreen.configure(background="white")
-    # graphScreen.title("Graph")
-    # graphScreen.resizable(False, False)
-
-    # get data points
-
-    #line graph
-    time = ['1','2','3','4','5']
-    power = [randint(0,50), randint(0,50), randint(0,50), randint(0,50), randint(0,50)]
-    plt.title('Graph')
-    plt.plot(time, power)
-    plt.title('Displaying Power Usage',font=('Arial'),fontsize=14)
-    plt.xlabel('Time (Seconds)',fontsize=12)
-    plt.ylabel('Power (Watts)',fontsize=12)
-    plt.show()
-
-# def calculatingScreen():
-#     canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-#     canvas.create_text(200, 200, text='Calculating ... ', font=('Arial Bold', boldFontSize), fill="black", justify="center")
-#     canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
-
-def changeScreen(newScreen):
-    global screen
-    print (screen)
-    screen = newScreen
-    print(newScreen)
-    print (screen)
-
-screen = 1
-if (screen == 0):
-    startImage = tk.PhotoImage(file='App/Test.png')
-    startImage = startImage.subsample(2)
-    carbonButton = tk.Button(root, text="Start", image=startImage, height=150, width=150, borderwidth=0,)
-    carbonButton['command'] = lambda: changeScreen(1)
-    carbonButton.grid(row = 2, column = 0, sticky = tk.E, padx = 40, pady = 2)
-
-if (screen == 1):
-    homeButton = tk.Button(root, text="Home", height=25, width=25)
-    homeButton['command'] = lambda: changeScreen(0)
-    homeButton.grid(row = 0, column = 0, sticky = tk.E, padx = 40, pady = 2)
-    durationLabel = tk.Label(root, text="%d SECOND" %durationInput, font=('Arial Light', 18), bg=backgroundColour, fg="black")
-    titleLabel = tk.Label(root, text="Power Consumption", font=('Arial Bold', 32), bg=backgroundColour, fg="black")
-    durationLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
-    titleLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
-    buttonWidth = 10
-    if Windows: 
-        buttonWidth = 15
-
-    startImage = tk.PhotoImage(file='App/Test.png')
-    startImage = startImage.subsample(2)
-
-    carbonButton = tk.Button(root, text="Start", image=startImage, height=150, width=150, borderwidth=0)
-    carbonButton['command'] = lambda: startTest(5)
-
-    graphImage = tk.PhotoImage(file='App/Graph.png')
-    graphImage = graphImage.subsample(2)
-
-    carbonButton.grid(row = 2, column = 0, sticky = tk.E, padx = 40, pady = 2)
-    # graphButton = tk.Button(root, text="View Graph", image=graphImage, height=150, width=150, borderwidth=0,command=graphToDisplay)
-    # graphButton.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
-    canvas = tk.Canvas(root, background=backgroundColour, height=400, width=400, highlightthickness=0)
-    intCircle = canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-    backArc = canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
-    # wattText = canvas.create_text(200, 210, text='Click "Start" to run\na 5-second test', font=('Arial Bold', 28), fill="black", justify="center")
-    boldFontSize = 48
-    if Windows:
-        boldFontSize = 40
-    startText = canvas.create_text(200, 200, text='Press "Start"', font=('Arial Bold', boldFontSize), fill="black", justify="center")
-    subtitleText = canvas.create_text(200, 245, text="TO START A 5-SECOND TEST", font=('Arial Light', 18), fill="gray", justify="center")
-    canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
-
-    values = tk.Canvas(root, background=backgroundColour,height=150, width=150, highlightthickness=0)
-    hardware = values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill=backgroundColour)
-    GPU = values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
-    CPU = values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
-    GPU = values.create_text(40,120,text = "RAM :",font =('Arial Bold', 18),fill="black", justify="center")
-    GPU_values = values.create_text(100,40,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
-    CPU_values = values.create_text(100,80,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
-    GPU_values = values.create_text(100,120,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
-    values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2) 
-
-    settingsImage = tk.PhotoImage(file='App/Settings.png')
-    settingsImage = settingsImage.subsample(3)
-
-    settingsButton = tk.Button(root, text="Settings", image=settingsImage, height=50, width=100, borderwidth=0, command=lambda: navToSettings())
-    settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
-            
-    def startTest(durationInput):
-        ##Calling the analysis function
-        backendData = backend_analysis.dataAnalysis(durationInput, countryID[intCountry])
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
+    
+    def startTest(self,durationInput,canvas,values):
+    ##Calling the analysis function
+        backendData = backend_analysis.dataAnalysis(durationInput, 'IE')
         wattInput = backendData[0]
         carbonEmissions = (((backendData[1])/60)/12)*1000000
-        ##
+        print(wattInput)
+        print(carbonEmissions)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-        canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', boldFontSize+16), fill="black", justify="center")
+        canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', 40+16), fill="black", justify="center")
         canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " mgCO₂", font=('Arial Light', 18), fill="gray", justify="center")
         canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
-        # backArc
         canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
-        # The arc starts from the right and is a total of 270°, so 270-((avg/peak) * 270) in grey will give the percentage visually
-        # progressArc
-        canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/peakWattInput)*270)))
-        print(round(270-((wattInput/peakWattInput)*270)))
+        canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/100)*270)))
         values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill=backgroundColour)
         values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
         values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
@@ -181,5 +54,128 @@ if (screen == 1):
             values.create_text(100,40,text = str(round(backendData[2],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
         values.create_text(100,80,text = str(round(backendData[3],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
         values.create_text(100,120,text = str(round(backendData[4],2))+ " W",font =('Arial Light', 12),fill="black", justify="center")
+    
+        
 
-root.mainloop()
+    def navToSettings(self):
+        listbox = tk.Listbox(self, width=40, height=10,selectmode=tk.SINGLE)
+        listbox.insert(1, "Ireland")
+        listbox.insert(2, "France")
+        listbox.insert(3, "Great Britain")
+        listbox.insert(4, "Russian")
+        listbox.insert(5, "Australia")
+        listbox.pack()
+        for i in listbox.curselection():
+            print(listbox.get(i))
+            return listbox.get(i)
+        
+    def settingsStart(self,controller):
+        global previousScreen
+        previousScreen = StartPage
+        controller.show_frame(SettingsPage)
+
+    def settingsPage1(self,controller):
+        global previousScreen
+        previousScreen = Page1
+        controller.show_frame(SettingsPage)
+
+    def settingsPage2(self,controller):
+        global previousScreen
+        previousScreen = Page2
+        controller.show_frame(SettingsPage)
+  
+class StartPage(tk.Frame):
+    def __init__(self, parent, controller):
+        backgroundColour = '#DAEFD2'
+        tk.Frame.__init__(self, parent, background=backgroundColour)
+
+        button1 = ttk.Button(self, text ="Continuous Usage",command = lambda : controller.show_frame(Page1))
+        button2 = ttk.Button(self, text ="Individual Usage",command = lambda : controller.show_frame(Page2))
+
+        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = settingsImage.subsample(3)
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
+                                   command = lambda : controller.settingsStart(controller))
+        #command = lambda : controller.navToSettings())
+        settingsButton.image = settingsImage
+
+        button1.grid(row = 1, column = 1,padx = 10, pady = 10)
+        button2.grid(row = 2, column = 1, padx = 10, pady = 10)
+        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+  
+
+class Page1(tk.Frame):
+     
+    def __init__(self, parent, controller):
+        # backgroundColour = '#DAEFD2' 
+        tk.Frame.__init__(self, parent)
+
+        button1 = ttk.Button(self, text ="StartPage",command = lambda : controller.show_frame(StartPage))
+        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = settingsImage.subsample(3)
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
+                                   command = lambda : controller.settingsPage1(controller))
+        #command = lambda : controller.navToSettings())
+        settingsButton.image = settingsImage
+     
+        button1.grid(row = 1, column = 1, padx = 10, pady = 10)
+        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+  
+class Page2(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, background=backgroundColour)
+
+        style = ttk.Style(self)
+        style.theme_use('clam')
+        style.configure('Test.TLabel', background= backgroundColour)
+
+        titleLabel = ttk.Label(self, text="Power Consumption",style= 'Test.TLabel',font=('Arial Bold', 32))
+        durationLabel = ttk.Label(self, text="5 SECOND", font=('Arial Light', 18), style= 'Test.TLabel')
+
+        startImage = tk.PhotoImage(file='App/Test.png')
+        startImage = startImage.subsample(2)
+        startButton = tk.Button(self,text="Start", image = startImage, height = 150, width = 150, borderwidth = 0, 
+                                 command = lambda : controller.startTest(5,canvas,values))
+        startButton.image = startImage
+
+        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = settingsImage.subsample(3)
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
+                                   command = lambda : controller.settingsPage2(controller))
+        #command = lambda : controller.navToSettings())
+        settingsButton.image = settingsImage
+
+        returnButton = ttk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
+
+        canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
+        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+        canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
+        canvas.create_text(200, 200, text='Press "Start"', font=('Arial Bold', 40), fill="black", justify="center")
+        canvas.create_text(200, 245, text="TO START A 5-SECOND TEST", font=('Arial Light', 18), fill="gray", justify="center")
+
+        values = tk.Canvas(self, background=backgroundColour,height=150, width=150, highlightthickness=0)
+        values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill=backgroundColour)
+        values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
+        values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
+        values.create_text(40,120,text = "RAM :",font =('Arial Bold', 18),fill="black", justify="center")
+        values.create_text(100,40,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+        values.create_text(100,80,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+        values.create_text(100,120,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+
+        titleLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
+        durationLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
+        startButton.grid(row = 2, column = 0, sticky = tk.E, padx = 40, pady = 2)
+        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+        returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
+        values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
+        
+class SettingsPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, background=backgroundColour)
+        returnButton = ttk.Button(self, text ="Return",command = lambda : controller.show_frame(previousScreen))
+        returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        
+
+app = tkinterApp()
+app.mainloop()
