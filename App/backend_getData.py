@@ -1,5 +1,6 @@
 import clr #package pythonnet, not clr
 import os
+import psutil
 file = os.getcwd() + '/App/OpenHardwareMonitorLib'
 clr.AddReference(file)
 from OpenHardwareMonitor import Hardware
@@ -14,6 +15,28 @@ def initialize_openhardwaremonitor():
     c.HDDEnabled = True
     c.Open()
     return c
+def get_disk_usage(disk_type):
+    Disk_power = 0
+    counts = psutil.disk_io_counters(perdisk=False, nowrap=True)
+    read_count = counts[0]
+    write_count = counts[1]
+    if write_count!=0:
+        if(disk_type == "HDD"):
+            Disk_power = 8.5 #Average power use of the most common hdd disks while write or/and read
+        elif(disk_type=="SSD"):
+            Disk_power = 6 #Average state of power use of the most common ssd disks while write or/and read
+    elif read_count!=0 and write_count==0:
+        if(disk_type == "HDD"):
+            Disk_power = 7.5 #Average power use of the most common hdd disks while read
+        elif(disk_type=="SSD"):
+            Disk_power = 4.75 #Average state of power use of the most common ssd disks while read
+    else:
+        if(disk_type == "HDD"):
+            Disk_power = 6.5 #Average power use of the most common hdd disks while idle
+        elif(disk_type=="SSD"):
+            Disk_power = 1.5 #Average state of power use of the most common ssd disks while idle
+    return Disk_power
+
 
 def fetch_dict():
     c = initialize_openhardwaremonitor()
@@ -68,12 +91,7 @@ def fetch_dict():
                 if(sensor.SensorType == Hardware.SensorType.Load and "Used Space" in sensor.Name):
                     HDD_Load=sensor.Value
     
-    disk_type = "HDD" #Has to be changed later to integrate with user's input
-    if(disk_type == "HDD"):
-        Disk_power = 6.5 #Average power use of HDD, in process of looking for better estimation
-    elif(disk_type=="SSD"):
-        Disk_power = 3 #Average idle state power use of SSD, in process of looking for better estimation
-            
+    Disk_power = get_disk_usage("SSD") #Parameter is the type of disk - user input
     stats_dict = {
         "cpu usage" : CPU_power, #Power Usage
         "ram usage" : RAM_power, #Approx Power Usage
