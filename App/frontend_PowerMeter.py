@@ -9,6 +9,7 @@ import backend_analysis
 LARGEFONT =('Arial',45)
 backgroundColour = '#DAEFD2'
 previousScreen = tk.Frame
+baselineRun = False
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -41,7 +42,7 @@ class tkinterApp(tk.Tk):
         print(carbonEmissions)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', 40+16), fill="black", justify="center")
-        canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " mgCO₂", font=('Arial Light', 18), fill="gray", justify="center")
+        canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " mgCO₂eq", font=('Arial Light', 18), fill="gray", justify="center")
         canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
         canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/100)*270)))
@@ -111,16 +112,55 @@ class Page1(tk.Frame):
         # backgroundColour = '#DAEFD2' 
         tk.Frame.__init__(self, parent)
 
-        button1 = tk.Button(self, text ="StartPage",command = lambda : controller.show_frame(StartPage))
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
                                    command = lambda : controller.settingsPage1(controller))
         #command = lambda : controller.navToSettings())
         settingsButton.image = settingsImage
-     
-        button1.grid(row = 1, column = 1, padx = 10, pady = 10)
+
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+        titleLabel = ttk.Label(self, text="App Power Usage",style= 'Test.TLabel',font=('Arial Bold', 32))
+        infoLabel = ttk.Label(self, text="Measure the idle energy use of your device with the\nmeasure baseline function while no applications are\nopen and then test the app for statistics.", font=('Arial Light', 15), style= 'Test.TLabel')
+
+        baselineImage = tk.PhotoImage(file='App/Baseline.png')
+        baselineImage = baselineImage.subsample(2)
+        baselineButton = tk.Button(self,text="Start", image = baselineImage, height = 150, width = 150, borderwidth = 0, 
+                                 command = lambda : controller.navTo)
+        baselineButton.image = baselineImage
+
+        appTestImage = tk.PhotoImage(file='App/AppTest.png')
+        appTestImage = appTestImage.subsample(2)
+        appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, 
+                                 command = lambda : controller.startTest(5,canvas,values))
+        appTestButton.image = appTestImage
+
+        backImage = tk.PhotoImage(file='App/back.png')
+        backImage = backImage.subsample(2)
+        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, 
+                                   command = lambda : controller.show_frame(StartPage))
+        backButton.image = backImage
+
+        tk.Tk.configure(self, bg='#DAEFD2')
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
+
+        canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
+        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+        canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
+        canvas.create_text(200, 182, text="CARBON", font=('Arial', 22), fill='#A3B59C', justify="center")
+        carbonImage = tk.PhotoImage(file='App/Carbon.png')
+        carbonImage = carbonImage.subsample(6)
+        canvas.image = carbonImage
+        canvas.create_image(200,240,anchor=tk.S,image=carbonImage)
+        canvas.update()
+
+        infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
+        titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
+        baselineButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
+        appTestButton.grid(row = 2, column = 1, sticky = tk.W, padx = (20,0), pady = 2)
+        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+        backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
   
 class Page2(tk.Frame):
     def __init__(self, parent, controller):
