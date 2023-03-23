@@ -8,6 +8,7 @@ import backend_analysis
 
 LARGEFONT =('Arial',45)
 backgroundColour = '#DAEFD2'
+
 previousScreen = tk.Frame
 baselineRun = False
 
@@ -21,7 +22,7 @@ class tkinterApp(tk.Tk):
         container.grid_columnconfigure(0, weight = 1)
         self.frames = {} 
 
-        for F in (StartPage, Page1, Page2, SettingsPage):
+        for F in (StartPage, Page1, AppTestHome, BaselineTest, AppTesting, AppResults, SettingsPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
@@ -57,7 +58,7 @@ class tkinterApp(tk.Tk):
         values.create_text(100,80,text = str(round(backendData[3],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
         values.create_text(100,120,text = str(round(backendData[4],2))+ " W",font =('Arial Light', 12),fill="black", justify="center")
     
-        
+    
 
     def navToSettings(self):
         listbox = tk.Listbox(self, width=40, height=10,selectmode=tk.SINGLE)
@@ -81,18 +82,18 @@ class tkinterApp(tk.Tk):
         previousScreen = Page1
         controller.show_frame(SettingsPage)
 
-    def settingsPage2(self,controller):
+    def settingsAppTestHome(self,controller):
         global previousScreen
-        previousScreen = Page2
+        previousScreen = AppTestHome
         controller.show_frame(SettingsPage)
-  
+    
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         backgroundColour = '#DAEFD2'
         tk.Frame.__init__(self, parent, background=backgroundColour)
 
         button1 = tk.Button(self, text ="Continuous Usage",command = lambda : controller.show_frame(Page1))
-        button2 = tk.Button(self, text ="Individual Usage",command = lambda : controller.show_frame(Page2))
+        button2 = tk.Button(self, text ="Individual Usage",command = lambda : controller.show_frame(AppTestHome))
 
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
@@ -162,7 +163,7 @@ class Page1(tk.Frame):
         backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
   
-class Page2(tk.Frame):
+class AppTestHome(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
 
@@ -182,7 +183,7 @@ class Page2(tk.Frame):
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.settingsPage2(controller))
+                                   command = lambda : controller.settingsAppTestHome(controller))
         #command = lambda : controller.navToSettings())
         settingsButton.image = settingsImage
 
@@ -210,7 +211,23 @@ class Page2(tk.Frame):
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
         values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
+
+class BaselineTest(tk.Frame):
+    def __init__(self, parent, controller):
         
+        tk.Frame.__init__(self, parent, background=backgroundColour)
+        
+
+class AppTesting(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, background=backgroundColour)
+        
+
+class AppResults(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent, background=backgroundColour)
+        
+
 class SettingsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
@@ -228,7 +245,7 @@ class SettingsPage(tk.Frame):
         rusButton.grid(row = 1, column = 3,sticky=tk.NW, padx = 5, pady = 5)
         ausButton.grid(row = 1, column = 4,sticky=tk.NW, padx = 5, pady = 5)
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        
+
 
 app = tkinterApp()
 app.mainloop()
