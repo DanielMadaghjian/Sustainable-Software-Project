@@ -1,3 +1,4 @@
+
 # 'python3 -m pip install tkinter'
 # 'python3 -m pip install matplotlib'
 
@@ -210,3 +211,5 @@ class SettingsPage(tk.Frame):
 app = tkinterApp()
 app.resizable(False,False)
 app.mainloop()
+
+
