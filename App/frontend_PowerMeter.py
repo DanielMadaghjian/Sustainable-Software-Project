@@ -89,8 +89,24 @@ class StartPage(tk.Frame):
         backgroundColour = '#DAEFD2'
         tk.Frame.__init__(self, parent, background=backgroundColour)
 
-        button1 = tk.Button(self, text ="Continuous Usage",command = lambda : controller.show_frame(Page1))
-        button2 = tk.Button(self, text ="Individual Usage",command = lambda : controller.show_frame(Page2))
+        titleLabel = ttk.Label(self, text="Sustainable Software",style= 'Test.TLabel',font=('Arial Bold', 28))
+
+        overallImage = tk.PhotoImage(file='App/overallButton.png')
+        overallImage = overallImage.subsample(2)
+        overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 100, width = 235, borderwidth = 0, 
+                                 command = lambda : controller.show_frame(Page1))
+        overallButton.image = overallImage
+
+        singleImage = tk.PhotoImage(file='App/singleButton.png')
+        singleImage = singleImage.subsample(2)
+        singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 100, width = 235, borderwidth = 0, 
+                                 command = lambda : controller.show_frame(Page2))
+        singleButton.image = singleImage
+
+        bannerImage = tk.PhotoImage(file='App/banner.png')
+        bannerImage = bannerImage.subsample(2)
+        bannerLabel = ttk.Label(self, image=bannerImage, border=0)
+        bannerLabel.image = bannerImage
 
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
@@ -98,10 +114,12 @@ class StartPage(tk.Frame):
                                    command = lambda : controller.settingsStart(controller))
         #command = lambda : controller.navToSettings())
         settingsButton.image = settingsImage
-
-        button1.grid(row = 1, column = 1,padx = 10, pady = 10)
-        button2.grid(row = 2, column = 1, padx = 10, pady = 10)
-        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+        
+        titleLabel.grid(row = 1, column = 1, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 50, pady = 102)
+        bannerLabel.place(x=500,y=85)
+        overallButton.grid(row = 2, column = 2,padx = 10, pady = 0)
+        singleButton.grid(row = 2, column = 3, padx = 10, pady = 0)
+        settingsButton.grid(row = 4, column = 4, padx = 10, pady = 10, sticky = tk.SE)
   
 
 class Page1(tk.Frame):
@@ -190,4 +208,5 @@ class SettingsPage(tk.Frame):
         
 
 app = tkinterApp()
+app.resizable(False,False)
 app.mainloop()
