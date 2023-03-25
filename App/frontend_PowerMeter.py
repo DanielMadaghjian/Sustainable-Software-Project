@@ -10,6 +10,10 @@ LARGEFONT =('Arial',45)
 backgroundColour = '#DAEFD2'
 previousScreen = tk.Frame
 
+country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
+countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
+intCountry = 0
+
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -31,10 +35,14 @@ class tkinterApp(tk.Tk):
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
+
+    def updateCountry(self, newCountry):
+        global intCountry
+        intCountry = newCountry
     
-    def startTest(self,durationInput,canvas,values):
+    def startTest(self,durationInput,canvas,values,currentCountry):
     ##Calling the analysis function
-        backendData = backend_analysis.dataAnalysis(durationInput, 'IE')
+        backendData = backend_analysis.dataAnalysis(durationInput, countryID[currentCountry])
         wattInput = backendData[0]
         carbonEmissions = (((backendData[1])/60)/12)*1000000
         print(wattInput)
@@ -55,10 +63,8 @@ class tkinterApp(tk.Tk):
             values.create_text(100,40,text = str(round(backendData[2],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
         values.create_text(100,80,text = str(round(backendData[3],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
         values.create_text(100,120,text = str(round(backendData[4],2))+ " W",font =('Arial Light', 12),fill="black", justify="center")
-    
-        
 
-    def navToSettings(self):
+    '''def navToSettings(self):
         listbox = tk.Listbox(self, width=40, height=10,selectmode=tk.SINGLE)
         listbox.insert(1, "Ireland")
         listbox.insert(2, "France")
@@ -69,6 +75,7 @@ class tkinterApp(tk.Tk):
         for i in listbox.curselection():
             print(listbox.get(i))
             return listbox.get(i)
+    '''
         
     def settingsStart(self,controller):
         global previousScreen
@@ -154,7 +161,7 @@ class Page2(tk.Frame):
         startImage = tk.PhotoImage(file='App/Test.png')
         startImage = startImage.subsample(2)
         startButton = tk.Button(self,text="Start", image = startImage, height = 150, width = 150, borderwidth = 0, 
-                                 command = lambda : controller.startTest(5,canvas,values))
+                                 command = lambda : controller.startTest(5,canvas,values,intCountry))
         startButton.image = startImage
 
         settingsImage = tk.PhotoImage(file='App/Settings.png')
@@ -194,17 +201,87 @@ class SettingsPage(tk.Frame):
         tk.Frame.__init__(self, parent, background=backgroundColour)
         returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(previousScreen))
 
-        irlButton = tk.Button(self, text ="Ireland",command = lambda : controller.show_frame(previousScreen))
-        fraButton = tk.Button(self, text ="France",command = lambda : controller.show_frame(previousScreen))
-        ukButton = tk.Button(self, text ="United Kingdom",command = lambda : controller.show_frame(previousScreen))
-        rusButton = tk.Button(self, text ="Russia",command = lambda : controller.show_frame(previousScreen))
-        ausButton = tk.Button(self, text ="Australia",command = lambda : controller.show_frame(previousScreen))
+        
+
+        irlImage = tk.PhotoImage(file='App/flagIreland.png')
+        irlImage = irlImage.subsample(1)
+        irlButton = tk.Button(self, text ="Ireland",image = irlImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                               command = lambda : controller.updateCountry(0))
+        irlButton.image = irlImage
+
+        fraImage = tk.PhotoImage(file='App/flagFrance.png')
+        fraImage = fraImage.subsample(1)
+        fraButton = tk.Button(self, text ="France",image = fraImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(1))
+        fraButton.image = fraImage
+
+        ukImage = tk.PhotoImage(file='App/flagUK.png')
+        ukImage = ukImage.subsample(1)
+        ukButton = tk.Button(self, text ="United Kingdom",image = ukImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(2))
+        ukButton.image = ukImage
+
+        rusImage = tk.PhotoImage(file='App/flagRussia.png')
+        rusImage = rusImage.subsample(1)
+        rusButton = tk.Button(self, text ="Russia",image = rusImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(3))
+        rusButton.image = rusImage
+
+        ausImage = tk.PhotoImage(file='App/flagAustralia.png')
+        ausImage = ausImage.subsample(1)
+        ausButton = tk.Button(self, text ="Australia",image = ausImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(4))
+        ausButton.image = ausImage
+
+        braImage = tk.PhotoImage(file='App/flagBrazil.png')
+        braImage = braImage.subsample(1)
+        braButton = tk.Button(self, text ="Brazil",image = braImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(5))
+        braButton.image = braImage
+
+        nzImage = tk.PhotoImage(file='App/flagNewZealand.png')
+        nzImage = nzImage.subsample(1)
+        nzButton = tk.Button(self, text ="New Zealand",image = nzImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(6))
+        nzButton.image = nzImage
+
+        spaImage = tk.PhotoImage(file='App/flagSpain.png')
+        spaImage = spaImage.subsample(1)
+        spaButton = tk.Button(self, text ="Spain",image = spaImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(7))
+        spaButton.image = spaImage
+
+        porImage = tk.PhotoImage(file='App/flagPortugal.png')
+        porImage = porImage.subsample(1)
+        porButton = tk.Button(self, text ="Portugal",image = porImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(8))
+        porButton.image = porImage
+
+        itaImage = tk.PhotoImage(file='App/flagItaly.png')
+        itaImage = itaImage.subsample(1)
+        itaButton = tk.Button(self, text ="Italy",image = itaImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(9))
+        itaButton.image = itaImage
+
+        gerImage = tk.PhotoImage(file='App/flagGermany.png')
+        gerImage = itaImage.subsample(1)
+        gerButton = tk.Button(self, text ="Germany",image = gerImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : controller.updateCountry(10))
+        gerButton.image = gerImage
+
 
         irlButton.grid(row = 1, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         fraButton.grid(row = 1, column = 1,sticky=tk.NW, padx = 5, pady = 5)
         ukButton.grid(row = 1, column = 2,sticky=tk.NW, padx = 5, pady = 5)
         rusButton.grid(row = 1, column = 3,sticky=tk.NW, padx = 5, pady = 5)
-        ausButton.grid(row = 1, column = 4,sticky=tk.NW, padx = 5, pady = 5)
+        ausButton.grid(row = 2, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        braButton.grid(row = 2, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        nzButton.grid(row = 2, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        spaButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        porButton.grid(row = 3, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        itaButton.grid(row = 3, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        gerButton.grid(row = 3, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         
 
