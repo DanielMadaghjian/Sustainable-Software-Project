@@ -5,8 +5,8 @@
 import tkinter as tk
 from tkinter import ttk
 import backend_analysis
+import matplotlib.pyplot as plt
 
-LARGEFONT =('Arial',45)
 backgroundColour = '#DAEFD2'
 previousScreen = tk.Frame
 
@@ -64,18 +64,6 @@ class tkinterApp(tk.Tk):
         values.create_text(100,80,text = str(round(backendData[3],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
         values.create_text(100,120,text = str(round(backendData[4],2))+ " W",font =('Arial Light', 12),fill="black", justify="center")
 
-    '''def navToSettings(self):
-        listbox = tk.Listbox(self, width=40, height=10,selectmode=tk.SINGLE)
-        listbox.insert(1, "Ireland")
-        listbox.insert(2, "France")
-        listbox.insert(3, "Great Britain")
-        listbox.insert(4, "Russian")
-        listbox.insert(5, "Australia")
-        listbox.pack()
-        for i in listbox.curselection():
-            print(listbox.get(i))
-            return listbox.get(i)
-    '''
         
     def settingsStart(self,controller):
         global previousScreen
@@ -91,6 +79,76 @@ class tkinterApp(tk.Tk):
         global previousScreen
         previousScreen = Page2
         controller.show_frame(SettingsPage)
+    
+
+    def graphToDisplay(self,data):
+        time = []
+        power = []
+        plt.figure("Continuous Graph",facecolor='#DAEFD2')
+        plt.title(label='Displaying Power Usage')
+        plt.xlabel('Time (Seconds)')
+        plt.ylabel('Power (Watts)')
+        if data:
+            for i in range(6,data[5]+6):
+                power.append(data[i])
+            for i in range(data[5]):
+                time.append(i)
+            plt.plot(time, power,color='#516E4C')
+            plt.show()
+
+    def getContinuousData(self,canvas,values,processorValuesImage):
+        global run
+        run = True
+        self.update()
+        global data
+        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+        canvas.create_text(200, 200, text='Calculating ... ', font=('Arial Bold', 40), fill="black", justify="center")
+        canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
+        self.update()
+        carbon = 0
+        peakWatts = 0
+        while run:
+            self.update()
+            data = backend_analysis.dataAnalysis(2, countryID[intCountry])
+            self.update()
+            watt = data[0]
+            self.update()
+            carbon = (((data[1])/60)/12)*1000000
+            if (peakWatts<data[0]):
+                peakWatts = data[0]
+            self.update()
+            self.update()
+            canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+            canvas.create_text(200, 200, text=str(round(watt, 2)) + " W", font=('Arial Bold', 56), fill="black", justify="center")
+            self.update()
+            canvas.create_text(200, 245, text=str(round(carbon, 2)) + " mgCO₂", font=('Arial Light', 18), fill="gray", justify="center")
+            canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
+            self.update()
+            canvas.create_arc(5, 5, 395, 395, fill = "black",outline="black", style=tk.ARC, width=6, start=315, extent="270")
+            #arc is calculated by the current power against the peak watt
+            self.update()
+            peakArc = round(270-((watt/peakWatts)*270))
+            if (peakArc>270):
+                peakArc = 270
+            canvas.create_arc(5, 5, 395, 395, fill = "white",outline="white", style=tk.ARC, width=8, start=315, extent=peakArc)
+            self.update()
+            values.create_image(10,10,anchor=tk.NW,image=processorValuesImage)
+            if data[2] == 0:
+                values.create_text(110,69,text = "N/A",font =('Arial Light', 12),fill="black", justify="center")
+            else:
+                values.create_text(110,69,text = str(round(data[2], 2)) + " W",font =('Arial Light', 10),fill="black", justify="center")
+            self.update()
+            values.create_text(110,47,text = str(round(data[3], 2)) + " W",font =('Arial Light', 10),fill="black", justify="center")
+            values.create_text(110,92,text = str(round(data[4], 2)) + " W",font =('Arial Light', 10),fill="black", justify="center")
+            self.update()
+
+    def stop(self):
+        global run
+        run = False
+
+    # def start(self):
+    #     global run
+    #     run = True
   
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -133,19 +191,58 @@ class StartPage(tk.Frame):
 class Page1(tk.Frame):
      
     def __init__(self, parent, controller):
-        # backgroundColour = '#DAEFD2' 
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent,background=backgroundColour)
 
-        button1 = tk.Button(self, text ="StartPage",command = lambda : controller.show_frame(StartPage))
+        durationLabel = tk.Label(self, text="Measuring Live Data" , font=('Arial Light', 18), bg=backgroundColour, fg="black")
+        titleLabel = tk.Label(self, text="Overall Power Usage", font=('Arial Bold', 32), bg=backgroundColour, fg="black")
+
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
+
+        startImage = tk.PhotoImage(file='App/CUStart.png')
+        startImage = startImage.subsample(2)
+        startButton = tk.Button(self, text="Start", image=startImage, height=125, width=125, borderwidth=0,command = lambda : controller.getContinuousData(canvas,values,processorValuesImage))
+
+        stopImage = tk.PhotoImage(file='App/CUStop.png')
+        stopImage = stopImage.subsample(2)
+        stopButton = tk.Button(self, text="Stop", image=stopImage, height=125, width=125, borderwidth=0,command = lambda : controller.stop())
+
+        graphImage = tk.PhotoImage(file='App/CUGraph.png')
+        graphImage = graphImage.subsample(2)
+        graphButton = tk.Button(self, text="View Graph", image=graphImage, height=125, width=125, borderwidth=0,command = lambda : controller.graphToDisplay(data))
+
+        processorValuesImage = tk.PhotoImage(file='App/CUValues.png')
+        processorValuesImage = processorValuesImage.subsample(2)
+        values = tk.Canvas(self, background=backgroundColour,height=150, width=150, highlightthickness=0)
+        values.create_image(10,10,anchor=tk.NW,image=processorValuesImage)
+        GPU_values = values.create_text(110,47,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+        CPU_values = values.create_text(110,69,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+        GPU_values = values.create_text(110,92,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.settingsPage1(controller))
-        #command = lambda : controller.navToSettings())
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsPage1(controller))
+
+        canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
+        intCircle = canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+        backArc = canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
+        startText = canvas.create_text(200, 200, text='Press "Start"', font=('Arial Bold', 40), fill="black", justify="center")
+        subtitleText = canvas.create_text(200, 245, text="TO BEGIN MEASURING", font=('Arial Light', 18), fill="gray", justify="center")
+
         settingsButton.image = settingsImage
+        startImage.image = startImage
+        stopImage.image = stopImage
+        graphImage.image = graphImage
+        processorValuesImage.image = processorValuesImage
      
-        button1.grid(row = 1, column = 1, padx = 10, pady = 10)
+        durationLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
+        titleLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+        returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        startButton.grid(row = 1, column = 0,sticky = tk.SE, padx = 30)
+        stopButton.grid(row = 1, column = 1,sticky = tk.SW)
+        graphButton.grid(row = 2, column = 0,sticky = tk.NE, padx = 30, rowspan = 4)
+        values.grid(row = 2, column = 1, sticky = tk.NW, padx = 0, pady = 2, rowspan= 4)
+        canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
   
 class Page2(tk.Frame):
     def __init__(self, parent, controller):
@@ -288,5 +385,6 @@ class SettingsPage(tk.Frame):
 app = tkinterApp()
 app.resizable(False,False)
 app.mainloop()
+
 
 
