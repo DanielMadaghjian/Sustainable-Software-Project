@@ -4,9 +4,7 @@ import backend_getData
 import requests
 import json
 
-gpuList = [] 
-cpuList = [] 
-ramList = []
+graphList = []
 
 # Method that calculates the average power 
 def getPower(gpuList, cpuList, ramList):
@@ -35,16 +33,27 @@ def getCarbon(region):#add a country here
   emission = carbon.get("co2e")
   #print(emission)
   return emission
+
 # Method that collects the raw data and filters it
 def dataAnalysis(t, country):#add a country here
+  gpuList = [] 
+  cpuList = [] 
+  ramList = []
   while t:
       print(t)
-      time.sleep(1)
+      #time.sleep(0.01)
       currentData = backend_getData.fetch_dict()
-      gpuList.append(currentData.get("gpu usage"))
-      cpuList.append(currentData.get("cpu usage"))
-      ramList.append(currentData.get("ram usage"))
-      t -= 1
+      graphList.append(currentData.get("gpu usage") + currentData.get("cpu usage") + currentData.get("ram usage"))
+      #gpuList.append(currentData.get("gpu usage"))
+      #cpuList.append(currentData.get("cpu usage"))
+      #ramList.append(currentData.get("ram usage"))
+      t -= 2    
+
+  currentData = backend_getData.fetch_dict()
+  graphList.append(currentData.get("gpu usage") + currentData.get("cpu usage") + currentData.get("ram usage"))
+  gpuList.append(currentData.get("gpu usage"))
+  cpuList.append(currentData.get("cpu usage"))
+  ramList.append(currentData.get("ram usage"))    
   
   values = []
   power = getPower(gpuList, cpuList, ramList)
@@ -55,6 +64,8 @@ def dataAnalysis(t, country):#add a country here
   values.append(mean(gpuList)) # adds gpu value (position 2)
   values.append(mean(cpuList)) # adds cpu value (position 3)
   values.append(mean(ramList)) # adds gpu value (position 4)
+  values.append(len(graphList))
+  values = values + graphList
 
 
   #print(values[0])
@@ -63,6 +74,7 @@ def dataAnalysis(t, country):#add a country here
   #print(values[2])
   #print(values[3])
   #print(values[4])
+  #print(values)
   return values
 
-
+dataAnalysis(2,'IE')

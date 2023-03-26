@@ -185,7 +185,7 @@ class StartPage(tk.Frame):
         bannerLabel.place(x=500,y=85)
         overallButton.grid(row = 2, column = 2,padx = 10, pady = 0)
         singleButton.grid(row = 2, column = 3, padx = 10, pady = 0)
-        settingsButton.grid(row = 4, column = 4, padx = 10, pady = 10, sticky = tk.SE)
+        #settingsButton.grid(row = 4, column = 4, padx = 10, pady = 10, sticky = tk.SE)
   
 
 class Page1(tk.Frame):
@@ -201,14 +201,17 @@ class Page1(tk.Frame):
         startImage = tk.PhotoImage(file='App/CUStart.png')
         startImage = startImage.subsample(2)
         startButton = tk.Button(self, text="Start", image=startImage, height=125, width=125, borderwidth=0,command = lambda : controller.getContinuousData(canvas,values,processorValuesImage))
+        startButton.image = startImage
 
         stopImage = tk.PhotoImage(file='App/CUStop.png')
         stopImage = stopImage.subsample(2)
         stopButton = tk.Button(self, text="Stop", image=stopImage, height=125, width=125, borderwidth=0,command = lambda : controller.stop())
+        stopButton.image = stopImage
 
         graphImage = tk.PhotoImage(file='App/CUGraph.png')
         graphImage = graphImage.subsample(2)
         graphButton = tk.Button(self, text="View Graph", image=graphImage, height=125, width=125, borderwidth=0,command = lambda : controller.graphToDisplay(data))
+        graphButton.image = graphImage
 
         processorValuesImage = tk.PhotoImage(file='App/CUValues.png')
         processorValuesImage = processorValuesImage.subsample(2)
@@ -229,9 +232,6 @@ class Page1(tk.Frame):
         subtitleText = canvas.create_text(200, 245, text="TO BEGIN MEASURING", font=('Arial Light', 18), fill="gray", justify="center")
 
         settingsButton.image = settingsImage
-        startImage.image = startImage
-        stopImage.image = stopImage
-        graphImage.image = graphImage
         processorValuesImage.image = processorValuesImage
      
         durationLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
@@ -296,77 +296,84 @@ class Page2(tk.Frame):
 class SettingsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
-        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(previousScreen))
 
-        
+        def changeRegion(i,buttonText):
+            countryLabel["text"] = buttonText
+            countryLabel.update
+            controller.updateCountry(i)
+
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(previousScreen))
+        currentLabel = ttk.Label(self, text="Current Country: ", font=('Arial Light', 18), style= 'Test.TLabel')
+        countryLabel = ttk.Label(self, text="Ireland", font=('Arial Light', 18), style= 'Test.TLabel')
 
         irlImage = tk.PhotoImage(file='App/flagIreland.png')
         irlImage = irlImage.subsample(1)
         irlButton = tk.Button(self, text ="Ireland",image = irlImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                               command = lambda : controller.updateCountry(0))
+                               command = lambda : changeRegion(0, irlButton["text"]))
         irlButton.image = irlImage
 
         fraImage = tk.PhotoImage(file='App/flagFrance.png')
         fraImage = fraImage.subsample(1)
         fraButton = tk.Button(self, text ="France",image = fraImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(1))
+                              command = lambda : changeRegion(1,fraButton["text"]))
         fraButton.image = fraImage
 
         ukImage = tk.PhotoImage(file='App/flagUK.png')
         ukImage = ukImage.subsample(1)
         ukButton = tk.Button(self, text ="United Kingdom",image = ukImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(2))
+                              command = lambda : changeRegion(2,ukButton["text"]))
         ukButton.image = ukImage
 
         rusImage = tk.PhotoImage(file='App/flagRussia.png')
         rusImage = rusImage.subsample(1)
         rusButton = tk.Button(self, text ="Russia",image = rusImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(3))
+                              command = lambda : changeRegion(3,rusButton["text"]))
         rusButton.image = rusImage
 
         ausImage = tk.PhotoImage(file='App/flagAustralia.png')
         ausImage = ausImage.subsample(1)
         ausButton = tk.Button(self, text ="Australia",image = ausImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(4))
+                              command = lambda : changeRegion(4,ausButton["text"]))
         ausButton.image = ausImage
 
         braImage = tk.PhotoImage(file='App/flagBrazil.png')
         braImage = braImage.subsample(1)
         braButton = tk.Button(self, text ="Brazil",image = braImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(5))
+                              command = lambda : changeRegion(5,braButton["text"]))
         braButton.image = braImage
 
         nzImage = tk.PhotoImage(file='App/flagNewZealand.png')
         nzImage = nzImage.subsample(1)
         nzButton = tk.Button(self, text ="New Zealand",image = nzImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(6))
+                              command = lambda : changeRegion(6,nzButton["text"]))
         nzButton.image = nzImage
 
         spaImage = tk.PhotoImage(file='App/flagSpain.png')
         spaImage = spaImage.subsample(1)
         spaButton = tk.Button(self, text ="Spain",image = spaImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(7))
+                              command = lambda : changeRegion(7,spaButton["text"]))
         spaButton.image = spaImage
 
         porImage = tk.PhotoImage(file='App/flagPortugal.png')
         porImage = porImage.subsample(1)
         porButton = tk.Button(self, text ="Portugal",image = porImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(8))
+                              command = lambda : changeRegion(8,porButton["text"]))
         porButton.image = porImage
 
         itaImage = tk.PhotoImage(file='App/flagItaly.png')
         itaImage = itaImage.subsample(1)
         itaButton = tk.Button(self, text ="Italy",image = itaImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(9))
+                              command = lambda : changeRegion(9,itaButton["text"]))
         itaButton.image = itaImage
 
         gerImage = tk.PhotoImage(file='App/flagGermany.png')
-        gerImage = itaImage.subsample(1)
+        gerImage = gerImage.subsample(1)
         gerButton = tk.Button(self, text ="Germany",image = gerImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
-                              command = lambda : controller.updateCountry(10))
+                              command = lambda : changeRegion(10,gerButton["text"]))
         gerButton.image = gerImage
 
-
+        currentLabel.grid(row = 0, column = 2, sticky=tk.NW, padx = 5, pady = 5)
+        countryLabel.grid(row = 0, column = 3, sticky=tk.NW, padx = 5, pady = 5)
         irlButton.grid(row = 1, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         fraButton.grid(row = 1, column = 1,sticky=tk.NW, padx = 5, pady = 5)
         ukButton.grid(row = 1, column = 2,sticky=tk.NW, padx = 5, pady = 5)
@@ -384,6 +391,7 @@ class SettingsPage(tk.Frame):
 
 app = tkinterApp()
 app.resizable(False,False)
+app.title("Sustainable Software")
 app.mainloop()
 
 
