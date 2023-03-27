@@ -39,6 +39,8 @@ def dataAnalysis(t, country):#add a country here
   gpuList = [] 
   cpuList = [] 
   ramList = []
+  if len(graphList) == 40:
+    graphList.clear()
   while t:
       print(t)
       #time.sleep(0.01)
