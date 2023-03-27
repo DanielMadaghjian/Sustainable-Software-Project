@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 backgroundColour = '#DAEFD2'
 previousScreen = tk.Frame
 
-country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
-countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
+country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany","Poland"]
+countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE","PL"]
 intCountry = 0
 
 class tkinterApp(tk.Tk):
@@ -303,8 +303,9 @@ class SettingsPage(tk.Frame):
             controller.updateCountry(i)
 
         returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(previousScreen))
-        currentLabel = ttk.Label(self, text="Current Country: ", font=('Arial Light', 18), style= 'Test.TLabel')
-        countryLabel = ttk.Label(self, text="Ireland", font=('Arial Light', 18), style= 'Test.TLabel')
+        currentLabel = ttk.Label(self, text="Current Country: ", font=('Arial Light', 24), style= 'Test.TLabel')
+        countryLabel = ttk.Label(self, text="Ireland", font=('Arial Light', 24), style= 'Test.TLabel')
+        selectLabel = ttk.Label(self, text="Select a country: ",font=('Arial Light', 18), style= 'Test.TLabel')
 
         irlImage = tk.PhotoImage(file='App/flagIreland.png')
         irlImage = irlImage.subsample(1)
@@ -372,27 +373,36 @@ class SettingsPage(tk.Frame):
                               command = lambda : changeRegion(10,gerButton["text"]))
         gerButton.image = gerImage
 
-        currentLabel.grid(row = 0, column = 2, sticky=tk.NW, padx = 5, pady = 5)
-        countryLabel.grid(row = 0, column = 3, sticky=tk.NW, padx = 5, pady = 5)
-        irlButton.grid(row = 1, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        fraButton.grid(row = 1, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        ukButton.grid(row = 1, column = 2,sticky=tk.NW, padx = 5, pady = 5)
-        rusButton.grid(row = 1, column = 3,sticky=tk.NW, padx = 5, pady = 5)
-        ausButton.grid(row = 2, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        braButton.grid(row = 2, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        nzButton.grid(row = 2, column = 2,sticky=tk.NW, padx = 5, pady = 5)
-        spaButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 5, pady = 5)
-        porButton.grid(row = 3, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        itaButton.grid(row = 3, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        gerButton.grid(row = 3, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        polImage = tk.PhotoImage(file='App/flagPoland.png')
+        polImage = polImage.subsample(1)
+        polButton = tk.Button(self, text ="Poland",image = polImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : changeRegion(11,polButton["text"]))
+        polButton.image = polImage
+
+        currentLabel.place(x = 300, y = 20)
+        countryLabel.place(x = 550, y = 20)
+
+        #currentLabel.grid(row = 0, column = 2, sticky=tk.NW, padx = 5, pady = 5)
+        #countryLabel.grid(row = 0, column = 3, sticky=tk.NW, padx = 5, pady = 5)
+        selectLabel.grid(row = 1, column = 0, stick = tk.NW, padx = 5, pady = 30)
+
+        irlButton.grid(row = 2, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        fraButton.grid(row = 2, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        ukButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        rusButton.grid(row = 2, column = 4,sticky=tk.NW, padx = 5, pady = 5)
+        ausButton.grid(row = 3, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        braButton.grid(row = 3, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        nzButton.grid(row = 3, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        spaButton.grid(row = 3, column = 4,sticky=tk.NW, padx = 5, pady = 5)
+        porButton.grid(row = 4, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        itaButton.grid(row = 4, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        gerButton.grid(row = 4, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        polButton.grid(row = 4, column = 4,sticky=tk.NW, padx = 5, pady = 5)
 
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         
 
 app = tkinterApp()
 app.resizable(False,False)
-app.title("Sustainable Software")
+app.title("Eco Check")
 app.mainloop()
-
-
-
