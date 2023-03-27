@@ -2,6 +2,8 @@
 # 'python3 -m pip install tkinter'
 # 'python3 -m pip install matplotlib'
 
+import threading
+import time
 import tkinter as tk
 from tkinter import ttk
 import backend_analysis
@@ -11,9 +13,17 @@ backgroundColour = '#DAEFD2'
 
 previousScreen = tk.Frame
 baselineRun = False
-countdownDisplay = -1
+countdownDisplay = "0:60"
 
 globalCanvas = tk.Canvas
+
+def countdownFunction() :
+    for countdown in range(0, 60, 1) :
+        countdownDisplay = "0:" + str(59-countdown).zfill(2)
+        print(countdownDisplay)
+        tk.Canvas.update_idletasks
+        time.sleep(1)
+countdownThread = threading.Thread(target=countdownFunction)
 
 def runAppTest(controller) :
     controller.show_frame(AppTesting)
@@ -21,7 +31,9 @@ def runAppTest(controller) :
     #     timeRemaining = str(sec).zfill(2)
     #     globalCanvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
     #     globalCanvas.create_text(200, 200, text=timeRemaining, font=('Arial Bold', 40), fill="black", justify="center")
+    print("here\n")
     #     globalCanvas.update()
+    countdownThread.start()
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -221,14 +233,44 @@ class TimedTest(tk.Frame):
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
         values.grid(row = 2, column = 1, sticky = tk.W, padx = 0, pady = 2)
 
-        globalCanvas = canvas
+        
 
 class BaselineTest(tk.Frame):
     def __init__(self, parent, controller):
-        
         tk.Frame.__init__(self, parent, background=backgroundColour)
         tk.Tk.configure(self, bg='#DAEFD2')
 
+        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = settingsImage.subsample(3)
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
+                                   command = lambda : controller.settingsAppTestHome(controller))
+        #command = lambda : controller.navToSettings())
+        settingsButton.image = settingsImage
+
+        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+        titleLabel = ttk.Label(self, text="Measuring...",style= 'Test.TLabel',font=('Arial Bold', 32), padding=(0,22,0,0))
+        infoLabel = ttk.Label(self, text="Please wait while we measure the idle power use of\nyour device. Please ensure that you keep all other\napps closed until this test completes.", font=('Arial Light', 15), style= 'Test.TLabel')
+
+        countdownLabel = ttk.Label(self, text=countdownDisplay,style= 'Test.TLabel',font=('Arial Bold', 64), padding=(0,22,0,0))
+
+        tk.Tk.configure(self, bg='#DAEFD2')
+
+        canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
+        canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
+        
+        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+
+        carbonImage = tk.PhotoImage(file='App/Carbon.png')
+        carbonImage = carbonImage.subsample(6)
+        canvas.image = carbonImage
+        canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
+        
+
+        infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
+        titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
+        countdownLabel.grid(row = 2, column = 0, sticky = tk.NW, padx = (40,20), pady = 2)
+        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+        canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
         
 
 class AppTesting(tk.Frame):
@@ -265,7 +307,8 @@ class AppTesting(tk.Frame):
         carbonImage = tk.PhotoImage(file='App/Carbon.png')
         carbonImage = carbonImage.subsample(6)
         canvas.image = carbonImage
-        canvas.create_image(200,240,anchor=tk.S,image=carbonImage)
+        canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
+        canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
         
 
         infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
@@ -273,6 +316,7 @@ class AppTesting(tk.Frame):
         stopButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
+        globalCanvas = canvas
         
 
 class AppResults(tk.Frame):
