@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 backgroundColour = '#DAEFD2'
 previousScreen = tk.Frame
 
-country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
-countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
+country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany","Poland"]
+countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE","PL"]
 intCountry = 0
 
 class tkinterApp(tk.Tk):
@@ -157,24 +157,24 @@ class StartPage(tk.Frame):
 
         titleLabel = ttk.Label(self, text="Sustainable Software",style= 'Test.TLabel',font=('Arial Bold', 28))
 
-        overallImage = tk.PhotoImage(file='App/overallButton.png')
+        overallImage = tk.PhotoImage(file='App/images/overallButton.png')
         overallImage = overallImage.subsample(2)
         overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 100, width = 235, borderwidth = 0, 
                                  command = lambda : controller.show_frame(Page1))
         overallButton.image = overallImage
 
-        singleImage = tk.PhotoImage(file='App/singleButton.png')
+        singleImage = tk.PhotoImage(file='App/images/singleButton.png')
         singleImage = singleImage.subsample(2)
         singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 100, width = 235, borderwidth = 0, 
                                  command = lambda : controller.show_frame(Page2))
         singleButton.image = singleImage
 
-        bannerImage = tk.PhotoImage(file='App/banner.png')
+        bannerImage = tk.PhotoImage(file='App/images/banner.png')
         bannerImage = bannerImage.subsample(2)
         bannerLabel = ttk.Label(self, image=bannerImage, border=0)
         bannerLabel.image = bannerImage
 
-        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
                                    command = lambda : controller.settingsStart(controller))
@@ -198,22 +198,22 @@ class Page1(tk.Frame):
 
         returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
 
-        startImage = tk.PhotoImage(file='App/CUStart.png')
+        startImage = tk.PhotoImage(file='App/images/CUStart.png')
         startImage = startImage.subsample(2)
         startButton = tk.Button(self, text="Start", image=startImage, height=125, width=125, borderwidth=0,command = lambda : controller.getContinuousData(canvas,values,processorValuesImage))
         startButton.image = startImage
 
-        stopImage = tk.PhotoImage(file='App/CUStop.png')
+        stopImage = tk.PhotoImage(file='App/images/CUStop.png')
         stopImage = stopImage.subsample(2)
         stopButton = tk.Button(self, text="Stop", image=stopImage, height=125, width=125, borderwidth=0,command = lambda : controller.stop())
         stopButton.image = stopImage
 
-        graphImage = tk.PhotoImage(file='App/CUGraph.png')
+        graphImage = tk.PhotoImage(file='App/images/CUGraph.png')
         graphImage = graphImage.subsample(2)
         graphButton = tk.Button(self, text="View Graph", image=graphImage, height=125, width=125, borderwidth=0,command = lambda : controller.graphToDisplay(data))
         graphButton.image = graphImage
 
-        processorValuesImage = tk.PhotoImage(file='App/CUValues.png')
+        processorValuesImage = tk.PhotoImage(file='App/images/CUValues.png')
         processorValuesImage = processorValuesImage.subsample(2)
         values = tk.Canvas(self, background=backgroundColour,height=150, width=150, highlightthickness=0)
         values.create_image(10,10,anchor=tk.NW,image=processorValuesImage)
@@ -221,7 +221,7 @@ class Page1(tk.Frame):
         CPU_values = values.create_text(110,69,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
         GPU_values = values.create_text(110,92,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
 
-        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsPage1(controller))
 
@@ -255,13 +255,13 @@ class Page2(tk.Frame):
         titleLabel = ttk.Label(self, text="Power Consumption",style= 'Test.TLabel',font=('Arial Bold', 32))
         durationLabel = ttk.Label(self, text="5 SECOND", font=('Arial Light', 18), style= 'Test.TLabel')
 
-        startImage = tk.PhotoImage(file='App/Test.png')
+        startImage = tk.PhotoImage(file='App/images/Test.png')
         startImage = startImage.subsample(2)
         startButton = tk.Button(self,text="Start", image = startImage, height = 150, width = 150, borderwidth = 0, 
                                  command = lambda : controller.startTest(5,canvas,values,intCountry))
         startButton.image = startImage
 
-        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
                                    command = lambda : controller.settingsPage2(controller))
@@ -303,96 +303,107 @@ class SettingsPage(tk.Frame):
             controller.updateCountry(i)
 
         returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(previousScreen))
-        currentLabel = ttk.Label(self, text="Current Country: ", font=('Arial Light', 18), style= 'Test.TLabel')
-        countryLabel = ttk.Label(self, text="Ireland", font=('Arial Light', 18), style= 'Test.TLabel')
+        currentLabel = ttk.Label(self, text="Current Country: ", font=('Arial Light', 24), style= 'Test.TLabel')
+        countryLabel = ttk.Label(self, text="Ireland", font=('Arial Light', 24), style= 'Test.TLabel')
+        selectLabel = ttk.Label(self, text="Select a country: ",font=('Arial Light', 18), style= 'Test.TLabel')
 
-        irlImage = tk.PhotoImage(file='App/flagIreland.png')
+        irlImage = tk.PhotoImage(file='App/images/flagIreland.png')
         irlImage = irlImage.subsample(1)
         irlButton = tk.Button(self, text ="Ireland",image = irlImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                                command = lambda : changeRegion(0, irlButton["text"]))
         irlButton.image = irlImage
 
-        fraImage = tk.PhotoImage(file='App/flagFrance.png')
+        fraImage = tk.PhotoImage(file='App/images/flagFrance.png')
         fraImage = fraImage.subsample(1)
         fraButton = tk.Button(self, text ="France",image = fraImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(1,fraButton["text"]))
         fraButton.image = fraImage
 
-        ukImage = tk.PhotoImage(file='App/flagUK.png')
+        ukImage = tk.PhotoImage(file='App/images/flagUK.png')
         ukImage = ukImage.subsample(1)
         ukButton = tk.Button(self, text ="United Kingdom",image = ukImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(2,ukButton["text"]))
         ukButton.image = ukImage
 
-        rusImage = tk.PhotoImage(file='App/flagRussia.png')
+        rusImage = tk.PhotoImage(file='App/images/flagRussia.png')
         rusImage = rusImage.subsample(1)
         rusButton = tk.Button(self, text ="Russia",image = rusImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(3,rusButton["text"]))
         rusButton.image = rusImage
 
-        ausImage = tk.PhotoImage(file='App/flagAustralia.png')
+        ausImage = tk.PhotoImage(file='App/images/flagAustralia.png')
         ausImage = ausImage.subsample(1)
         ausButton = tk.Button(self, text ="Australia",image = ausImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(4,ausButton["text"]))
         ausButton.image = ausImage
 
-        braImage = tk.PhotoImage(file='App/flagBrazil.png')
+        braImage = tk.PhotoImage(file='App/images/flagBrazil.png')
         braImage = braImage.subsample(1)
         braButton = tk.Button(self, text ="Brazil",image = braImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(5,braButton["text"]))
         braButton.image = braImage
 
-        nzImage = tk.PhotoImage(file='App/flagNewZealand.png')
+        nzImage = tk.PhotoImage(file='App/images/flagNewZealand.png')
         nzImage = nzImage.subsample(1)
         nzButton = tk.Button(self, text ="New Zealand",image = nzImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(6,nzButton["text"]))
         nzButton.image = nzImage
 
-        spaImage = tk.PhotoImage(file='App/flagSpain.png')
+        spaImage = tk.PhotoImage(file='App/images/flagSpain.png')
         spaImage = spaImage.subsample(1)
         spaButton = tk.Button(self, text ="Spain",image = spaImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(7,spaButton["text"]))
         spaButton.image = spaImage
 
-        porImage = tk.PhotoImage(file='App/flagPortugal.png')
+        porImage = tk.PhotoImage(file='App/images/flagPortugal.png')
         porImage = porImage.subsample(1)
         porButton = tk.Button(self, text ="Portugal",image = porImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(8,porButton["text"]))
         porButton.image = porImage
 
-        itaImage = tk.PhotoImage(file='App/flagItaly.png')
+        itaImage = tk.PhotoImage(file='App/images/flagItaly.png')
         itaImage = itaImage.subsample(1)
         itaButton = tk.Button(self, text ="Italy",image = itaImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(9,itaButton["text"]))
         itaButton.image = itaImage
 
-        gerImage = tk.PhotoImage(file='App/flagGermany.png')
+        gerImage = tk.PhotoImage(file='App/images/flagGermany.png')
         gerImage = gerImage.subsample(1)
         gerButton = tk.Button(self, text ="Germany",image = gerImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(10,gerButton["text"]))
         gerButton.image = gerImage
 
-        currentLabel.grid(row = 0, column = 2, sticky=tk.NW, padx = 5, pady = 5)
-        countryLabel.grid(row = 0, column = 3, sticky=tk.NW, padx = 5, pady = 5)
-        irlButton.grid(row = 1, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        fraButton.grid(row = 1, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        ukButton.grid(row = 1, column = 2,sticky=tk.NW, padx = 5, pady = 5)
-        rusButton.grid(row = 1, column = 3,sticky=tk.NW, padx = 5, pady = 5)
-        ausButton.grid(row = 2, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        braButton.grid(row = 2, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        nzButton.grid(row = 2, column = 2,sticky=tk.NW, padx = 5, pady = 5)
-        spaButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 5, pady = 5)
-        porButton.grid(row = 3, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        itaButton.grid(row = 3, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        gerButton.grid(row = 3, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        polImage = tk.PhotoImage(file='App/images/flagPoland.png')
+        polImage = polImage.subsample(1)
+        polButton = tk.Button(self, text ="Poland",image = polImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : changeRegion(11,polButton["text"]))
+        polButton.image = polImage
+
+        currentLabel.place(x = 300, y = 20)
+        countryLabel.place(x = 550, y = 20)
+
+        #currentLabel.grid(row = 0, column = 2, sticky=tk.NW, padx = 5, pady = 5)
+        #countryLabel.grid(row = 0, column = 3, sticky=tk.NW, padx = 5, pady = 5)
+        selectLabel.grid(row = 1, column = 0, stick = tk.NW, padx = 5, pady = 30)
+
+        irlButton.grid(row = 2, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        fraButton.grid(row = 2, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        ukButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        rusButton.grid(row = 2, column = 4,sticky=tk.NW, padx = 5, pady = 5)
+        ausButton.grid(row = 3, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        braButton.grid(row = 3, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        nzButton.grid(row = 3, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        spaButton.grid(row = 3, column = 4,sticky=tk.NW, padx = 5, pady = 5)
+        porButton.grid(row = 4, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        itaButton.grid(row = 4, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        gerButton.grid(row = 4, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        polButton.grid(row = 4, column = 4,sticky=tk.NW, padx = 5, pady = 5)
 
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         
 
 app = tkinterApp()
 app.resizable(False,False)
-app.title("Sustainable Software")
+app.title("ecoCheck")
+app.iconphoto(False,tk.PhotoImage(file='App/images/ecoCheck.png')) #ecoCheck.png?
 app.mainloop()
-
-
-
