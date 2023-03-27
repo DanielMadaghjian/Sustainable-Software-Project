@@ -487,13 +487,13 @@ class SettingsPage(tk.Frame):
             countryLabel.update
             controller.updateCountry(i)
 
-        returnButton = tk.PhotoImage(file='App/Return.png')
-        returnButton = returnButton.subsample(2)
-        returnButton.image = returnButton
-        returnButton = tk.Button(self, text ="Return",image=returnButton, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(previousScreen))        
+        returnImage = tk.PhotoImage(file='App/Return.png')
+        returnImage = returnImage.subsample(2)
+        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(previousScreen))      
+        returnButton.image = returnImage  
         
-        currentLabel = ttk.Label(self, text="Current Country: ", font=('Arial Light', 18), style= 'Test.TLabel')
-        countryLabel = ttk.Label(self, text="Ireland", font=('Arial Light', 18), style= 'Test.TLabel')
+        currentLabel = tk.Label(self, text="Current Country : ", font=('Arial Bold', 24),background=backgroundColour, foreground="black")
+        countryLabel = tk.Label(self, text="Ireland", font=('Arial Light', 24),background=backgroundColour, foreground="grey")
 
         irlImage = tk.PhotoImage(file='App/flagIreland.png')
         irlImage = irlImage.subsample(1)
@@ -561,19 +561,19 @@ class SettingsPage(tk.Frame):
                               command = lambda : changeRegion(10,gerButton["text"]))
         gerButton.image = gerImage
 
-        currentLabel.grid(row = 0, column = 2, sticky=tk.NW, padx = 5, pady = 5)
-        countryLabel.grid(row = 0, column = 3, sticky=tk.NW, padx = 5, pady = 5)
-        irlButton.grid(row = 1, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        fraButton.grid(row = 1, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        ukButton.grid(row = 1, column = 2,sticky=tk.NW, padx = 5, pady = 5)
-        rusButton.grid(row = 1, column = 3,sticky=tk.NW, padx = 5, pady = 5)
-        ausButton.grid(row = 2, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        braButton.grid(row = 2, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        nzButton.grid(row = 2, column = 2,sticky=tk.NW, padx = 5, pady = 5)
-        spaButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 5, pady = 5)
-        porButton.grid(row = 3, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        itaButton.grid(row = 3, column = 1,sticky=tk.NW, padx = 5, pady = 5)
-        gerButton.grid(row = 3, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        currentLabel.grid(row = 0, column = 1)
+        countryLabel.grid(row = 0, column = 1, columnspan=3)
+        irlButton.grid(row = 1, column = 0,sticky=tk.NE, padx = 50, pady = 20)
+        fraButton.grid(row = 1, column = 1, sticky=tk.N,padx = 50, pady = 20)
+        ukButton.grid(row = 1, column = 2,sticky=tk.N, padx = 50, pady = 20)
+        rusButton.grid(row = 1, column = 3,sticky=tk.NW, padx = 30, pady = 20)
+        ausButton.grid(row = 2, column = 0,sticky=tk.NS, padx = 50, pady = 20)
+        braButton.grid(row = 2, column = 1,sticky=tk.NS, padx = 50, pady = 20)
+        nzButton.grid(row = 2, column = 2,sticky=tk.NS, padx = 50, pady = 20)
+        spaButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 30, pady = 20)
+        porButton.grid(row = 3, column = 0, padx = 50, pady = 20)
+        itaButton.grid(row = 3, column = 1, padx = 50, pady = 20)
+        gerButton.grid(row = 3, column = 2,padx = 30, pady = 20)
 
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         
@@ -582,6 +582,3 @@ app = tkinterApp()
 app.resizable(False,False)
 app.title("Sustainable Software")
 app.mainloop()
-
-
-
