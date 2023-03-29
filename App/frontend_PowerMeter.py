@@ -43,7 +43,24 @@ class tkinterApp(tk.Tk):
     def updateCountry(self, newCountry):
         global intCountry
         intCountry = newCountry
-    
+
+    def countdownFunction(self, canvas, countDown, isBaseline):
+        while countDown >0:
+            self.config(cursor="none")
+            canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+            canvas.create_text(200, 200, text="0 : " + str(countDown), font=('Arial Bold', 56),fill="black", justify="center")
+            backend_analysis.dataGathering()
+            self.update()
+            time.sleep(1)
+            countDown-= 1
+            print(countDown)
+        if isBaseline == True:
+            baseLine = backend_analysis.getBaseLine(countryID[intCountry])
+            print(baseLine)
+        else:
+            appData = backend_analysis.getApp(countryID[intCountry])
+            print(appData)
+   
     # def startTest(self,durationInput,canvas,values,currentCountry):
     # ##Calling the analysis function
     #     backendData = backend_analysis.dataAnalysis(durationInput, countryID[currentCountry])
@@ -169,28 +186,23 @@ class tkinterApp(tk.Tk):
     def baselineCountdown(self, canvas, titleCanvas):
         global checkBaseline
         checkBaseline = True
-        countDown = 60
+        countDown = 10
         titleCanvas.create_rectangle(0,0,500,700, fill=backgroundColour, outline=backgroundColour)
         titleCanvas.create_text(130, 50, text="Measuring ...",font=('Arial Bold', 32),fill="black", justify="center")
         titleCanvas.create_text(200, 100, text="Please wait while we measure the idle power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
         self.update()
-        while countDown >0:
-            self.config(cursor="none")
-            canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-            canvas.create_text(200, 200, text="0 : " + str(countDown), font=('Arial Bold', 56),fill="black", justify="center")
-            self.update()
-            time.sleep(1)
-            countDown-= 10
-            print(countDown)
+
+        self.countdownFunction(canvas, countDown, True)
         self.config(cursor="")
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_text(200, 200, text="Open App then press Test App",font=('Arial Bold', 22),fill="black", justify="center")
-        #call backend to get baseline here
+        
 
-    def getBaseline(controller):
+    def measureApp(controller):
         global checkBaseline
         if checkBaseline:
             controller.show_frame(AppTesting)
+
         
     def startCountdown(canvas):
         print("timer")
@@ -310,7 +322,7 @@ class IndividualMeasurmentPage(tk.Frame):
 
         appTestImage = tk.PhotoImage(file='App/AppTest.png')
         appTestImage = appTestImage.subsample(2)
-        appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.getBaseline())
+        appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.measureApp())
         appTestButton.image = appTestImage
 
         returnImage = tk.PhotoImage(file='App/Return.png')
@@ -370,7 +382,8 @@ class AppTesting(tk.Frame):
     def __init__(self, parent, controller):
 
         tk.Frame.__init__(self, parent, background=backgroundColour)
-        countdownDisplay = "0:00"
+        #countdownDisplay = "0:00"
+        countDown = 10
 
         settingsImage = tk.PhotoImage(file='App/Settings.png')
         settingsImage = settingsImage.subsample(3)
@@ -382,11 +395,17 @@ class AppTesting(tk.Frame):
         titleLabel = ttk.Label(self, text="Measuring...",style= 'Test.TLabel',font=('Arial Bold', 32), padding=(0,22,0,0))
         infoLabel = ttk.Label(self, text="Please wait while we measure the idle power use of\nyour device. Please ensure that you keep all other\napps closed until this test completes.", font=('Arial Light', 15), style= 'Test.TLabel')
 
-        stopImage = tk.PhotoImage(file='App/Stop.png')
-        stopImage = stopImage.subsample(2)
-        stopButton = tk.Button(self,text="Start", image = stopImage, height = 150, width = 150, borderwidth = 0, 
-                                 command = lambda : controller.show_frame(IndividualResultsPage))
-        stopButton.image = stopImage
+        ##stopImage = tk.PhotoImage(file='App/Stop.png')
+        ##stopImage = stopImage.subsample(2)
+        ##stopButton = tk.Button(self,text="Start", image = stopImage, height = 150, width = 150, borderwidth = 0, 
+        ##                         command = lambda : controller.show_frame(IndividualResultsPage))
+        ##stopButton.image = stopImage
+
+        startImage = tk.PhotoImage(file='App/CUStart.png')
+        startImage = startImage.subsample(2)
+        startButton = tk.Button(self,text="Start", image = startImage, height = 150, width = 150, borderwidth = 0, 
+                                 command = lambda : controller.countdownFunction(canvas, countDown, False))
+        startButton.image = startImage
 
         returnImage = tk.PhotoImage(file='App/Return.png')
         returnImage = returnImage.subsample(2)
@@ -402,15 +421,16 @@ class AppTesting(tk.Frame):
         carbonImage = carbonImage.subsample(6)
         canvas.image = carbonImage
         canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
-        canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
-        
+        #canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
 
         infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
         titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
-        stopButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
+        #stopButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
+        startButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+    
 
 class SettingsPage(tk.Frame):
     def __init__(self, parent, controller):
