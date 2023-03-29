@@ -1,11 +1,12 @@
 
 # 'python3 -m pip install tkinter'
 # 'python3 -m pip install matplotlib'
-
+from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 import backend_analysis
 import matplotlib.pyplot as plt
+import requests
 import time
 
 backgroundColour = '#DAEFD2'
@@ -259,27 +260,42 @@ class HomePage(tk.Frame):
 
         titleLabel = ttk.Label(self, text="Sustainable Software",style= 'Test.TLabel',font=('Arial Bold', 28))
 
-        overallImage = tk.PhotoImage(file='App/overallButton.png')
-        overallImage = overallImage.subsample(2)
-        overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 100, width = 235, borderwidth = 0, 
+        overallImage = tk.PhotoImage(file='App/OverallUsage.png')
+        overallImage = overallImage.subsample(4)
+        overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 148, width = 382, borderwidth = 0, 
                                  command = lambda : controller.show_frame(ContinuousPowerUsagePage))
         overallButton.image = overallImage
 
-        singleImage = tk.PhotoImage(file='App/singleButton.png')
-        singleImage = singleImage.subsample(2)
-        singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 100, width = 235, borderwidth = 0, 
+        singleImage = tk.PhotoImage(file='App/SingleApp.png')
+        singleImage = singleImage.subsample(4)
+        singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 148, width = 382, borderwidth = 0, 
                                  command = lambda : controller.show_frame(IndividualMeasurmentPage))
         singleButton.image = singleImage
 
-        bannerImage = tk.PhotoImage(file='App/banner.png')
-        bannerImage = bannerImage.subsample(2)
+        bannerImage = tk.PhotoImage(file='App/TrinityCisco.png')
+        bannerImage = bannerImage.subsample(4)
         bannerLabel = ttk.Label(self, image=bannerImage, border=0)
         bannerLabel.image = bannerImage
+
+        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = settingsImage.subsample(3)
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
+                                   command = lambda : controller.settingsStart(controller))
+        #command = lambda : controller.navToSettings())
+        settingsButton.image = settingsImage
         
-        titleLabel.grid(row = 1, column = 1, columnspan = 2, rowspan = 1, padx = 50, pady = 100)
-        bannerLabel.grid(row = 1, column = 3,padx = 50, pady = 100)
-        overallButton.grid(row = 2, column = 2,padx = 50, pady = 0)
-        singleButton.grid(row = 2, column = 3, padx = 10, pady = 0)
+        titleLabel.grid(row = 0, column = 0, sticky = tk.SE, padx = (95,15), pady = (150,10))
+        bannerLabel.place(x=550,y=140)
+        overallButton.grid(row = 1, column = 0, sticky= tk.NE, padx = 10, pady = 0)
+        singleButton.grid(row = 1, column = 1, sticky= tk.NW, padx = 10, pady = 0)
+        settingsButton.place(x=875, y=500)
+  
+        # User feedback button - brings user to another screen to give feedback
+        feedbackImage = tk.PhotoImage(file='App/Feedback.png')
+        feedbackImage = feedbackImage.subsample(3)
+        feedbackButton = tk.Button(self, text="Give Feedback", image=feedbackImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(FeedbackPage))
+        feedbackButton.place(x=750, y=500)
+        feedbackButton.image = feedbackImage
   
 
 class ContinuousPowerUsagePage(tk.Frame):
@@ -287,61 +303,76 @@ class ContinuousPowerUsagePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
 
+        stopImage = tk.PhotoImage(file='App/Stop.png')
+        stopImage = stopImage.subsample(2)
+        startImage = tk.PhotoImage(file='App/Start.png')
+        startImage = startImage.subsample(2)
+
+        def toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage):
+            if toggleButton["text"] == "Running":
+                toggleButton.configure(text="Not Running")
+                toggleButton["image"] = startImage
+                
+                controller.stop()
+            else:
+                toggleButton.configure(text="Running")
+                toggleButton["image"] = stopImage
+                
+                controller.getContinuousData(canvas,values,powerBreakdownImage)
+
         durationLabel = tk.Label(self, text="Measuring Live Data" , font=('Arial Light', 18), bg=backgroundColour, fg="black")
         titleLabel = tk.Label(self, text="Overall Power Usage", font=('Arial Bold', 32), bg=backgroundColour, fg="black")
 
-        returnButton = tk.Button(self, text ="Return",command = lambda : controller.stopRun())
+        backImage = tk.PhotoImage(file='App/Return.png')
+        backImage = backImage.subsample(2)
+        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, 
+                                   command = lambda : controller.show_frame(HomePage))
+        backButton.image = backImage
 
-        startImage = tk.PhotoImage(file='App/CUStart.png')
+        startImage = tk.PhotoImage(file='App/Start.png')
         startImage = startImage.subsample(2)
-        startButton = tk.Button(self, text="Start", image=startImage, height=125, width=125, borderwidth=0,command = lambda : controller.getContinuousData(canvas,values,processorValuesImage))
-        startButton.image = startImage
+        toggleButton = tk.Button(self, text="Start", image=startImage, height = 150, width = 150, borderwidth=0,command = lambda : toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage))
+        
+        
 
-        stopImage = tk.PhotoImage(file='App/CUStop.png')
-        stopImage = stopImage.subsample(2)
-        stopButton = tk.Button(self, text="Stop", image=stopImage, height=125, width=125, borderwidth=0,command = lambda : controller.stop())
-        stopButton.image = stopImage
 
-        graphImage = tk.PhotoImage(file='App/CUGraph.png')
+
+        graphImage = tk.PhotoImage(file='App/Graph.png')
         graphImage = graphImage.subsample(2)
-        graphButton = tk.Button(self, text="View Graph", image=graphImage, height=125, width=125, borderwidth=0,command = lambda : controller.graphToDisplay(data))
+        graphButton = tk.Button(self, text="View Graph", image=graphImage, height = 150, width = 150, borderwidth=0,command = lambda : controller.graphToDisplay(data))
         graphButton.image = graphImage
 
-        processorValuesImage = tk.PhotoImage(file='App/CUValues.png')
-        processorValuesImage = processorValuesImage.subsample(2)
-        values = tk.Canvas(self, background=backgroundColour,height=150, width=150, highlightthickness=0)
-        values.create_image(10,10,anchor=tk.NW,image=processorValuesImage)
-        GPU_values = values.create_text(110,47,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
-        CPU_values = values.create_text(110,69,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
-        GPU_values = values.create_text(110,92,text = "TBC",font =('Arial Light', 12),fill="black", justify="center")
+        powerBreakdownImage = tk.PhotoImage(file='App/PowerBreakdown.png')
+        powerBreakdownImage = powerBreakdownImage.subsample(2)
+        values = tk.Canvas(self, background=backgroundColour,height=100, width=250, highlightthickness=0)
+        # values.create_image(200,50,image=powerBreakdownImage)
+        # values.create_text(295,67,text = "Start Test",font =('Arial Bold', 10),fill="black", justify="left")
 
-        settingsImage = tk.PhotoImage(file='App/Settings.png')
-        settingsImage = settingsImage.subsample(3)
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsPage1(controller))
+        # settingsImage = tk.PhotoImage(file='App/images/Settings.png')
+        # settingsImage = settingsImage.subsample(3)
+        # settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsPage1(controller))
 
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
-        intCircle = canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-        backArc = canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
-        startText = canvas.create_text(200, 200, text='Press "Start"', font=('Arial Bold', 40), fill="black", justify="center")
-        subtitleText = canvas.create_text(200, 245, text="TO BEGIN MEASURING", font=('Arial Light', 18), fill="gray", justify="center")
+        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+        canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
+        canvas.create_text(200, 182, text="CARBON", font=('Arial', 22), fill='#A3B59C', justify="center")
+        carbonImage = tk.PhotoImage(file='App/Carbon.png')
+        carbonImage = carbonImage.subsample(4)
+        canvas.image = carbonImage
+        canvas.create_image(200,240,anchor=tk.S,image=carbonImage)
+        canvas.update()
 
-        returnImage = tk.PhotoImage(file='App/Return.png')
-        returnImage = returnImage.subsample(2)
-        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(HomePage))
-        returnButton.image = returnImage    
-
-        settingsButton.image = settingsImage
-        processorValuesImage.image = processorValuesImage
-     
+        # settingsButton.image = settingsImage
+        
         durationLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
         titleLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
-        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
-        returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        startButton.grid(row = 1, column = 0,sticky = tk.SE, padx = 30)
-        stopButton.grid(row = 1, column = 1,sticky = tk.SW)
-        graphButton.grid(row = 2, column = 0,sticky = tk.NE, padx = 30, rowspan = 4)
-        values.grid(row = 2, column = 1, sticky = tk.NW, padx = 0, pady = 2, rowspan= 4)
+        # settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+        backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        toggleButton.grid(row = 1, column = 0,sticky = tk.SE, padx = 30, pady = (30,50))
+        graphButton.grid(row = 1, column = 1,sticky = tk.SW, pady = (30,50))
+        values.place(x=75,y=370, width=400, height=100)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
+  
   
 class IndividualMeasurmentPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -578,6 +609,62 @@ class SettingsPage(tk.Frame):
         gerButton.grid(row = 3, column = 2,padx = 30, pady = 20)
 
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+
+class FeedbackPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent,background=backgroundColour)
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(HomePage))
+        returnButton.pack(side='top', anchor='nw')
+        
+        # Function to send form data
+        def send_form_data():
+            # Get input values
+            name = name_entry.get()
+            email = email_entry.get()
+            message = message_entry.get("1.0", "end-1c")
+
+            # Create dictionary with form data
+            form_data = {
+                "name": name,
+                "email": email,
+                "message": message
+            }
+
+            # Send POST request to Getform API
+            response = requests.post("https://getform.io/f/da461dc3-8929-49bc-977b-03a9f84201a9", data=form_data)
+
+            # Show success message
+            success_label.config(text="Message sent successfully!")
+        # Create input fields
+        title_label = tk.Label(self, text="Give feedback on potential inaccuracies you found in the app!")
+        name_label = tk.Label(self, text="Name:")
+        name_entry = tk.Entry(self)
+
+        email_label = tk.Label(self, text="Email:")
+        email_entry = tk.Entry(self)
+
+        message_label = tk.Label(self, text="Message:")
+        message_entry = tk.Text(self)
+
+        # Create submit button
+        submit_button = tk.Button(self, text="Send Message", command=send_form_data)
+
+        # Create success label
+        success_label = tk.Label(self, fg="green")
+
+        title_label.pack()
+        name_label.pack()
+        name_entry.pack()
+
+        email_label.pack()
+        email_entry.pack()
+
+        message_label.pack()
+        message_entry.pack()
+
+        submit_button.pack(pady=10)
+        success_label.pack()      
+
         
 
 app = tkinterApp()
