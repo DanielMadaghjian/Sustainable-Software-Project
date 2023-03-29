@@ -57,10 +57,11 @@ class tkinterApp(tk.Tk):
             print(countDown)
         if isBaseline == True:
             baseLine = backend_analysis.getBaseLine(countryID[intCountry])
-            print(baseLine)
+            return baseLine
         else:
             appData = backend_analysis.getApp(countryID[intCountry])
-            print(appData)
+            return appData
+            
    
     # def startTest(self,durationInput,canvas,values,currentCountry):
     # ##Calling the analysis function
@@ -238,10 +239,12 @@ class tkinterApp(tk.Tk):
         titleCanvas.create_text(200, 100, text="Please wait while we measure the idle power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
         self.update()
 
-        self.countdownFunction(canvas, countDown, True)
+        baseLine = self.countdownFunction(canvas, countDown, True)
         self.config(cursor="")
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-        canvas.create_text(200, 200, text="Open App then press Test App",font=('Arial Bold', 22),fill="black", justify="center")
+
+        baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
+        canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22),fill="black", justify="center")
         
 
     def measureApp(controller):
