@@ -10,6 +10,7 @@
         "id": "electricity-energy_source_grid_mix",
         "access_type": "public",
         "source": "AIB",
+        "source_dataset": "European Residual Mix",
         "year": "2022",
         "region": "IE",
         "category": "Electricity",

@@ -1,10 +1,11 @@
 # 'python3 -m pip install tkinter'
 # 'python3 -m pip install matplotlib'
-
+from tkinter import *
 import tkinter as tk
 from tkinter import ttk
 import backend_analysis
 import matplotlib.pyplot as plt
+import requests
 
 backgroundColour = '#DAEFD2'
 previousScreen = tk.Frame
@@ -26,7 +27,7 @@ class tkinterApp(tk.Tk):
         container.grid_columnconfigure(0, weight = 1)
         self.frames = {} 
 
-        for F in (StartPage, Page1, Page2, SettingsPage):
+        for F in (StartPage, Page1, Page2, SettingsPage, FeedbackPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
@@ -241,6 +242,12 @@ class StartPage(tk.Frame):
         singleButton.grid(row = 1, column = 1, sticky= tk.NW, padx = 10, pady = 0)
         settingsButton.place(x=875, y=500)
   
+        # User feedback button - brings user to another screen to give feedback
+        feedbackImage = tk.PhotoImage(file='App/images/GetFeedback.png')
+        feedbackImage = feedbackImage.subsample(3)
+        feedbackButton = tk.Button(self, text="Give Feedback", image=feedbackImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(FeedbackPage))
+        feedbackButton.place(x=750, y=500)
+        feedbackButton.image = feedbackImage
 
 class Page1(tk.Frame):
      
@@ -482,7 +489,61 @@ class SettingsPage(tk.Frame):
         polButton.grid(row = 4, column = 4,sticky=tk.NW, padx = 5, pady = 5)
 
         backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+
+class FeedbackPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent,background=backgroundColour)
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
+        returnButton.pack(side=TOP, anchor=NW)
         
+        # Function to send form data
+        def send_form_data():
+            # Get input values
+            name = name_entry.get()
+            email = email_entry.get()
+            message = message_entry.get("1.0", "end-1c")
+
+            # Create dictionary with form data
+            form_data = {
+                "name": name,
+                "email": email,
+                "message": message
+            }
+
+            # Send POST request to Getform API
+            response = requests.post("https://getform.io/f/da461dc3-8929-49bc-977b-03a9f84201a9", data=form_data)
+
+            # Show success message
+            success_label.config(text="Message sent successfully!")
+        # Create input fields
+        title_label = tk.Label(self, text="Give feedback on potential inaccuracies you found in the app!")
+        name_label = tk.Label(self, text="Name:")
+        name_entry = tk.Entry(self)
+
+        email_label = tk.Label(self, text="Email:")
+        email_entry = tk.Entry(self)
+
+        message_label = tk.Label(self, text="Message:")
+        message_entry = tk.Text(self)
+
+        # Create submit button
+        submit_button = tk.Button(self, text="Send Message", command=send_form_data)
+
+        # Create success label
+        success_label = tk.Label(self, fg="green")
+
+        title_label.pack()
+        name_label.pack()
+        name_entry.pack()
+
+        email_label.pack()
+        email_entry.pack()
+
+        message_label.pack()
+        message_entry.pack()
+
+        submit_button.pack(pady=10)
+        success_label.pack()      
 
 app = tkinterApp()
 app.resizable(False,False)
