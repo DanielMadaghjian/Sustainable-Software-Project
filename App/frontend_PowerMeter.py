@@ -116,7 +116,7 @@ class tkinterApp(tk.Tk):
             plt.plot(time, power,color='#516E4C')
             plt.show()
 
-    def getContinuousData(self,canvas,values,processorValuesImage):
+    def getContinuousData(self,canvas,values,powerBreakdownImage):
         global run
         run = True
         self.update()
@@ -124,54 +124,99 @@ class tkinterApp(tk.Tk):
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_text(200, 200, text='Calculating ... ', font=('Arial Bold', 40), fill="black", justify="center")
         canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
+    
         self.update()
         carbon = 0
         peakWatts = 0
-        averageWatts = 0
-        averageCarbon = 0
+        isRunning = True
+        totalCarbon = 0
+        carbonUnits = "mgCO₂eq"
+        introDisplay = 0        # Cycles through each datapoint giving info
+        cycleChange = 0
         while run:
-            self.update()
+            
+        
+
+            # self.update_idletasks()
+            # self.update()
             data = backend_analysis.dataAnalysis(2, countryID[intCountry])
-            averageWatts += data[0]
-            self.update()
+            # self.update()
             watt = data[0]
-            self.update()
-            carbon = (((data[1])/60)/12)*1000000
-            averageCarbon += carbon
+            # self.update()
+            # Note that data[1] is kgCO2eq/Wh
+            print(data[1])
+            if totalCarbon > 1000 :
+                carbonUnits = "gCO₂eq"
+                totalCarbon = totalCarbon / 1000
+            if carbonUnits == "gCO₂eq" :
+                carbon = (data[1]/60/60)*1000
+            else :
+                carbon = (data[1]/60/60)*1000*1000
+            totalCarbon = totalCarbon + carbon
             if (peakWatts<data[0]):
                 peakWatts = data[0]
-            self.update()
-            self.update()
+            # self.update()
+            # self.update()
+
+            if introDisplay != 7 :
+                cycleChange= cycleChange + 1
+                if cycleChange > 10 :
+                    cycleChange = 0
+                    introDisplay = introDisplay + 1
+
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-            canvas.create_text(200, 200, text=str(round(watt, 2)) + " W", font=('Arial Bold', 56), fill="black", justify="center")
-            self.update()
-            canvas.create_text(200, 245, text=str(round(carbon, 2)) + " mgCO₂", font=('Arial Light', 18), fill="gray", justify="center")
-            canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
-            self.update()
-            canvas.create_arc(5, 5, 395, 395, fill = "black",outline="black", style=tk.ARC, width=6, start=315, extent="270")
+            if introDisplay == 2 :
+                canvas.create_text(200, 155, text = "Power Use - " + str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
+            else :
+                canvas.create_text(200, 160, text = str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
+
+            if introDisplay == 4 :
+                canvas.create_text(200, 203, text="Carbon Produced Since Start", font=('Arial Bold', 19), fill='#93A78A', justify="center")
+            else :
+                canvas.create_text(200, 200, text=str(round(totalCarbon, 2)) + " " + carbonUnits, font=('Arial Bold', 32), fill='#93A78A', justify="center")
+
+            # self.update()
+            if introDisplay == 6 :
+                canvas.create_text(200, 257, text = "CO₂ Emission Factor -\n" + str(round(data[1]*1000, 2)) + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+            else :
+                canvas.create_text(200, 250, text = str(round(data[1]*1000, 2)) + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+            
+            # self.update()
+            canvas.create_arc(5, 5, 395, 395, fill = '#93A78A',outline='#93A78A', style=tk.ARC, width=6, start=315, extent="270")
             #arc is calculated by the current power against the peak watt
-            self.update()
-            peakArc = round(270-((watt/peakWatts)*270))
+            # self.update()
+
+            ###
+            
+            #       peakArc has no value!
+
+            ### 
+
+            peakArc = round(270-((0.5)*270))
             if (peakArc>270):
                 peakArc = 270
             canvas.create_arc(5, 5, 395, 395, fill = "white",outline="white", style=tk.ARC, width=8, start=315, extent=peakArc)
-            self.update()
-            values.create_image(10,10,anchor=tk.NW,image=processorValuesImage)
+            carbonImage = tk.PhotoImage(file='App/Carbon.png')
+            carbonImage = carbonImage.subsample(4)
+            canvas.image = carbonImage
+            canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
+            canvas.update()
+            # self.update()
+            values.create_image(200,50,image=powerBreakdownImage)
             if data[2] == 0:
-                values.create_text(110,69,text = "N/A",font =('Arial Light', 12),fill="black", justify="center")
+                values.create_text(95,65,text = "N/A",font =('Arial Light', 12),fill="black", justify="left")
             else:
-                values.create_text(110,69,text = str(round(data[2], 2)) + " W",font =('Arial Light', 10),fill="black", justify="center")
+                values.create_text(105,65,text = str(round(data[2], 2)) + " W",font =('Arial Light', 10),fill="black", justify="left")
+            # self.update()
+            values.create_text(105,33,text = str(round(data[3], 2)) + " W",font =('Arial Light', 10),fill="black", justify="left")
+            values.create_text(285,33,text = str(round(data[4], 2)) + " W",font =('Arial Light', 10),fill="black", justify="left")
+            values.create_text(295,67,text = str(round((data[2]+data[3]+data[4]), 2)) + " W",font =('Arial Bold', 10),fill="black", justify="left")
             self.update()
-            values.create_text(110,47,text = str(round(data[3], 2)) + " W",font =('Arial Light', 10),fill="black", justify="center")
-            values.create_text(110,92,text = str(round(data[4], 2)) + " W",font =('Arial Light', 10),fill="black", justify="center")
-            self.update()
-        averageWatts /= (data[5]/2)
-        averageCarbon /= (data[5]/2)
-        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-        canvas.create_text(200, 160, text="Average Power", font=('Arial Bold', 24), fill="black", justify="center")
-        canvas.create_text(200, 200, text=str(round(averageWatts, 2)) + " W", font=('Arial Bold', 56), fill="black", justify="center")
-        canvas.create_text(200, 240, text="Average Carbon", font=('Arial Light', 18), fill="gray", justify="center")
-        canvas.create_text(200, 270, text=str(round(carbon, 2)) + " mgCO₂", font=('Arial Light', 28), fill="gray", justify="center")
+        isRunning = False
+    def stop(self):
+        global run
+        run = False
+
 
     def stop(self):
         global run
