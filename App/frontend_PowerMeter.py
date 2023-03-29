@@ -330,26 +330,29 @@ class IndividualMeasurmentPage(tk.Frame):
         returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(HomePage))
         returnButton.image = returnImage
 
+        titleCanvas = tk.Canvas(self, background=backgroundColour, height=200, width=400, highlightthickness=0)
+        titleLabel = tk.Label(self, background=backgroundColour, text="App Power Usage",font=('Arial Bold', 32))
+        infoLabel = tk.Label(self,background=backgroundColour, text="Measure the idle energy use of your device with the\nmeasure baseline function while no applications are\nopen and then test the app for statistics.", font=('Arial Light', 15))
+
+
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-        canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
-        canvas.create_text(200, 180, text='Intructions', font=('Arial Bold', 40), fill="black", justify="center")
-        canvas.create_text(200, 220, text="1. Close All Unnecessary Applications", font=('Arial Light', 18), fill="gray", justify="center")
-        canvas.create_text(200, 245, text="1. Press 'Get Baseline'", font=('Arial Light', 18), fill="gray", justify="center")
-        canvas.create_text(200, 270, text="2. Open App to Measure", font=('Arial Light', 18), fill="gray", justify="center")
-        canvas.create_text(200, 295, text="3. Press 'Test App'", font=('Arial Light', 18), fill="gray", justify="center")
+        canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
+        carbonImage = tk.PhotoImage(file='App/Carbon.png')
+        carbonImage = carbonImage.subsample(6)
+        canvas.image = carbonImage
+        canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
+        #canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
+        canvas.update()
 
-        titleCanvas = tk.Canvas(self, background=backgroundColour, height=200, width=400, highlightthickness=0)
-        titleLabel = titleCanvas.create_text(170, 50, text="App Power Usage", font=('Arial Bold', 32), fill="black", justify="center")
-        infoLabel = titleCanvas.create_text(200,100, text="Measure the idle energy use of your device with\nthe'Get Baseline' function, while no applications\nare open, then 'Test App' function for statistics.", font=('Arial Light', 15), fill="black", justify="center")        
-        
+          
+        infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
+        titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
         baselineButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
         appTestButton.grid(row = 2, column = 1, sticky = tk.W, padx = (20,0), pady = 2)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
-        titleCanvas.grid(row= 1, column= 0,columnspan = 2, rowspan = 1, padx=20)
-          
 
 class IndividualResultsPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -423,9 +426,9 @@ class AppTesting(tk.Frame):
         canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
         #canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
 
-        infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
-        titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
-        #stopButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
+        #infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
+        #titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
+        
         startButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
