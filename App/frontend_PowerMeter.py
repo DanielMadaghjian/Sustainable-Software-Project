@@ -243,7 +243,7 @@ class StartPage(tk.Frame):
         settingsButton.place(x=875, y=500)
   
         # User feedback button - brings user to another screen to give feedback
-        feedbackImage = tk.PhotoImage(file='App/images/GetFeedback.png')
+        feedbackImage = tk.PhotoImage(file='App/images/Feedback.png')
         feedbackImage = feedbackImage.subsample(3)
         feedbackButton = tk.Button(self, text="Give Feedback", image=feedbackImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(FeedbackPage))
         feedbackButton.place(x=750, y=500)
