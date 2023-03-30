@@ -230,21 +230,36 @@ class tkinterApp(tk.Tk):
         controller.show_frame(HomePage)
     
 
-    def baselineCountdown(self, canvas, titleCanvas):
-        global checkBaseline
-        checkBaseline = True
+    def baselineCountdown(self, canvas, titleCanvas, isApp):
         countDown = 10
-        titleCanvas.create_rectangle(0,0,500,700, fill=backgroundColour, outline=backgroundColour)
-        titleCanvas.create_text(130, 50, text="Measuring ...",font=('Arial Bold', 32),fill="black", justify="center")
-        titleCanvas.create_text(200, 100, text="Please wait while we measure the idle power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
-        self.update()
+        
+        if isApp:
+            global checkBaseline
+            checkBaseline = True
+            titleCanvas.create_rectangle(0,0,500,700, fill=backgroundColour, outline=backgroundColour)
+            titleCanvas.create_text(130, 50, text="Measuring ...",font=('Arial Bold', 32),fill="black", justify="center")
+            titleCanvas.create_text(200, 100, text="Please wait while we measure the idle power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
+            self.update()
 
-        baseLine = self.countdownFunction(canvas, countDown, True)
-        self.config(cursor="")
-        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+            baseLine = self.countdownFunction(canvas, countDown, True)
+            self.config(cursor="")
+            canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
 
-        baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
-        canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22),fill="black", justify="center")
+            baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
+            canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22),fill="black", justify="center")
+        else:
+            titleCanvas.create_rectangle(0,0,500,700, fill=backgroundColour, outline=backgroundColour)
+            titleCanvas.create_text(130, 50, text="Measuring ...",font=('Arial Bold', 32),fill="black", justify="center")
+            titleCanvas.create_text(200, 100, text="Please wait while we measure the Apps power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
+            self.update()
+
+            baseLine = self.countdownFunction(canvas, countDown, False)
+            self.config(cursor="")
+            canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+
+            baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
+            canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22),fill="black", justify="center")
+
         
 
     def measureApp(controller):
@@ -396,12 +411,12 @@ class IndividualMeasurmentPage(tk.Frame):
         baselineImage = tk.PhotoImage(file='App/Baseline.png')
         baselineImage = baselineImage.subsample(2)
         baselineButton = tk.Button(self,text="Start", image = baselineImage, height = 150, width = 150, borderwidth = 0, 
-                                 command = lambda : controller.baselineCountdown(canvas, titleCanvas))
+                                 command = lambda : controller.baselineCountdown(canvas, titleCanvas, True))
         baselineButton.image = baselineImage
 
         appTestImage = tk.PhotoImage(file='App/AppTest.png')
         appTestImage = appTestImage.subsample(2)
-        appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.measureApp())
+        appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.baselineCountdown(canvas, titleCanvas, False))
         appTestButton.image = appTestImage
 
         returnImage = tk.PhotoImage(file='App/Return.png')
@@ -474,9 +489,7 @@ class AppTesting(tk.Frame):
         settingsButton.image = settingsImage
 
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
-        titleLabel = ttk.Label(self, text="Measuring...",style= 'Test.TLabel',font=('Arial Bold', 32), padding=(0,22,0,0))
-        infoLabel = ttk.Label(self, text="Please wait while we measure the idle power use of\nyour device. Please ensure that you keep all other\napps closed until this test completes.", font=('Arial Light', 15), style= 'Test.TLabel')
-
+        
         ##stopImage = tk.PhotoImage(file='App/Stop.png')
         ##stopImage = stopImage.subsample(2)
         ##stopButton = tk.Button(self,text="Start", image = stopImage, height = 150, width = 150, borderwidth = 0, 

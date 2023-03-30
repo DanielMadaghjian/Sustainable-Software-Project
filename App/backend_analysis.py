@@ -79,7 +79,8 @@ def getApp(region):
   cpuBaseLine.clear()
   ramBaseLine.clear()
 
-  return appData
+  return appData + baseLineData, data2
+  
 
 def dataGathering():
   currentData = backend_getData.fetch_dict()
