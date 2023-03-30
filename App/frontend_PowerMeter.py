@@ -29,15 +29,13 @@ class tkinterApp(tk.Tk):
         container.grid_columnconfigure(0, weight = 1)
         self.frames = {} 
 
-
-        for F in (HomePage, ContinuousPowerUsagePage, IndividualMeasurmentPage, AppTesting, IndividualResultsPage ,SettingsPage):
+        for F in (StartPage, Page1, Page2, SettingsPage, FeedbackPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
   
-        self.show_frame(HomePage)
+        self.show_frame(StartPage)
   
-
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
@@ -91,18 +89,19 @@ class tkinterApp(tk.Tk):
         
     def settingsStart(self,controller):
         global previousScreen
-        previousScreen = HomePage
+        previousScreen = StartPage
         controller.show_frame(SettingsPage)
 
     def settingsPage1(self,controller):
         global previousScreen
-        previousScreen = ContinuousPowerUsagePage
+        previousScreen = Page1
         controller.show_frame(SettingsPage)
 
     def settingsPage2(self,controller):
         global previousScreen
-        previousScreen = IndividualMeasurmentPage
+        previousScreen = Page2
         controller.show_frame(SettingsPage)
+    
 
     def graphToDisplay(self,data):
         time = []
@@ -118,8 +117,9 @@ class tkinterApp(tk.Tk):
                 time.append(i)
             plt.plot(time, power,color='#516E4C')
             plt.show()
-
+    
     def getContinuousData(self,canvas,values,powerBreakdownImage):
+        
         global run
         run = True
         self.update()
@@ -228,7 +228,7 @@ class tkinterApp(tk.Tk):
     def stopRun(controller):
         global run
         run = False
-        controller.show_frame(HomePage)
+        controller.show_frame(StartPage)
     
 
     def baselineCountdown(self, canvas, titleCanvas, isApp):
@@ -272,7 +272,7 @@ class tkinterApp(tk.Tk):
     def startCountdown(canvas):
         print("timer")
 
-class HomePage(tk.Frame):
+class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         backgroundColour = '#DAEFD2'
         tk.Frame.__init__(self, parent, background=backgroundColour)
@@ -282,13 +282,13 @@ class HomePage(tk.Frame):
         overallImage = tk.PhotoImage(file='App/images/OverallUsage.png')
         overallImage = overallImage.subsample(4)
         overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 148, width = 382, borderwidth = 0, 
-                                 command = lambda : controller.show_frame(ContinuousPowerUsagePage))
+                                 command = lambda : controller.show_frame(Page1))
         overallButton.image = overallImage
 
         singleImage = tk.PhotoImage(file='App/images/SingleApp.png')
         singleImage = singleImage.subsample(4)
         singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 148, width = 382, borderwidth = 0, 
-                                 command = lambda : controller.show_frame(IndividualMeasurmentPage))
+                                 command = lambda : controller.show_frame(Page2))
         singleButton.image = singleImage
 
         bannerImage = tk.PhotoImage(file='App/images/TrinityCisco.png')
@@ -315,9 +315,8 @@ class HomePage(tk.Frame):
         feedbackButton = tk.Button(self, text="Give Feedback", image=feedbackImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(FeedbackPage))
         feedbackButton.place(x=750, y=500)
         feedbackButton.image = feedbackImage
-  
 
-class ContinuousPowerUsagePage(tk.Frame):
+class Page1(tk.Frame):
      
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
@@ -345,7 +344,7 @@ class ContinuousPowerUsagePage(tk.Frame):
         backImage = tk.PhotoImage(file='App/images/Return.png')
         backImage = backImage.subsample(2)
         backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.show_frame(HomePage))
+                                   command = lambda : controller.show_frame(StartPage))
         backButton.image = backImage
 
         startImage = tk.PhotoImage(file='App/images/Start.png')
@@ -392,8 +391,7 @@ class ContinuousPowerUsagePage(tk.Frame):
         values.place(x=75,y=370, width=400, height=100)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
   
-  
-class IndividualMeasurmentPage(tk.Frame):
+class Page2(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
 
@@ -422,7 +420,7 @@ class IndividualMeasurmentPage(tk.Frame):
 
         returnImage = tk.PhotoImage(file='App/images/Return.png')
         returnImage = returnImage.subsample(2)
-        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(HomePage))
+        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(StartPage))
         returnButton.image = returnImage
 
         titleCanvas = tk.Canvas(self, background=backgroundColour, height=200, width=400, highlightthickness=0)
@@ -505,7 +503,7 @@ class AppTesting(tk.Frame):
 
         returnImage = tk.PhotoImage(file='App/images/Return.png')
         returnImage = returnImage.subsample(2)
-        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(IndividualMeasurmentPage))
+        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(Page2))
         returnButton.image = returnImage
 
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
@@ -537,13 +535,15 @@ class SettingsPage(tk.Frame):
             countryLabel.update
             controller.updateCountry(i)
 
-        returnImage = tk.PhotoImage(file='App/images/Return.png')
-        returnImage = returnImage.subsample(2)
-        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(previousScreen))      
-        returnButton.image = returnImage  
-        
-        currentLabel = tk.Label(self, text="Current Country : ", font=('Arial Bold', 24),background=backgroundColour, foreground="black")
-        countryLabel = tk.Label(self, text="Ireland", font=('Arial Light', 24),background=backgroundColour, foreground="grey")
+        backImage = tk.PhotoImage(file='App/images/Return.png')
+        backImage = backImage.subsample(2)
+        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0,
+                                   command = lambda : controller.show_frame(StartPage))
+        backButton.image = backImage
+
+        currentLabel = ttk.Label(self, text="Current Country: ", font=('Arial Light', 24), style= 'Test.TLabel')
+        countryLabel = ttk.Label(self, text="Ireland", font=('Arial Light', 24), style= 'Test.TLabel')
+        selectLabel = ttk.Label(self, text="Select a country: ",font=('Arial Light', 18), style= 'Test.TLabel')
 
         irlImage = tk.PhotoImage(file='App/images/flagIreland.png')
         irlImage = irlImage.subsample(1)
@@ -611,27 +611,39 @@ class SettingsPage(tk.Frame):
                               command = lambda : changeRegion(10,gerButton["text"]))
         gerButton.image = gerImage
 
-        currentLabel.grid(row = 0, column = 1)
-        countryLabel.grid(row = 0, column = 1, columnspan=3)
-        irlButton.grid(row = 1, column = 0,sticky=tk.NE, padx = 50, pady = 20, )
-        fraButton.grid(row = 1, column = 1, sticky=tk.N,padx = 50, pady = 20)
-        ukButton.grid(row = 1, column = 2,sticky=tk.N, padx = 50, pady = 20)
-        rusButton.grid(row = 1, column = 3,sticky=tk.NW, padx = 30, pady = 20)
-        ausButton.grid(row = 2, column = 0,sticky=tk.NS, padx = 50, pady = 20)
-        braButton.grid(row = 2, column = 1,sticky=tk.NS, padx = 50, pady = 20)
-        nzButton.grid(row = 2, column = 2,sticky=tk.NS, padx = 50, pady = 20)
-        spaButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 30, pady = 20)
-        porButton.grid(row = 3, column = 0, padx = 50, pady = 20)
-        itaButton.grid(row = 3, column = 1, padx = 50, pady = 20)
-        gerButton.grid(row = 3, column = 2,padx = 30, pady = 20)
+        polImage = tk.PhotoImage(file='App/images/flagPoland.png')
+        polImage = polImage.subsample(1)
+        polButton = tk.Button(self, text ="Poland",image = polImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
+                              command = lambda : changeRegion(11,polButton["text"]))
+        polButton.image = polImage
 
-        returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+        currentLabel.place(x = 300, y = 20)
+        countryLabel.place(x = 550, y = 20)
+
+        #currentLabel.grid(row = 0, column = 2, sticky=tk.NW, padx = 5, pady = 5)
+        #countryLabel.grid(row = 0, column = 3, sticky=tk.NW, padx = 5, pady = 5)
+        selectLabel.grid(row = 1, column = 0, stick = tk.NW, padx = 5, pady = 30)
+
+        irlButton.grid(row = 2, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        fraButton.grid(row = 2, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        ukButton.grid(row = 2, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        rusButton.grid(row = 2, column = 4,sticky=tk.NW, padx = 5, pady = 5)
+        ausButton.grid(row = 3, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        braButton.grid(row = 3, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        nzButton.grid(row = 3, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        spaButton.grid(row = 3, column = 4,sticky=tk.NW, padx = 5, pady = 5)
+        porButton.grid(row = 4, column = 1,sticky=tk.NW, padx = 5, pady = 5)
+        itaButton.grid(row = 4, column = 2,sticky=tk.NW, padx = 5, pady = 5)
+        gerButton.grid(row = 4, column = 3,sticky=tk.NW, padx = 5, pady = 5)
+        polButton.grid(row = 4, column = 4,sticky=tk.NW, padx = 5, pady = 5)
+
+        backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
 
 class FeedbackPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
-        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(HomePage))
-        returnButton.pack(side='top', anchor='nw')
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
+        returnButton.pack(side=TOP, anchor=NW)
         
         # Function to send form data
         def send_form_data():
@@ -682,9 +694,8 @@ class FeedbackPage(tk.Frame):
         submit_button.pack(pady=10)
         success_label.pack()      
 
-        
-
 app = tkinterApp()
 app.resizable(False,False)
-app.title("Sustainable Software")
+app.title("ecoCheck")
+app.iconphoto(False,tk.PhotoImage(file='App/images/ecoCheck.png')) #ecoCheck.png?
 app.mainloop()
