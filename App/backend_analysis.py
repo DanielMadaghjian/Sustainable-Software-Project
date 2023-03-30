@@ -6,6 +6,11 @@ import json
 
 graphList = []
 
+baseLineData = []
+gpuBaseLine = []
+cpuBaseLine = []
+ramBaseLine = []
+
 # Method that calculates the average power 
 def getPower(gpuList, cpuList, ramList):
   gpuAverage = mean(gpuList)
@@ -33,6 +38,58 @@ def getCarbon(region):#add a country here
   emission = carbon.get("co2e")
   #print(emission)
   return emission
+
+
+def getBaseLine(region):
+  baseLineData.clear()
+  power = getPower(gpuBaseLine, cpuBaseLine, ramBaseLine)
+  emission = getCarbon(region) * power
+
+  baseLineData.append(power)
+  baseLineData.append(emission)
+  baseLineData.append(mean(gpuBaseLine)) # adds gpu value (position 2)
+  baseLineData.append(mean(cpuBaseLine)) # adds cpu value (position 3)
+  baseLineData.append(mean(ramBaseLine)) # adds gpu value (position 4)
+  gpuBaseLine.clear()
+  cpuBaseLine.clear()
+  ramBaseLine.clear()
+
+  return baseLineData
+  
+def getApp(region):
+
+  data2 = []
+  power = getPower(gpuBaseLine, cpuBaseLine, ramBaseLine)
+  emission = getCarbon(region) * power
+
+  data2.append(power)
+  data2.append(emission)
+  data2.append(mean(gpuBaseLine)) # adds gpu value (position 2)
+  data2.append(mean(cpuBaseLine)) # adds cpu value (position 3)
+  data2.append(mean(ramBaseLine)) # adds gpu value (position 4)
+
+  appData = []
+  appData.append(data2[0]- baseLineData[0]) ## overall power for the app
+  appData.append(data2[1]-baseLineData[1]) ## emissions
+  appData.append(data2[2]-baseLineData[2]) ## gpu
+  appData.append(data2[3]- baseLineData[3]) ## cpu
+  appData.append(data2[4]-baseLineData[4]) ## ram
+
+  gpuBaseLine.clear()
+  cpuBaseLine.clear()
+  ramBaseLine.clear()
+
+  return appData, baseLineData, data2
+  
+
+def dataGathering():
+  currentData = backend_getData.fetch_dict()
+  gpuBaseLine.append(currentData.get("gpu usage"))
+  cpuBaseLine.append(currentData.get("cpu usage"))
+  ramBaseLine.append(currentData.get("ram usage"))
+
+
+
 
 # Method that collects the raw data and filters it
 def dataAnalysis(t, country):#add a country here
