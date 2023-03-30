@@ -79,7 +79,7 @@ def getApp(region):
   cpuBaseLine.clear()
   ramBaseLine.clear()
 
-  return appData + baseLineData, data2
+  return appData, baseLineData, data2
   
 
 def dataGathering():

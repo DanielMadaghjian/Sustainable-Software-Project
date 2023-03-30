@@ -60,7 +60,7 @@ class tkinterApp(tk.Tk):
             baseLine = backend_analysis.getBaseLine(countryID[intCountry])
             return baseLine
         else:
-            appData = backend_analysis.getApp(countryID[intCountry])
+            appData, baseLineData, oData = backend_analysis.getApp(countryID[intCountry])
             return appData
             
    
