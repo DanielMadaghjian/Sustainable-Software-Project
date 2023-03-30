@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import requests
 import time
 
+
 backgroundColour = '#DAEFD2'
 previousScreen = tk.Frame
 
@@ -198,7 +199,7 @@ class tkinterApp(tk.Tk):
             if (peakArc>270):
                 peakArc = 270
             canvas.create_arc(5, 5, 395, 395, fill = "white",outline="white", style=tk.ARC, width=8, start=315, extent=peakArc)
-            carbonImage = tk.PhotoImage(file='App/Carbon.png')
+            carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
             carbonImage = carbonImage.subsample(4)
             canvas.image = carbonImage
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
@@ -278,24 +279,24 @@ class HomePage(tk.Frame):
 
         titleLabel = ttk.Label(self, text="Sustainable Software",style= 'Test.TLabel',font=('Arial Bold', 28))
 
-        overallImage = tk.PhotoImage(file='App/OverallUsage.png')
+        overallImage = tk.PhotoImage(file='App/images/OverallUsage.png')
         overallImage = overallImage.subsample(4)
         overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 148, width = 382, borderwidth = 0, 
                                  command = lambda : controller.show_frame(ContinuousPowerUsagePage))
         overallButton.image = overallImage
 
-        singleImage = tk.PhotoImage(file='App/SingleApp.png')
+        singleImage = tk.PhotoImage(file='App/images/SingleApp.png')
         singleImage = singleImage.subsample(4)
         singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 148, width = 382, borderwidth = 0, 
                                  command = lambda : controller.show_frame(IndividualMeasurmentPage))
         singleButton.image = singleImage
 
-        bannerImage = tk.PhotoImage(file='App/TrinityCisco.png')
+        bannerImage = tk.PhotoImage(file='App/images/TrinityCisco.png')
         bannerImage = bannerImage.subsample(4)
         bannerLabel = ttk.Label(self, image=bannerImage, border=0)
         bannerLabel.image = bannerImage
 
-        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
                                    command = lambda : controller.settingsStart(controller))
@@ -309,7 +310,7 @@ class HomePage(tk.Frame):
         settingsButton.place(x=875, y=500)
   
         # User feedback button - brings user to another screen to give feedback
-        feedbackImage = tk.PhotoImage(file='App/Feedback.png')
+        feedbackImage = tk.PhotoImage(file='App/images/Feedback.png')
         feedbackImage = feedbackImage.subsample(3)
         feedbackButton = tk.Button(self, text="Give Feedback", image=feedbackImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(FeedbackPage))
         feedbackButton.place(x=750, y=500)
@@ -321,9 +322,9 @@ class ContinuousPowerUsagePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
 
-        stopImage = tk.PhotoImage(file='App/Stop.png')
+        stopImage = tk.PhotoImage(file='App/images/Stop.png')
         stopImage = stopImage.subsample(2)
-        startImage = tk.PhotoImage(file='App/Start.png')
+        startImage = tk.PhotoImage(file='App/images/Start.png')
         startImage = startImage.subsample(2)
 
         def toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage):
@@ -341,13 +342,13 @@ class ContinuousPowerUsagePage(tk.Frame):
         durationLabel = tk.Label(self, text="Measuring Live Data" , font=('Arial Light', 18), bg=backgroundColour, fg="black")
         titleLabel = tk.Label(self, text="Overall Power Usage", font=('Arial Bold', 32), bg=backgroundColour, fg="black")
 
-        backImage = tk.PhotoImage(file='App/Return.png')
+        backImage = tk.PhotoImage(file='App/images/Return.png')
         backImage = backImage.subsample(2)
         backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, 
                                    command = lambda : controller.show_frame(HomePage))
         backButton.image = backImage
 
-        startImage = tk.PhotoImage(file='App/Start.png')
+        startImage = tk.PhotoImage(file='App/images/Start.png')
         startImage = startImage.subsample(2)
         toggleButton = tk.Button(self, text="Start", image=startImage, height = 150, width = 150, borderwidth=0,command = lambda : toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage))
         
@@ -355,18 +356,18 @@ class ContinuousPowerUsagePage(tk.Frame):
 
 
 
-        graphImage = tk.PhotoImage(file='App/Graph.png')
+        graphImage = tk.PhotoImage(file='App/images/Graph.png')
         graphImage = graphImage.subsample(2)
         graphButton = tk.Button(self, text="View Graph", image=graphImage, height = 150, width = 150, borderwidth=0,command = lambda : controller.graphToDisplay(data))
         graphButton.image = graphImage
 
-        powerBreakdownImage = tk.PhotoImage(file='App/PowerBreakdown.png')
+        powerBreakdownImage = tk.PhotoImage(file='App/images/PowerBreakdown.png')
         powerBreakdownImage = powerBreakdownImage.subsample(2)
         values = tk.Canvas(self, background=backgroundColour,height=100, width=250, highlightthickness=0)
         # values.create_image(200,50,image=powerBreakdownImage)
         # values.create_text(295,67,text = "Start Test",font =('Arial Bold', 10),fill="black", justify="left")
 
-        # settingsImage = tk.PhotoImage(file='App/images/Settings.png')
+        # settingsImage = tk.PhotoImage(file='App/images/images/Settings.png')
         # settingsImage = settingsImage.subsample(3)
         # settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsPage1(controller))
 
@@ -374,7 +375,7 @@ class ContinuousPowerUsagePage(tk.Frame):
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
         canvas.create_text(200, 182, text="CARBON", font=('Arial', 22), fill='#A3B59C', justify="center")
-        carbonImage = tk.PhotoImage(file='App/Carbon.png')
+        carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(4)
         canvas.image = carbonImage
         canvas.create_image(200,240,anchor=tk.S,image=carbonImage)
@@ -402,24 +403,24 @@ class IndividualMeasurmentPage(tk.Frame):
 
         # startCountdown()
 
-        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
                                    command = lambda : controller.settingsPage2(controller))
         settingsButton.image = settingsImage
 
-        baselineImage = tk.PhotoImage(file='App/Baseline.png')
+        baselineImage = tk.PhotoImage(file='App/images/Baseline.png')
         baselineImage = baselineImage.subsample(2)
         baselineButton = tk.Button(self,text="Start", image = baselineImage, height = 150, width = 150, borderwidth = 0, 
                                  command = lambda : controller.baselineCountdown(canvas, titleCanvas, True))
         baselineButton.image = baselineImage
 
-        appTestImage = tk.PhotoImage(file='App/AppTest.png')
+        appTestImage = tk.PhotoImage(file='App/images/AppTest.png')
         appTestImage = appTestImage.subsample(2)
         appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.baselineCountdown(canvas, titleCanvas, False))
         appTestButton.image = appTestImage
 
-        returnImage = tk.PhotoImage(file='App/Return.png')
+        returnImage = tk.PhotoImage(file='App/images/Return.png')
         returnImage = returnImage.subsample(2)
         returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(HomePage))
         returnButton.image = returnImage
@@ -432,7 +433,7 @@ class IndividualMeasurmentPage(tk.Frame):
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
-        carbonImage = tk.PhotoImage(file='App/Carbon.png')
+        carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(6)
         canvas.image = carbonImage
         canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
@@ -452,7 +453,7 @@ class IndividualResultsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
 
-        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
                                    command = lambda : controller.settingsAppTestHome(controller))
@@ -465,7 +466,7 @@ class IndividualResultsPage(tk.Frame):
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
 
-        carbonImage = tk.PhotoImage(file='App/Carbon.png')
+        carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(6)
         canvas.image = carbonImage
         canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
@@ -482,7 +483,7 @@ class AppTesting(tk.Frame):
         #countdownDisplay = "0:00"
         countDown = 10
 
-        settingsImage = tk.PhotoImage(file='App/Settings.png')
+        settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
         settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
                                    command = lambda : controller.settingsAppTestHome(controller))
@@ -490,19 +491,19 @@ class AppTesting(tk.Frame):
 
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         
-        ##stopImage = tk.PhotoImage(file='App/Stop.png')
+        ##stopImage = tk.PhotoImage(file='App/images/Stop.png')
         ##stopImage = stopImage.subsample(2)
         ##stopButton = tk.Button(self,text="Start", image = stopImage, height = 150, width = 150, borderwidth = 0, 
         ##                         command = lambda : controller.show_frame(IndividualResultsPage))
         ##stopButton.image = stopImage
 
-        startImage = tk.PhotoImage(file='App/AppTest.png')
+        startImage = tk.PhotoImage(file='App/images/AppTest.png')
         startImage = startImage.subsample(2)
         startButton = tk.Button(self,text="Start", image = startImage, height = 150, width = 150, borderwidth = 0, 
                                  command = lambda : controller.countdownFunction(canvas, countDown, False))
         startButton.image = startImage
 
-        returnImage = tk.PhotoImage(file='App/Return.png')
+        returnImage = tk.PhotoImage(file='App/images/Return.png')
         returnImage = returnImage.subsample(2)
         returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(IndividualMeasurmentPage))
         returnButton.image = returnImage
@@ -512,7 +513,7 @@ class AppTesting(tk.Frame):
         
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
 
-        carbonImage = tk.PhotoImage(file='App/Carbon.png')
+        carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(6)
         canvas.image = carbonImage
         canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
@@ -536,7 +537,7 @@ class SettingsPage(tk.Frame):
             countryLabel.update
             controller.updateCountry(i)
 
-        returnImage = tk.PhotoImage(file='App/Return.png')
+        returnImage = tk.PhotoImage(file='App/images/Return.png')
         returnImage = returnImage.subsample(2)
         returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(previousScreen))      
         returnButton.image = returnImage  
@@ -544,67 +545,67 @@ class SettingsPage(tk.Frame):
         currentLabel = tk.Label(self, text="Current Country : ", font=('Arial Bold', 24),background=backgroundColour, foreground="black")
         countryLabel = tk.Label(self, text="Ireland", font=('Arial Light', 24),background=backgroundColour, foreground="grey")
 
-        irlImage = tk.PhotoImage(file='App/flagIreland.png')
+        irlImage = tk.PhotoImage(file='App/images/flagIreland.png')
         irlImage = irlImage.subsample(1)
         irlButton = tk.Button(self, text ="Ireland",image = irlImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                                command = lambda : changeRegion(0, irlButton["text"]))
         irlButton.image = irlImage
 
-        fraImage = tk.PhotoImage(file='App/flagFrance.png')
+        fraImage = tk.PhotoImage(file='App/images/flagFrance.png')
         fraImage = fraImage.subsample(1)
         fraButton = tk.Button(self, text ="France",image = fraImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(1,fraButton["text"]))
         fraButton.image = fraImage
 
-        ukImage = tk.PhotoImage(file='App/flagUK.png')
+        ukImage = tk.PhotoImage(file='App/images/flagUK.png')
         ukImage = ukImage.subsample(1)
         ukButton = tk.Button(self, text ="United Kingdom",image = ukImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(2,ukButton["text"]))
         ukButton.image = ukImage
 
-        rusImage = tk.PhotoImage(file='App/flagRussia.png')
+        rusImage = tk.PhotoImage(file='App/images/flagRussia.png')
         rusImage = rusImage.subsample(1)
         rusButton = tk.Button(self, text ="Russia",image = rusImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(3,rusButton["text"]))
         rusButton.image = rusImage
 
-        ausImage = tk.PhotoImage(file='App/flagAustralia.png')
+        ausImage = tk.PhotoImage(file='App/images/flagAustralia.png')
         ausImage = ausImage.subsample(1)
         ausButton = tk.Button(self, text ="Australia",image = ausImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(4,ausButton["text"]))
         ausButton.image = ausImage
 
-        braImage = tk.PhotoImage(file='App/flagBrazil.png')
+        braImage = tk.PhotoImage(file='App/images/flagBrazil.png')
         braImage = braImage.subsample(1)
         braButton = tk.Button(self, text ="Brazil",image = braImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(5,braButton["text"]))
         braButton.image = braImage
 
-        nzImage = tk.PhotoImage(file='App/flagNewZealand.png')
+        nzImage = tk.PhotoImage(file='App/images/flagNewZealand.png')
         nzImage = nzImage.subsample(1)
         nzButton = tk.Button(self, text ="New Zealand",image = nzImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(6,nzButton["text"]))
         nzButton.image = nzImage
 
-        spaImage = tk.PhotoImage(file='App/flagSpain.png')
+        spaImage = tk.PhotoImage(file='App/images/flagSpain.png')
         spaImage = spaImage.subsample(1)
         spaButton = tk.Button(self, text ="Spain",image = spaImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(7,spaButton["text"]))
         spaButton.image = spaImage
 
-        porImage = tk.PhotoImage(file='App/flagPortugal.png')
+        porImage = tk.PhotoImage(file='App/images/flagPortugal.png')
         porImage = porImage.subsample(1)
         porButton = tk.Button(self, text ="Portugal",image = porImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(8,porButton["text"]))
         porButton.image = porImage
 
-        itaImage = tk.PhotoImage(file='App/flagItaly.png')
+        itaImage = tk.PhotoImage(file='App/images/flagItaly.png')
         itaImage = itaImage.subsample(1)
         itaButton = tk.Button(self, text ="Italy",image = itaImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(9,itaButton["text"]))
         itaButton.image = itaImage
 
-        gerImage = tk.PhotoImage(file='App/flagGermany.png')
+        gerImage = tk.PhotoImage(file='App/images/flagGermany.png')
         gerImage = gerImage.subsample(1)
         gerButton = tk.Button(self, text ="Germany",image = gerImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
                               command = lambda : changeRegion(10,gerButton["text"]))
