@@ -483,7 +483,7 @@ class AppTesting(tk.Frame):
         ##                         command = lambda : controller.show_frame(IndividualResultsPage))
         ##stopButton.image = stopImage
 
-        startImage = tk.PhotoImage(file='App/CUStart.png')
+        startImage = tk.PhotoImage(file='App/AppTest.png')
         startImage = startImage.subsample(2)
         startButton = tk.Button(self,text="Start", image = startImage, height = 150, width = 150, borderwidth = 0, 
                                  command = lambda : controller.countdownFunction(canvas, countDown, False))
