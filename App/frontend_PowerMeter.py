@@ -148,16 +148,23 @@ class tkinterApp(tk.Tk):
             # self.update()
             # Note that data[1] is kgCO2eq/Wh
             print(data[1])
-            if totalCarbon > 1000 :
-                carbonUnits = "gCO₂eq"
-                totalCarbon = totalCarbon / 1000
-            if carbonUnits == "gCO₂eq" :
-                carbon = (data[1]/60/60)*1000
-            else :
-                carbon = (data[1]/60/60)*1000*1000
-            totalCarbon = totalCarbon + carbon
-            if (peakWatts<data[0]):
-                peakWatts = data[0]
+            if isinstance(data[1], float):
+
+                if totalCarbon > 1000 :
+                    carbonUnits = "gCO₂eq"
+                    totalCarbon = totalCarbon / 1000
+                if carbonUnits == "gCO₂eq" :
+                    carbon = (data[1]/60/60)*1000
+                else :
+                    carbon = (data[1]/60/60)*1000*1000
+                totalCarbon = totalCarbon + carbon
+                if (peakWatts<data[0]):
+                    peakWatts = data[0]
+
+                carbonText = str(round(data[1]*1000, 2))
+            else:
+                totalCarbon = 0
+                carbonText = "Can't Connect To API"
             # self.update()
             # self.update()
 
@@ -180,9 +187,9 @@ class tkinterApp(tk.Tk):
 
             # self.update()
             if introDisplay == 6 :
-                canvas.create_text(200, 257, text = "CO₂ Emission Factor -\n" + str(round(data[1]*1000, 2)) + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+                canvas.create_text(200, 257, text = "CO₂ Emission Factor -\n" + carbonText + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
             else :
-                canvas.create_text(200, 250, text = str(round(data[1]*1000, 2)) + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+                canvas.create_text(200, 250, text = carbonText + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
             
             # self.update()
             canvas.create_arc(5, 5, 395, 395, fill = '#93A78A',outline='#93A78A', style=tk.ARC, width=6, start=315, extent="270")
@@ -338,13 +345,19 @@ class Page1(tk.Frame):
                 
                 controller.getContinuousData(canvas,values,powerBreakdownImage)
 
+        def backToStartPage(controller):
+            toggleButton.configure(text="Not Running")
+            toggleButton["image"] = startImage
+            controller.stop()
+            controller.show_frame(StartPage)
+
         durationLabel = tk.Label(self, text="Measuring Live Data" , font=('Arial Light', 18), bg=backgroundColour, fg="black")
         titleLabel = tk.Label(self, text="Overall Power Usage", font=('Arial Bold', 32), bg=backgroundColour, fg="black")
 
         backImage = tk.PhotoImage(file='App/images/Return.png')
         backImage = backImage.subsample(2)
         backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.show_frame(StartPage))
+                                   command = lambda : backToStartPage(controller))
         backButton.image = backImage
 
         startImage = tk.PhotoImage(file='App/images/Start.png')

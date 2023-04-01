@@ -28,22 +28,30 @@ def getCarbon(region):#add a country here
   data = '{\n  "emission_factor": {\n    "id": "electricity-energy_source_grid_mix",\n    "region": "' + region + '"\n  },\n  "parameters": {\n    "energy": 0.001,\n    "energy_unit": "kWh"\n  }\n}'
 
   #remove after finish
-  response = requests.post('https://beta3.api.climatiq.io/estimate', headers=headers, data=data)
-  output = response.json()
+  try:
+    response = requests.post('https://beta3.api.climatiq.io/estimate', headers=headers, data=data)
+    output = response.json()
 
-  with open('{}.json'.format("test"), 'w', encoding='utf-8') as f:
-    json.dump(output, f, ensure_ascii=False, indent=4)
-  f = open('test.json')
-  carbon = json.load(f)
-  emission = carbon.get("co2e")
-  #print(emission)
+    with open('{}.json'.format("test"), 'w', encoding='utf-8') as f:
+      json.dump(output, f, ensure_ascii=False, indent=4)
+    f = open('test.json')
+    carbon = json.load(f)
+    emission = carbon.get("co2e")
+    #print(emission)
+  except:
+    emission = "API CONNECTION ERROR"
   return emission
 
 
 def getBaseLine(region):
   baseLineData.clear()
   power = getPower(gpuBaseLine, cpuBaseLine, ramBaseLine)
-  emission = getCarbon(region) * power
+  
+  carbon = getCarbon(region)
+  if isinstance(carbon, int):
+    emission = carbon * power
+  else:
+    emission = carbon
 
   baseLineData.append(power)
   baseLineData.append(emission)
@@ -60,8 +68,13 @@ def getApp(region):
 
   data2 = []
   power = getPower(gpuBaseLine, cpuBaseLine, ramBaseLine)
-  emission = getCarbon(region) * power
-
+  
+  carbon = getCarbon(region)
+  if isinstance(carbon, int):
+    emission = carbon * power
+  else:
+    emission = carbon
+    
   data2.append(power)
   data2.append(emission)
   data2.append(mean(gpuBaseLine)) # adds gpu value (position 2)
@@ -70,7 +83,10 @@ def getApp(region):
 
   appData = []
   appData.append(data2[0]- baseLineData[0]) ## overall power for the app
-  appData.append(data2[1]-baseLineData[1]) ## emissions
+  if isinstance(data2[1], str) or isinstance(baseLineData[1]):
+    appData.append("API Connection Error")
+  else:
+    appData.append(data2[1]-baseLineData[1]) ## emissions
   appData.append(data2[2]-baseLineData[2]) ## gpu
   appData.append(data2[3]- baseLineData[3]) ## cpu
   appData.append(data2[4]-baseLineData[4]) ## ram
@@ -117,7 +133,11 @@ def dataAnalysis(t, country):#add a country here
   values = []
   power = getPower(gpuList, cpuList, ramList)
   values.append(power)
-  emission = getCarbon(country) * power
+  carbon = getCarbon(country)
+  if isinstance(carbon, int):
+    emission = carbon * power
+  else:
+    emission = carbon
   values.append(emission)
 
   values.append(mean(gpuList)) # adds gpu value (position 2)
