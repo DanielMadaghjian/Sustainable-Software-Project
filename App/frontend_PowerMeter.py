@@ -45,10 +45,16 @@ class tkinterApp(tk.Tk):
         intCountry = newCountry
 
     def countdownFunction(self, canvas, countDown, isBaseline):
+        carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
+        carbonImage = carbonImage.subsample(4)
+        canvas.image = carbonImage
         while countDown >0:
             self.config(cursor="none")
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-            canvas.create_text(200, 200, text="0 : " + str(countDown), font=('Arial Bold', 56),fill="black", justify="center")
+            canvas.create_text(200, 200, text="0:" + str(countDown).zfill(2), font=('Arial Bold', 56),fill='#93A78A', justify="center")
+            canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
+            
+            canvas.update()
             backend_analysis.dataGathering()
             self.update()
             time.sleep(1)
