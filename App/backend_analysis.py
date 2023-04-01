@@ -83,7 +83,7 @@ def getApp(region):
 
   appData = []
   appData.append(data2[0]- baseLineData[0]) ## overall power for the app
-  if isinstance(data2[1], str) or isinstance(baseLineData[1]):
+  if isinstance(data2[1], str) or isinstance(baseLineData[1],str):
     appData.append("API Connection Error")
   else:
     appData.append(data2[1]-baseLineData[1]) ## emissions
@@ -105,7 +105,13 @@ def dataGathering():
   ramBaseLine.append(currentData.get("ram usage"))
 
 
-
+baselineRan = False
+# Method that sets the baseline
+def setBaselineRan():
+  print("Baseline test ran!")
+  baselineRan = True
+def getBaselineRan():
+  return baselineRan
 
 # Method that collects the raw data and filters it
 def dataAnalysis(t, country):#add a country here

@@ -24,7 +24,7 @@ class tkinterApp(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self) 
         container.pack(side = "top", fill = "both", expand = True)
-  
+        self.geometry("1000x560")
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
         self.frames = {} 
@@ -53,13 +53,18 @@ class tkinterApp(tk.Tk):
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
             canvas.create_text(200, 200, text="0:" + str(countDown).zfill(2), font=('Arial Bold', 56),fill='#93A78A', justify="center")
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
-            
+            canvas.create_arc(5, 5, 395, 395, fill = '#93A78A',outline='#93A78A', style=tk.ARC, width=6, start=315, extent="270")
+            timeArc = round(270-((0.1*countDown)*270))
+            if (timeArc>270):
+                timeArc = 270
+            canvas.create_arc(5, 5, 395, 395, fill = "white",outline="white", style=tk.ARC, width=8, start=315, extent=timeArc)
             canvas.update()
             backend_analysis.dataGathering()
             self.update()
             time.sleep(1)
             countDown-= 1
             print(countDown)
+        backend_analysis.setBaselineRan()
         if isBaseline == True:
             baseLine = backend_analysis.getBaseLine(countryID[intCountry])
             return baseLine
@@ -246,31 +251,35 @@ class tkinterApp(tk.Tk):
 
     def baselineCountdown(self, canvas, titleCanvas, isApp):
         countDown = 10
-        
+        global checkBaseline
         if isApp:
-            global checkBaseline
+            
             checkBaseline = True
             titleCanvas.create_rectangle(0,0,500,700, fill=backgroundColour, outline=backgroundColour)
             titleCanvas.create_text(130, 50, text="Measuring ...",font=('Arial Bold', 32),fill="black", justify="center")
             titleCanvas.create_text(200, 100, text="Please wait while we measure the idle power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
             self.update()
-
             baseLine = self.countdownFunction(canvas, countDown, True)
             self.config(cursor="")
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-
-            baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
-            canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22),fill="black", justify="center")
-        else:
-            titleCanvas.create_rectangle(0,0,500,700, fill=backgroundColour, outline=backgroundColour)
-            titleCanvas.create_text(130, 50, text="Measuring ...",font=('Arial Bold', 32),fill="black", justify="center")
-            titleCanvas.create_text(200, 100, text="Please wait while we measure the Apps power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
+            canvas.create_arc(5, 5, 395, 395, outline="#93A78A", style=tk.ARC, width=6, start=315, extent="270")
+            canvas.create_text(200, 200, text="Baseline\nReady",font=('Arial Bold', 22),fill="#93A78A", justify="center")
+            carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
+            carbonImage = carbonImage.subsample(4)
+            canvas.image = carbonImage
+            canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
+            canvas.update()
+        elif checkBaseline:
+            # titleCanvas.create_rectangle(0,0,500,700, fill=backgroundColour, outline=backgroundColour)
+            # titleCanvas.create_text(130, 50, text="Measuring ...",font=('Arial Bold', 32),fill="black", justify="center")
+            # titleCanvas.create_text(200, 100, text="Please wait while we measure the Apps power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
             self.update()
 
             baseLine = self.countdownFunction(canvas, countDown, False)
             self.config(cursor="")
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-
+            canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
+            # *
             baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
             canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22),fill="black", justify="center")
 
@@ -333,7 +342,7 @@ class Page1(tk.Frame):
      
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
-
+        
         stopImage = tk.PhotoImage(file='App/images/Stop.png')
         stopImage = stopImage.subsample(2)
         startImage = tk.PhotoImage(file='App/images/Start.png')
@@ -444,22 +453,23 @@ class Page2(tk.Frame):
 
         titleCanvas = tk.Canvas(self, background=backgroundColour, height=200, width=400, highlightthickness=0)
         titleLabel = tk.Label(self, background=backgroundColour, text="App Power Usage",font=('Arial Bold', 32))
-        infoLabel = tk.Label(self,background=backgroundColour, text="Measure the idle energy use of your device with the\nmeasure baseline function while no applications are\nopen and then test the app for statistics.", font=('Arial Light', 15))
+        infoLabel = tk.Label(self,background=backgroundColour, text="Measure the idle energy use of your device with the\nmeasure baseline function while no applications are\nopen and then test the app for statistics.", font=('Arial Light', 14), justify=LEFT)
 
 
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+        canvas.create_text(200, 200, text="0:10", font=('Arial Bold', 56),fill='#93A78A', justify="center")
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
         carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
-        carbonImage = carbonImage.subsample(6)
+        carbonImage = carbonImage.subsample(4)
         canvas.image = carbonImage
-        canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
+        canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
         #canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
         canvas.update()
 
           
-        infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
-        titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
+        infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
+        titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = (20,0))
         baselineButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
         appTestButton.grid(row = 2, column = 1, sticky = tk.W, padx = (20,0), pady = 2)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
