@@ -54,7 +54,10 @@ class tkinterApp(tk.Tk):
             canvas.create_text(200, 200, text="0:" + str(countDown).zfill(2), font=('Arial Bold', 56),fill='#93A78A', justify="center")
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
             canvas.create_arc(5, 5, 395, 395, fill = '#93A78A',outline='#93A78A', style=tk.ARC, width=6, start=315, extent="270")
-            timeArc = round(270-((0.1*countDown)*270))
+            if isBaseline :
+                timeArc = round(270-((1-0.1*countDown)*270))
+            else :
+                timeArc = round(270-((0.1*countDown)*270))
             if (timeArc>270):
                 timeArc = 270
             canvas.create_arc(5, 5, 395, 395, fill = "white",outline="white", style=tk.ARC, width=8, start=315, extent=timeArc)
@@ -64,7 +67,6 @@ class tkinterApp(tk.Tk):
             time.sleep(1)
             countDown-= 1
             print(countDown)
-        backend_analysis.setBaselineRan()
         if isBaseline == True:
             baseLine = backend_analysis.getBaseLine(countryID[intCountry])
             return baseLine
@@ -279,7 +281,15 @@ class tkinterApp(tk.Tk):
             self.config(cursor="")
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
             canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
+            carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
+            carbonImage = carbonImage.subsample(4)
+            canvas.image = carbonImage
+            canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
             # *
+            canvas.create_text(200, 160, text = "RESULTS READY", font=('Arial', 18), fill='#93A78A', justify='center')
+            canvas.create_text(200, 200, text="+63.43gCO₂eq/h", font=('Arial Bold', 32), fill='#93A78A', justify="center")
+            canvas.create_text(200, 250, text = " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+            
             baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
             canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22),fill="black", justify="center")
 
@@ -466,8 +476,6 @@ class Page2(tk.Frame):
         canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
         #canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
         canvas.update()
-
-          
         infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
         titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = (20,0))
         baselineButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)

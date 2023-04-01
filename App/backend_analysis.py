@@ -105,14 +105,6 @@ def dataGathering():
   ramBaseLine.append(currentData.get("ram usage"))
 
 
-baselineRan = False
-# Method that sets the baseline
-def setBaselineRan():
-  print("Baseline test ran!")
-  baselineRan = True
-def getBaselineRan():
-  return baselineRan
-
 # Method that collects the raw data and filters it
 def dataAnalysis(t, country):#add a country here
   gpuList = [] 
