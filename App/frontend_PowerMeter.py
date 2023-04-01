@@ -147,8 +147,8 @@ class tkinterApp(tk.Tk):
         isRunning = True
         totalCarbon = 0
         carbonUnits = "mgCO₂eq"
-        introDisplay = 0        # Cycles through each datapoint giving info
-        cycleChange = 0
+        # introDisplay = 0        # Cycles through each datapoint giving info
+        # cycleChange = 0
         while run:
             
         
@@ -181,44 +181,35 @@ class tkinterApp(tk.Tk):
             # self.update()
             # self.update()
 
-            if introDisplay != 7 :
-                cycleChange= cycleChange + 1
-                if cycleChange > 10 :
-                    cycleChange = 0
-                    introDisplay = introDisplay + 1
+            # if introDisplay != 7 :
+            #     cycleChange= cycleChange + 1
+            #     if cycleChange > 10 :
+            #         cycleChange = 0
+            #         introDisplay = introDisplay + 1
 
-            canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-            if introDisplay == 2 :
-                canvas.create_text(200, 155, text = "Power Use - " + str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
-            else :
-                canvas.create_text(200, 160, text = str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
+            # canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+            # if introDisplay == 2 :
+            #     canvas.create_text(200, 155, text = "Power Use - " + str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
+            # else :
+            
+            canvas.create_text(200, 160, text = str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
 
-            if introDisplay == 4 :
-                canvas.create_text(200, 203, text="Carbon Produced Since Start", font=('Arial Bold', 19), fill='#93A78A', justify="center")
-            else :
-                canvas.create_text(200, 200, text=str(round(totalCarbon, 2)) + " " + carbonUnits, font=('Arial Bold', 32), fill='#93A78A', justify="center")
+            # if introDisplay == 4 :
+            #     canvas.create_text(200, 203, text="Carbon Produced Since Start", font=('Arial Bold', 19), fill='#93A78A', justify="center")
+            # else :
+            
+            canvas.create_text(200, 200, text=str(round(totalCarbon, 2)) + " " + carbonUnits, font=('Arial Bold', 32), fill='#93A78A', justify="center")
 
-            # self.update()
-            if introDisplay == 6 :
-                canvas.create_text(200, 257, text = "CO₂ Emission Factor -\n" + carbonText + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
-            else :
-                canvas.create_text(200, 250, text = carbonText + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+            # # self.update()
+            # if introDisplay == 6 :
+            #     canvas.create_text(200, 257, text = "CO₂ Emission Factor -\n" + carbonText + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+            # else :
+            
+            canvas.create_text(200, 250, text = carbonText + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
             
             # self.update()
-            canvas.create_arc(5, 5, 395, 395, fill = '#93A78A',outline='#93A78A', style=tk.ARC, width=6, start=315, extent="270")
-            #arc is calculated by the current power against the peak watt
-            # self.update()
 
-            ###
-            
-            #       peakArc has no value!
-
-            ### 
-
-            peakArc = round(270-((0.5)*270))
-            if (peakArc>270):
-                peakArc = 270
-            canvas.create_arc(5, 5, 395, 395, fill = "white",outline="white", style=tk.ARC, width=8, start=315, extent=peakArc)
+            canvas.create_arc(5, 5, 395, 395, fill = 'white',outline='white', style=tk.ARC, width=6, start=315, extent="270")
             carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
             carbonImage = carbonImage.subsample(4)
             canvas.image = carbonImage
@@ -291,8 +282,10 @@ class tkinterApp(tk.Tk):
             canvas.create_text(200, 250, text = " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
             
             baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
-            canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22),fill="black", justify="center")
-
+            canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22), fill="black", justify="center")
+            resultsButton = Button(self, text='Welcome to Tkinter!', borderwidth=0, background="white", width=20, height=2, command= lambda : print("click"))
+            resultsButton["font"] = ('Arial Bold', 32)
+            resultsButton.place(x=100, y=100)
         
 
     def measureApp(controller):
