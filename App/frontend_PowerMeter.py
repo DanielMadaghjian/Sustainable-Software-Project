@@ -1,6 +1,8 @@
 
 # 'python3 -m pip install tkinter'
 # 'python3 -m pip install matplotlib'
+# 'python3 -m pip install pandas'
+# 'python3 -m pip install jinja2'
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
@@ -8,6 +10,7 @@ import backend_analysis
 import matplotlib.pyplot as plt
 import requests
 import time
+import pandas as pd
 
 
 backgroundColour = '#DAEFD2'
@@ -40,10 +43,85 @@ class tkinterApp(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
-    def showResults(self) :
+    def showResults(self, canvas, baseLine) :
         print("Showing Results")
-        time.sleep(5)
-        resultsButton.destroy()
+        
+        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+        headerImage = tk.PhotoImage(file='App/images/Header.png')
+        # headerImage = headerImage.subsample(2)
+        canvas.image = headerImage
+        global baseValues
+        global appValues
+        baseValuesGpu = round(baseValues[2], 2)
+        appValuesGpu = round(appValues[2], 2)
+        if baseValues[2] == 0 :
+            baseValuesGpu = "N/A"
+            appValuesGpu  = "N/A"
+            gpuInc = "N/A"
+        else:
+            baseValuesGpu = str(baseValuesGpu + " W")
+            if appValuesGpu >= 0 :
+                appValuesGpu = str("+" + appValuesGpu + " W")
+            else :
+                appValuesGpu = str(appValuesGpu + " W")
+            gpuInc = round((appValues[2]/baseValues[2])*100,1) 
+        canvas.create_image(200,165,anchor=tk.S,image=headerImage)
+        canvas.create_text(75, 170, text="CPU:", font=('Arial Bold', 12), fill="black", justify=LEFT)
+        canvas.create_text(75, 205, text="GPU:", font=('Arial Bold', 12), fill="black", justify=LEFT)
+        canvas.create_text(75, 240, text="RAM:", font=('Arial Bold', 12), fill="black", justify=LEFT)
+        canvas.create_text(75, 275, text="Total:", font=('Arial Bold', 12), fill="black", justify=LEFT)
+        
+        canvas.create_text(155, 170, text=str(round(baseValues[3], 2))+" W", font=('Arial', 12), fill="black")
+        canvas.create_text(155, 205, text=baseValuesGpu, font=('Arial', 12), fill="black")
+        canvas.create_text(155, 240, text=str(round(baseValues[4], 2))+" W", font=('Arial', 12), fill="black")
+        canvas.create_text(155, 275, text=str(round(baseValues[2]+baseValues[3]+baseValues[4], 2)) + " W", font=('Arial Bold', 12), fill="black")
+        appValuesCpu = round(appValues[3], 2)
+        if appValuesCpu >= 0 :
+            appValuesCpu = "+" + str(appValuesCpu) + " W"
+        else :
+            appValuesCpu = str(appValuesCpu) + " W"
+        appValuesRam = round(appValues[4], 2)
+        if appValuesRam >= 0 :
+            appValuesRam = "+" + str(appValuesRam) + " W"
+        else :
+            appValuesRam = str(appValuesRam) + " W"
+        canvas.create_text(234, 170, text=appValuesCpu, font=('Arial', 12), fill="black")
+        canvas.create_text(234, 205, text=appValuesGpu, font=('Arial', 12), fill="black")
+        canvas.create_text(234, 240, text=appValuesRam, font=('Arial', 12), fill="black")
+        canvas.create_text(234, 275, text=str(round(baseValues[2]+baseValues[3]+baseValues[4]+appValues[2]+appValues[3]+appValues[4],2)) + " W", font=('Arial Bold', 12), fill="black")
+
+        cpuInc = round((appValues[3]/baseValues[3])*100,1)
+        ramInc = round((appValues[4]/baseValues[4])*100,1)
+        if appValues[3] <= 0 :
+            cpuInc = "Negligible"
+        else :
+            cpuInc = "+" + str(cpuInc) + "%"
+        if gpuInc == "N/A" :
+            gpuInc = "N/A"
+        elif appValues[2] <= 0 :
+            gpuInc = "Negligible"
+        else :
+            gpuInc = "+" + str(gpuInc) + "%"
+        if appValues[4] <= 0 :
+            ramInc = "Negligible"
+        else :
+            ramInc = "+" + str(ramInc) + "%"
+        totInc = round(appValues[2]+appValues[3]+appValues[4], 1)
+        if totInc >= 0 :
+            totInc = "+" + str(totInc) + "%"
+        else :
+            totInc = "Negligible"
+
+        canvas.create_text(320, 170, text=cpuInc, font=('Arial', 12), fill="#93A78A")
+        canvas.create_text(320, 205, text=gpuInc, font=('Arial', 12), fill="#93A78A")
+        canvas.create_text(320, 240, text=ramInc, font=('Arial', 12), fill="#93A78A")
+        canvas.create_text(320, 275, text=str(totInc), font=('Arial Bold', 12), fill="#93A78A")
+        
+        # canvas.create_text(75, 320, text=str(baseLine) + " W", font=('Arial', 8), fill="black", justify="center")
+        carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
+        carbonImage = carbonImage.subsample(4)
+        # canvas.image = carbonImage
+        canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
 
     def updateCountry(self, newCountry):
         global intCountry
@@ -250,6 +328,8 @@ class tkinterApp(tk.Tk):
     def baselineCountdown(self, canvas, titleCanvas, isApp, controller):
         countDown = 10
         global checkBaseline
+        global baseValues
+        global appValues
         if isApp:
             
             checkBaseline = True
@@ -258,6 +338,7 @@ class tkinterApp(tk.Tk):
             titleCanvas.create_text(200, 100, text="Please wait while we measure the idle power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
             self.update()
             baseLine = self.countdownFunction(canvas, countDown, True)
+            baseValues = baseLine
             self.config(cursor="")
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
             canvas.create_arc(5, 5, 395, 395, outline="#93A78A", style=tk.ARC, width=6, start=315, extent="270")
@@ -274,6 +355,7 @@ class tkinterApp(tk.Tk):
             self.update()
 
             baseLine = self.countdownFunction(canvas, countDown, False)
+            appValues = baseLine
             self.config(cursor="")
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
             canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
@@ -281,6 +363,7 @@ class tkinterApp(tk.Tk):
             carbonImage = carbonImage.subsample(4)
             canvas.image = carbonImage
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
+            controller.showResults(canvas, baseLine)
             # *
             # canvas.create_text(200, 160, text = "RESULTS READY", font=('Arial', 18), fill='#93A78A', justify='center')
             # canvas.create_text(200, 200, text="+63.43gCO₂eq/h", font=('Arial Bold', 32), fill='#93A78A', justify="center")
@@ -288,10 +371,10 @@ class tkinterApp(tk.Tk):
             
             # baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
             # canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22), fill="black", justify="center")
-            global resultsButton
-            resultsButton = Button(self, text='Click Here to\nView Results', borderwidth=0, background="white", width=11, height=3, command= lambda : controller.showResults(), foreground="#93A78A")
-            resultsButton["font"] = ('Arial Bold', 28)
-            resultsButton.place(x=625, y=160)
+            # global resultsButton
+            # resultsButton = Button(self, text='Click Here to\nView Results', borderwidth=0, background="white", width=11, height=3, command= lambda : controller.showResults(), foreground="#93A78A")
+            # resultsButton["font"] = ('Arial Bold', 28)
+            # resultsButton.place(x=625, y=160)
 
     def measureApp(controller):
         global checkBaseline
