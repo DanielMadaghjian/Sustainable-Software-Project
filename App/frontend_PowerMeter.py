@@ -40,6 +40,11 @@ class tkinterApp(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+    def showResults(self) :
+        print("Showing Results")
+        time.sleep(5)
+        resultsButton.destroy()
+
     def updateCountry(self, newCountry):
         global intCountry
         intCountry = newCountry
@@ -187,7 +192,7 @@ class tkinterApp(tk.Tk):
             #         cycleChange = 0
             #         introDisplay = introDisplay + 1
 
-            # canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+            canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
             # if introDisplay == 2 :
             #     canvas.create_text(200, 155, text = "Power Use - " + str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
             # else :
@@ -242,7 +247,7 @@ class tkinterApp(tk.Tk):
         controller.show_frame(StartPage)
     
 
-    def baselineCountdown(self, canvas, titleCanvas, isApp):
+    def baselineCountdown(self, canvas, titleCanvas, isApp, controller):
         countDown = 10
         global checkBaseline
         if isApp:
@@ -277,16 +282,16 @@ class tkinterApp(tk.Tk):
             canvas.image = carbonImage
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
             # *
-            canvas.create_text(200, 160, text = "RESULTS READY", font=('Arial', 18), fill='#93A78A', justify='center')
-            canvas.create_text(200, 200, text="+63.43gCO₂eq/h", font=('Arial Bold', 32), fill='#93A78A', justify="center")
-            canvas.create_text(200, 250, text = " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+            # canvas.create_text(200, 160, text = "RESULTS READY", font=('Arial', 18), fill='#93A78A', justify='center')
+            # canvas.create_text(200, 200, text="+63.43gCO₂eq/h", font=('Arial Bold', 32), fill='#93A78A', justify="center")
+            # canvas.create_text(200, 250, text = " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
             
-            baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
-            canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22), fill="black", justify="center")
-            resultsButton = Button(self, text='Welcome to Tkinter!', borderwidth=0, background="white", width=20, height=2, command= lambda : print("click"))
-            resultsButton["font"] = ('Arial Bold', 32)
-            resultsButton.place(x=100, y=100)
-        
+            # baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
+            # canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22), fill="black", justify="center")
+            global resultsButton
+            resultsButton = Button(self, text='Click Here to\nView Results', borderwidth=0, background="white", width=11, height=3, command= lambda : controller.showResults(), foreground="#93A78A")
+            resultsButton["font"] = ('Arial Bold', 28)
+            resultsButton.place(x=625, y=160)
 
     def measureApp(controller):
         global checkBaseline
@@ -441,12 +446,12 @@ class Page2(tk.Frame):
         baselineImage = tk.PhotoImage(file='App/images/Baseline.png')
         baselineImage = baselineImage.subsample(2)
         baselineButton = tk.Button(self,text="Start", image = baselineImage, height = 150, width = 150, borderwidth = 0, 
-                                 command = lambda : controller.baselineCountdown(canvas, titleCanvas, True))
+                                 command = lambda : controller.baselineCountdown(canvas, titleCanvas, True, controller))
         baselineButton.image = baselineImage
 
         appTestImage = tk.PhotoImage(file='App/images/AppTest.png')
         appTestImage = appTestImage.subsample(2)
-        appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.baselineCountdown(canvas, titleCanvas, False))
+        appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.baselineCountdown(canvas, titleCanvas, False, controller))
         appTestButton.image = appTestImage
 
         returnImage = tk.PhotoImage(file='App/images/Return.png')
