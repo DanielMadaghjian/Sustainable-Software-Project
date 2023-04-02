@@ -40,6 +40,7 @@ def getCarbon(region):#add a country here
     #print(emission)
   except:
     emission = "API CONNECTION ERROR"
+  print(emission)
   return emission
 
 

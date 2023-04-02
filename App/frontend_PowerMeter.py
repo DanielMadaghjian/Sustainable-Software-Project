@@ -89,9 +89,9 @@ class tkinterApp(tk.Tk):
         canvas.create_text(234, 205, text=appValuesGpu, font=('Arial', 12), fill="black")
         canvas.create_text(234, 240, text=appValuesRam, font=('Arial', 12), fill="black")
         canvas.create_text(234, 275, text=str(round(baseValues[2]+baseValues[3]+baseValues[4]+appValues[2]+appValues[3]+appValues[4],2)) + " W", font=('Arial Bold', 12), fill="black")
-
         cpuInc = round((appValues[3]/baseValues[3])*100,1)
         ramInc = round((appValues[4]/baseValues[4])*100,1)
+        
         if appValues[3] <= 0 :
             cpuInc = "Negligible"
         else :
@@ -106,16 +106,22 @@ class tkinterApp(tk.Tk):
             ramInc = "Negligible"
         else :
             ramInc = "+" + str(ramInc) + "%"
-        totInc = round(appValues[2]+appValues[3]+appValues[4], 1)
-        if totInc >= 0 :
-            totInc = "+" + str(totInc) + "%"
-        else :
-            totInc = "Negligible"
+        # totInc = round((appValues[2]+appValues[3]+appValues[4])/(baseValues[2]+baseValues[3]+baseValues[4])*100, 1)
+        # if totInc >= 0 :
+        #     totInc = "+" + str(totInc) + "%"
+        # else :
+        #     totInc = "Negligible"
 
         canvas.create_text(320, 170, text=cpuInc, font=('Arial', 12), fill="#93A78A")
         canvas.create_text(320, 205, text=gpuInc, font=('Arial', 12), fill="#93A78A")
         canvas.create_text(320, 240, text=ramInc, font=('Arial', 12), fill="#93A78A")
-        canvas.create_text(320, 275, text=str(totInc), font=('Arial Bold', 12), fill="#93A78A")
+        # canvas.create_text(320, 275, text=str(totInc), font=('Arial Bold', 12), fill="#93A78A")
+        currCarb = backend_analysis.getCarbon(countryID[intCountry])
+        if currCarb == "API CONNECTION ERROR" :
+            currCarb = 0
+        else :
+            currCarb = currCarb*1000000
+        canvas.create_text(200, 320, text="Using "+ str(round(((baseValues[2]+baseValues[3]+baseValues[4]+appValues[2]+appValues[3]+appValues[4])*currCarb)/1000,2)) + " gCO₂eq/hr\n" + str(round(currCarb,2)) + " mgCO₂eq/Wh", font=('Arial Bold', 12), fill="#93A78A", justify="center")
         
         # canvas.create_text(75, 320, text=str(baseLine) + " W", font=('Arial', 8), fill="black", justify="center")
         carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
