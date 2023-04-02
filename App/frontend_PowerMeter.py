@@ -263,7 +263,7 @@ class tkinterApp(tk.Tk):
                 if (peakWatts<data[0]):
                     peakWatts = data[0]
 
-                carbonText = str(round(data[1]*1000, 2))
+                carbonText = str(round(data[1]*1000000, 2))
             else:
                 totalCarbon = 0
                 carbonText = "Can't Connect To API"
@@ -291,10 +291,10 @@ class tkinterApp(tk.Tk):
 
             # # self.update()
             # if introDisplay == 6 :
-            #     canvas.create_text(200, 257, text = "CO₂ Emission Factor -\n" + carbonText + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+            #     canvas.create_text(200, 257, text = "CO₂ Emission Factor -\n" + carbonText + " mgCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
             # else :
             
-            canvas.create_text(200, 250, text = carbonText + " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
+            canvas.create_text(200, 250, text = carbonText + " mgCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
             
             # self.update()
 
