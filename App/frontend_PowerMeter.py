@@ -10,7 +10,7 @@ import backend_analysis
 import matplotlib.pyplot as plt
 import requests
 import time
-import pandas as pd
+#import pandas as pd
 
 
 backgroundColour = '#DAEFD2'
@@ -59,11 +59,11 @@ class tkinterApp(tk.Tk):
             appValuesGpu  = "N/A"
             gpuInc = "N/A"
         else:
-            baseValuesGpu = str(baseValuesGpu + " W")
+            baseValuesGpu = str(baseValuesGpu) + " W"
             if appValuesGpu >= 0 :
-                appValuesGpu = str("+" + appValuesGpu + " W")
+                appValuesGpu = "+" + str(appValuesGpu) + " W"
             else :
-                appValuesGpu = str(appValuesGpu + " W")
+                appValuesGpu = str(appValuesGpu) + " W"
             gpuInc = round((appValues[2]/baseValues[2])*100,1) 
         canvas.create_image(200,165,anchor=tk.S,image=headerImage)
         canvas.create_text(75, 170, text="CPU:", font=('Arial Bold', 12), fill="black", justify=LEFT)
