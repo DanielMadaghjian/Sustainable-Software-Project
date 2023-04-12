@@ -32,7 +32,7 @@ class tkinterApp(tk.Tk):
         container.grid_columnconfigure(0, weight = 1)
         self.frames = {} 
 
-        for F in (StartPage, Page1, Page2, SettingsPage, FeedbackPage):
+        for F in (StartPage, ContinuousPowerPage, IndividualPowerPage, SettingsPage, FeedbackPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
@@ -194,14 +194,14 @@ class tkinterApp(tk.Tk):
         previousScreen = StartPage
         controller.show_frame(SettingsPage)
 
-    def settingsPage1(self,controller):
+    def settingsContinuousPowerPage(self,controller):
         global previousScreen
-        previousScreen = Page1
+        previousScreen = ContinuousPowerPage
         controller.show_frame(SettingsPage)
 
-    def settingsPage2(self,controller):
+    def settingsIndividualPowerPage(self,controller):
         global previousScreen
-        previousScreen = Page2
+        previousScreen = IndividualPowerPage
         controller.show_frame(SettingsPage)
     
 
@@ -401,13 +401,13 @@ class StartPage(tk.Frame):
         overallImage = tk.PhotoImage(file='App/images/OverallUsage.png')
         overallImage = overallImage.subsample(4)
         overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 148, width = 382, borderwidth = 0, 
-                                 command = lambda : controller.show_frame(Page1))
+                                 command = lambda : controller.show_frame(ContinuousPowerPage))
         overallButton.image = overallImage
 
         singleImage = tk.PhotoImage(file='App/images/SingleApp.png')
         singleImage = singleImage.subsample(4)
         singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 148, width = 382, borderwidth = 0, 
-                                 command = lambda : controller.show_frame(Page2))
+                                 command = lambda : controller.show_frame(IndividualPowerPage))
         singleButton.image = singleImage
 
         bannerImage = tk.PhotoImage(file='App/images/TrinityCisco.png')
@@ -435,16 +435,12 @@ class StartPage(tk.Frame):
         feedbackButton.place(x=750, y=500)
         feedbackButton.image = feedbackImage
 
-class Page1(tk.Frame):
+class ContinuousPowerPage(tk.Frame):
      
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
-        
-        stopImage = tk.PhotoImage(file='App/images/Stop.png')
-        stopImage = stopImage.subsample(2)
-        startImage = tk.PhotoImage(file='App/images/Start.png')
-        startImage = startImage.subsample(2)
 
+        # Function to test whether to continuously update the power consumption
         def toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage):
             if toggleButton["text"] == "Running":
                 toggleButton.configure(text="Not Running")
@@ -457,102 +453,103 @@ class Page1(tk.Frame):
                 
                 controller.getContinuousData(canvas,values,powerBreakdownImage)
 
+        # Function to return to homepage and stop continuously updating the power consumption
         def backToStartPage(controller):
             toggleButton.configure(text="Not Running")
             toggleButton["image"] = startImage
             controller.stop()
             controller.show_frame(StartPage)
 
+        # Create title labels
         durationLabel = tk.Label(self, text="Measuring Live Data" , font=('Arial Light', 18), bg=backgroundColour, fg="black")
         titleLabel = tk.Label(self, text="Overall Power Usage", font=('Arial Bold', 32), bg=backgroundColour, fg="black")
 
+        # Create return button
         backImage = tk.PhotoImage(file='App/images/Return.png')
         backImage = backImage.subsample(2)
-        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : backToStartPage(controller))
+        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, command = lambda : backToStartPage(controller))
         backButton.image = backImage
 
+        # Create start button
         startImage = tk.PhotoImage(file='App/images/Start.png')
         startImage = startImage.subsample(2)
         toggleButton = tk.Button(self, text="Start", image=startImage, height = 150, width = 150, borderwidth=0,command = lambda : toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage))
-        
-        
+        toggleButton.image = startImage
 
-
-
+        # Create graph button
         graphImage = tk.PhotoImage(file='App/images/Graph.png')
         graphImage = graphImage.subsample(2)
         graphButton = tk.Button(self, text="View Graph", image=graphImage, height = 150, width = 150, borderwidth=0,command = lambda : controller.graphToDisplay(data))
         graphButton.image = graphImage
 
+        # Create stop image
+        stopImage = tk.PhotoImage(file='App/images/Stop.png')
+        stopImage = stopImage.subsample(2)
+
+        # Create GPU, CPU and Ram display image 
         powerBreakdownImage = tk.PhotoImage(file='App/images/PowerBreakdown.png')
         powerBreakdownImage = powerBreakdownImage.subsample(2)
+
+        # Create canvas which updates to display the wattage and carbon
         values = tk.Canvas(self, background=backgroundColour,height=100, width=250, highlightthickness=0)
-        # values.create_image(200,50,image=powerBreakdownImage)
-        # values.create_text(295,67,text = "Start Test",font =('Arial Bold', 10),fill="black", justify="left")
-
-        # settingsImage = tk.PhotoImage(file='App/images/images/Settings.png')
-        # settingsImage = settingsImage.subsample(3)
-        # settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsPage1(controller))
-
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
         canvas.create_text(200, 182, text="CARBON", font=('Arial', 22), fill='#A3B59C', justify="center")
         carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(4)
-        canvas.image = carbonImage
         canvas.create_image(200,240,anchor=tk.S,image=carbonImage)
         canvas.update()
-
-        # settingsButton.image = settingsImage
         
         durationLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
         titleLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
-        # settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
+
         backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         toggleButton.grid(row = 1, column = 0,sticky = tk.SE, padx = 30, pady = (30,50))
         graphButton.grid(row = 1, column = 1,sticky = tk.SW, pady = (30,50))
-        values.place(x=75,y=370, width=400, height=100)
+
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
+        values.place(x=75,y=370, width=400, height=100)
   
-class Page2(tk.Frame):
+class IndividualPowerPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
 
+        # This is used to create the green background theme
         style = ttk.Style(self)
         style.theme_use('clam')
         style.configure('Test.TLabel', background= backgroundColour)
 
-        # startCountdown()
-
+        # Create settings button
         settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.settingsPage2(controller))
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsIndividualPowerPage(controller))
         settingsButton.image = settingsImage
 
+        # Create baseline button
         baselineImage = tk.PhotoImage(file='App/images/Baseline.png')
         baselineImage = baselineImage.subsample(2)
-        baselineButton = tk.Button(self,text="Start", image = baselineImage, height = 150, width = 150, borderwidth = 0, 
-                                 command = lambda : controller.baselineCountdown(canvas, titleCanvas, True, controller))
+        baselineButton = tk.Button(self,text="Start", image = baselineImage, height = 150, width = 150, borderwidth = 0, command = lambda : controller.baselineCountdown(canvas, titleCanvas, True, controller))
         baselineButton.image = baselineImage
 
+        # Create app test button
         appTestImage = tk.PhotoImage(file='App/images/AppTest.png')
         appTestImage = appTestImage.subsample(2)
         appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.baselineCountdown(canvas, titleCanvas, False, controller))
         appTestButton.image = appTestImage
 
+        # Create return button
         returnImage = tk.PhotoImage(file='App/images/Return.png')
         returnImage = returnImage.subsample(2)
         returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(StartPage))
         returnButton.image = returnImage
 
+        # Create title canvas
         titleCanvas = tk.Canvas(self, background=backgroundColour, height=200, width=400, highlightthickness=0)
         titleLabel = tk.Label(self, background=backgroundColour, text="App Power Usage",font=('Arial Bold', 32))
         infoLabel = tk.Label(self,background=backgroundColour, text="Measure the idle energy use of your device with the\nmeasure baseline function while no applications are\nopen and then test the app for statistics.", font=('Arial Light', 14), justify=LEFT)
 
-
+         # Create canvas to display countdown and results
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_text(200, 200, text="0:10", font=('Arial Bold', 56),fill='#93A78A', justify="center")
@@ -561,40 +558,16 @@ class Page2(tk.Frame):
         carbonImage = carbonImage.subsample(4)
         canvas.image = carbonImage
         canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
-        #canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
         canvas.update()
+
         infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
         titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = (20,0))
+
         baselineButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
         appTestButton.grid(row = 2, column = 1, sticky = tk.W, padx = (20,0), pady = 2)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-        canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
 
-class IndividualResultsPage(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent, background=backgroundColour)
-
-        settingsImage = tk.PhotoImage(file='App/images/Settings.png')
-        settingsImage = settingsImage.subsample(3)
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.settingsAppTestHome(controller))
-        settingsButton.image = settingsImage
-
-        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
-        titleLabel = ttk.Label(self, text="Results",style= 'Test.TLabel',font=('Arial Bold', 32), padding=(0,22,0,0))
-
-        canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
-        canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
-        canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-
-        carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
-        carbonImage = carbonImage.subsample(6)
-        canvas.image = carbonImage
-        canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
-        
-        titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
-        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
 
 
@@ -602,73 +575,64 @@ class AppTesting(tk.Frame):
     def __init__(self, parent, controller):
 
         tk.Frame.__init__(self, parent, background=backgroundColour)
-        #countdownDisplay = "0:00"
         countDown = 10
 
+        # Create settings button
         settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.settingsAppTestHome(controller))
-        settingsButton.image = settingsImage
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsAppTestHome(controller))
+        settingsButton.image = settingsImage    
 
-        settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
-        
-        ##stopImage = tk.PhotoImage(file='App/images/Stop.png')
-        ##stopImage = stopImage.subsample(2)
-        ##stopButton = tk.Button(self,text="Start", image = stopImage, height = 150, width = 150, borderwidth = 0, 
-        ##                         command = lambda : controller.show_frame(IndividualResultsPage))
-        ##stopButton.image = stopImage
-
+        # Create start button
         startImage = tk.PhotoImage(file='App/images/AppTest.png')
         startImage = startImage.subsample(2)
-        startButton = tk.Button(self,text="Start", image = startImage, height = 150, width = 150, borderwidth = 0, 
-                                 command = lambda : controller.countdownFunction(canvas, countDown, False))
+        startButton = tk.Button(self,text="Start", image = startImage, height = 150, width = 150, borderwidth = 0, command = lambda : controller.countdownFunction(canvas, countDown, False))
         startButton.image = startImage
 
+        # Create return button
         returnImage = tk.PhotoImage(file='App/images/Return.png')
         returnImage = returnImage.subsample(2)
-        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(Page2))
+        returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(IndividualPowerPage))
         returnButton.image = returnImage
 
+        # Create canvas
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
-        
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-
         carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(6)
         canvas.image = carbonImage
         canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
-        #canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
-
-        #infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = (40,0), pady = 0)
-        #titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
         
         startButton.grid(row = 2, column = 0, sticky = tk.E, padx = (40,20), pady = 2)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
-        canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
+
+        canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
     
 
 class SettingsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
 
+        # Funtion to update the country label
         def changeRegion(i,buttonText):
             countryLabel["text"] = buttonText
             countryLabel.update
             controller.updateCountry(i)
 
+        # Create return button
         backImage = tk.PhotoImage(file='App/images/Return.png')
         backImage = backImage.subsample(2)
-        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0,
-                                   command = lambda : controller.show_frame(StartPage))
+        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0,command = lambda : controller.show_frame(StartPage))
         backButton.image = backImage
 
+        # Create label to display selected country 
         currentLabel = ttk.Label(self, text="Current Country: ", font=('Arial Light', 24), style= 'Test.TLabel')
         countryLabel = ttk.Label(self, text="Ireland", font=('Arial Light', 24), style= 'Test.TLabel')
         selectLabel = ttk.Label(self, text="Select a country: ",font=('Arial Light', 18), style= 'Test.TLabel')
 
+        # Creating country buttons
         irlImage = tk.PhotoImage(file='App/images/flagIreland.png')
         irlImage = irlImage.subsample(1)
         irlButton = tk.Button(self, text ="Ireland",image = irlImage, height=90, width=130, borderwidth = 0, bg = backgroundColour,
@@ -743,10 +707,8 @@ class SettingsPage(tk.Frame):
 
         currentLabel.place(x = 300, y = 20)
         countryLabel.place(x = 550, y = 20)
-
-        #currentLabel.grid(row = 0, column = 2, sticky=tk.NW, padx = 5, pady = 5)
-        #countryLabel.grid(row = 0, column = 3, sticky=tk.NW, padx = 5, pady = 5)
         selectLabel.grid(row = 1, column = 0, stick = tk.NW, padx = 5, pady = 30)
+        backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
 
         irlButton.grid(row = 2, column = 1,sticky=tk.NW, padx = 5, pady = 5)
         fraButton.grid(row = 2, column = 2,sticky=tk.NW, padx = 5, pady = 5)
@@ -761,13 +723,9 @@ class SettingsPage(tk.Frame):
         gerButton.grid(row = 4, column = 3,sticky=tk.NW, padx = 5, pady = 5)
         polButton.grid(row = 4, column = 4,sticky=tk.NW, padx = 5, pady = 5)
 
-        backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-
 class FeedbackPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
-        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
-        returnButton.pack(side=TOP, anchor=NW)
         
         # Function to send form data
         def send_form_data():
@@ -788,6 +746,7 @@ class FeedbackPage(tk.Frame):
 
             # Show success message
             success_label.config(text="Message sent successfully!")
+
         # Create input fields
         title_label = tk.Label(self, text="Give feedback on potential inaccuracies you found in the app!")
         name_label = tk.Label(self, text="Name:")
@@ -799,11 +758,11 @@ class FeedbackPage(tk.Frame):
         message_label = tk.Label(self, text="Message:")
         message_entry = tk.Text(self)
 
-        # Create submit button
-        submit_button = tk.Button(self, text="Send Message", command=send_form_data)
-
         # Create success label
         success_label = tk.Label(self, fg="green")
+
+        returnButton = tk.Button(self, text ="Return",command = lambda : controller.show_frame(StartPage))
+        submit_button = tk.Button(self, text="Send Message", command=send_form_data)
 
         title_label.pack()
         name_label.pack()
@@ -816,10 +775,12 @@ class FeedbackPage(tk.Frame):
         message_entry.pack()
 
         submit_button.pack(pady=10)
-        success_label.pack()      
+        success_label.pack()    
+
+        returnButton.pack(side=TOP, anchor=NW)
 
 app = tkinterApp()
 app.resizable(False,False)
 app.title("ecoCheck")
-app.iconphoto(False,tk.PhotoImage(file='App/images/ecoCheck.png')) #ecoCheck.png?
+app.iconphoto(False,tk.PhotoImage(file='App/images/ecoCheck.png'))
 app.mainloop()
