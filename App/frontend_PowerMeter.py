@@ -1,8 +1,3 @@
-
-# 'python3 -m pip install tkinter'
-# 'python3 -m pip install matplotlib'
-# 'python3 -m pip install pandas'
-# 'python3 -m pip install jinja2'
 from tkinter import *
 import tkinter as tk
 from tkinter import ttk
@@ -10,14 +5,11 @@ import backend_analysis
 import matplotlib.pyplot as plt
 import requests
 import time
-#import pandas as pd
-
 
 backgroundColour = '#DAEFD2'
-previousScreen = tk.Frame
-
 country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
 countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
+previousScreen = tk.Frame
 intCountry = 0
 checkBaseline = False
 
@@ -30,25 +22,21 @@ class tkinterApp(tk.Tk):
         self.geometry("1000x560")
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
-        self.frames = {} 
-
+        self.frames = {}
         for F in (StartPage, Page1, Page2, SettingsPage, FeedbackPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
-  
         self.show_frame(StartPage)
-  
+
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
 
     def showResults(self, canvas, baseLine) :
         print("Showing Results")
-        
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         headerImage = tk.PhotoImage(file='App/images/Header.png')
-        # headerImage = headerImage.subsample(2)
         canvas.image = headerImage
         global baseValues
         global appValues
@@ -70,7 +58,6 @@ class tkinterApp(tk.Tk):
         canvas.create_text(75, 205, text="GPU:", font=('Arial Bold', 12), fill="black", justify=LEFT)
         canvas.create_text(75, 240, text="RAM:", font=('Arial Bold', 12), fill="black", justify=LEFT)
         canvas.create_text(75, 275, text="Total:", font=('Arial Bold', 12), fill="black", justify=LEFT)
-        
         canvas.create_text(155, 170, text=str(round(baseValues[3], 2))+" W", font=('Arial', 12), fill="black")
         canvas.create_text(155, 205, text=baseValuesGpu, font=('Arial', 12), fill="black")
         canvas.create_text(155, 240, text=str(round(baseValues[4], 2))+" W", font=('Arial', 12), fill="black")
@@ -91,7 +78,6 @@ class tkinterApp(tk.Tk):
         canvas.create_text(234, 275, text=str(round(baseValues[2]+baseValues[3]+baseValues[4]+appValues[2]+appValues[3]+appValues[4],2)) + " W", font=('Arial Bold', 12), fill="black")
         cpuInc = round((appValues[3]/baseValues[3])*100,1)
         ramInc = round((appValues[4]/baseValues[4])*100,1)
-        
         if appValues[3] <= 0 :
             cpuInc = "Negligible"
         else :
@@ -106,27 +92,17 @@ class tkinterApp(tk.Tk):
             ramInc = "Negligible"
         else :
             ramInc = "+" + str(ramInc) + "%"
-        # totInc = round((appValues[2]+appValues[3]+appValues[4])/(baseValues[2]+baseValues[3]+baseValues[4])*100, 1)
-        # if totInc >= 0 :
-        #     totInc = "+" + str(totInc) + "%"
-        # else :
-        #     totInc = "Negligible"
-
         canvas.create_text(320, 170, text=cpuInc, font=('Arial', 12), fill="#93A78A")
         canvas.create_text(320, 205, text=gpuInc, font=('Arial', 12), fill="#93A78A")
         canvas.create_text(320, 240, text=ramInc, font=('Arial', 12), fill="#93A78A")
-        # canvas.create_text(320, 275, text=str(totInc), font=('Arial Bold', 12), fill="#93A78A")
         currCarb = backend_analysis.getCarbon(countryID[intCountry])
         if currCarb == "API CONNECTION ERROR" :
             currCarb = 0
         else :
             currCarb = currCarb*1000000
         canvas.create_text(200, 320, text="Using "+ str(round(((baseValues[2]+baseValues[3]+baseValues[4]+appValues[2]+appValues[3]+appValues[4])*currCarb)/1000,2)) + " gCO₂eq/hr\n" + str(round(currCarb,2)) + " mgCO₂eq/Wh", font=('Arial Bold', 12), fill="#93A78A", justify="center")
-        
-        # canvas.create_text(75, 320, text=str(baseLine) + " W", font=('Arial', 8), fill="black", justify="center")
         carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(4)
-        # canvas.image = carbonImage
         canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
 
     def updateCountry(self, newCountry):
@@ -162,33 +138,7 @@ class tkinterApp(tk.Tk):
         else:
             appData, baseLineData, oData = backend_analysis.getApp(countryID[intCountry])
             return appData
-            
-   
-    # def startTest(self,durationInput,canvas,values,currentCountry):
-    # ##Calling the analysis function
-    #     backendData = backend_analysis.dataAnalysis(durationInput, countryID[currentCountry])
-    #     wattInput = backendData[0]
-    #     carbonEmissions = (((backendData[1])/60)/12)*1000000
-    #     print(wattInput)
-    #     print(carbonEmissions)
-    #     canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-    #     canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', 40+16), fill="black", justify="center")
-    #     canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " mgCO₂", font=('Arial Light', 18), fill="gray", justify="center")
-    #     canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
-    #     canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
-    #     canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/100)*270)))
-    #     values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill=backgroundColour)
-    #     values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
-    #     values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
-    #     values.create_text(40,120,text = "RAM :",font =('Arial Bold', 18),fill="black", justify="center")
-    #     if backendData[2] == 0:
-    #         values.create_text(100,40,text = "N/A",font =('Arial Light', 12),fill="black", justify="center")
-    #     else:
-    #         values.create_text(100,40,text = str(round(backendData[2],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
-    #     values.create_text(100,80,text = str(round(backendData[3],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
-    #     values.create_text(100,120,text = str(round(backendData[4],2))+ " W",font =('Arial Light', 12),fill="black", justify="center")
 
-        
     def settingsStart(self,controller):
         global previousScreen
         previousScreen = StartPage
@@ -203,7 +153,6 @@ class tkinterApp(tk.Tk):
         global previousScreen
         previousScreen = Page2
         controller.show_frame(SettingsPage)
-    
 
     def graphToDisplay(self,data):
         time = []
@@ -221,7 +170,6 @@ class tkinterApp(tk.Tk):
             plt.show()
     
     def getContinuousData(self,canvas,values,powerBreakdownImage):
-        
         global run
         run = True
         self.update()
@@ -229,29 +177,13 @@ class tkinterApp(tk.Tk):
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_text(200, 200, text='Calculating ... ', font=('Arial Bold', 40), fill="black", justify="center")
         canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
-    
         self.update()
         carbon = 0
-        peakWatts = 0
-        isRunning = True
         totalCarbon = 0
         carbonUnits = "mgCO₂eq"
-        # introDisplay = 0        # Cycles through each datapoint giving info
-        # cycleChange = 0
         while run:
-            
-        
-
-            # self.update_idletasks()
-            # self.update()
             data = backend_analysis.dataAnalysis(2, countryID[intCountry])
-            # self.update()
-            watt = data[0]
-            # self.update()
-            # Note that data[1] is kgCO2eq/Wh
-            print(data[1])
             if isinstance(data[1], float):
-
                 if totalCarbon > 1000 :
                     carbonUnits = "gCO₂eq"
                     totalCarbon = totalCarbon / 1000
@@ -260,67 +192,32 @@ class tkinterApp(tk.Tk):
                 else :
                     carbon = (data[1]/60/60)*1000*1000
                 totalCarbon = totalCarbon + carbon
-                if (peakWatts<data[0]):
-                    peakWatts = data[0]
-
                 carbonText = str(round(data[1]*1000000, 2))
             else:
                 totalCarbon = 0
                 carbonText = "Can't Connect To API"
-            # self.update()
-            # self.update()
-
-            # if introDisplay != 7 :
-            #     cycleChange= cycleChange + 1
-            #     if cycleChange > 10 :
-            #         cycleChange = 0
-            #         introDisplay = introDisplay + 1
-
             canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-            # if introDisplay == 2 :
-            #     canvas.create_text(200, 155, text = "Power Use - " + str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
-            # else :
-            
-            canvas.create_text(200, 160, text = str(round(watt, 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
-
-            # if introDisplay == 4 :
-            #     canvas.create_text(200, 203, text="Carbon Produced Since Start", font=('Arial Bold', 19), fill='#93A78A', justify="center")
-            # else :
-            
+            canvas.create_text(200, 160, text = str(round(data[0], 2)) + " W", font=('Arial', 18), fill='#93A78A', justify='center')
             canvas.create_text(200, 200, text=str(round(totalCarbon, 2)) + " " + carbonUnits, font=('Arial Bold', 32), fill='#93A78A', justify="center")
-
-            # # self.update()
-            # if introDisplay == 6 :
-            #     canvas.create_text(200, 257, text = "CO₂ Emission Factor -\n" + carbonText + " mgCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
-            # else :
-            
             canvas.create_text(200, 250, text = carbonText + " mgCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
-            
-            # self.update()
-
             canvas.create_arc(5, 5, 395, 395, fill = 'white',outline='white', style=tk.ARC, width=6, start=315, extent="270")
             carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
             carbonImage = carbonImage.subsample(4)
             canvas.image = carbonImage
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
             canvas.update()
-            # self.update()
             values.create_image(200,50,image=powerBreakdownImage)
             if data[2] == 0:
                 values.create_text(95,65,text = "N/A",font =('Arial Light', 12),fill="black", justify="left")
             else:
                 values.create_text(105,65,text = str(round(data[2], 2)) + " W",font =('Arial Light', 10),fill="black", justify="left")
-            # self.update()
             values.create_text(105,33,text = str(round(data[3], 2)) + " W",font =('Arial Light', 10),fill="black", justify="left")
             values.create_text(285,33,text = str(round(data[4], 2)) + " W",font =('Arial Light', 10),fill="black", justify="left")
             values.create_text(295,67,text = str(round((data[2]+data[3]+data[4]), 2)) + " W",font =('Arial Bold', 10),fill="black", justify="left")
             self.update()
-        isRunning = False
     def stop(self):
         global run
         run = False
-
-
     def stop(self):
         global run
         run = False
@@ -355,11 +252,7 @@ class tkinterApp(tk.Tk):
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
             canvas.update()
         elif checkBaseline:
-            # titleCanvas.create_rectangle(0,0,500,700, fill=backgroundColour, outline=backgroundColour)
-            # titleCanvas.create_text(130, 50, text="Measuring ...",font=('Arial Bold', 32),fill="black", justify="center")
-            # titleCanvas.create_text(200, 100, text="Please wait while we measure the Apps power use\nof your device. Please ensure that you keep all   \nother apps closed until this test completes.     ",font=('Arial Light', 15),fill="black", justify="center")
             self.update()
-
             baseLine = self.countdownFunction(canvas, countDown, False)
             appValues = baseLine
             self.config(cursor="")
@@ -370,66 +263,42 @@ class tkinterApp(tk.Tk):
             canvas.image = carbonImage
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
             controller.showResults(canvas, baseLine)
-            # *
-            # canvas.create_text(200, 160, text = "RESULTS READY", font=('Arial', 18), fill='#93A78A', justify='center')
-            # canvas.create_text(200, 200, text="+63.43gCO₂eq/h", font=('Arial Bold', 32), fill='#93A78A', justify="center")
-            # canvas.create_text(200, 250, text = " gCO₂eq/Wh", font=('Arial', 18), fill='#93A78A', justify="center")
-            
-            # baseText = str(baseLine[0]) + "\n" + str(baseLine[1]) + "\n" + str(baseLine[2]) + "\n" + str(baseLine[3]) + "\n" + str(baseLine[4])
-            # canvas.create_text(200, 200, text=baseText,font=('Arial Bold', 22), fill="black", justify="center")
-            # global resultsButton
-            # resultsButton = Button(self, text='Click Here to\nView Results', borderwidth=0, background="white", width=11, height=3, command= lambda : controller.showResults(), foreground="#93A78A")
-            # resultsButton["font"] = ('Arial Bold', 28)
-            # resultsButton.place(x=625, y=160)
 
     def measureApp(controller):
         global checkBaseline
         if checkBaseline:
             controller.show_frame(AppTesting)
 
-        
     def startCountdown(canvas):
         print("timer")
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         backgroundColour = '#DAEFD2'
-        tk.Frame.__init__(self, parent, background=backgroundColour)
-
+        tk.Frame.__init__(self, parent, background=backgroundColour) # This is the UI design of the page that shows on launch
         titleLabel = ttk.Label(self, text="Sustainable Software",style= 'Test.TLabel',font=('Arial Bold', 28))
-
         overallImage = tk.PhotoImage(file='App/images/OverallUsage.png')
         overallImage = overallImage.subsample(4)
-        overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 148, width = 382, borderwidth = 0, 
-                                 command = lambda : controller.show_frame(Page1))
+        overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 148, width = 382, borderwidth = 0, command = lambda : controller.show_frame(Page1))
         overallButton.image = overallImage
-
         singleImage = tk.PhotoImage(file='App/images/SingleApp.png')
         singleImage = singleImage.subsample(4)
-        singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 148, width = 382, borderwidth = 0, 
-                                 command = lambda : controller.show_frame(Page2))
+        singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 148, width = 382, borderwidth = 0, command = lambda : controller.show_frame(Page2))
         singleButton.image = singleImage
-
         bannerImage = tk.PhotoImage(file='App/images/TrinityCisco.png')
         bannerImage = bannerImage.subsample(4)
         bannerLabel = ttk.Label(self, image=bannerImage, border=0)
         bannerLabel.image = bannerImage
-
         settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.settingsStart(controller))
-        #command = lambda : controller.navToSettings())
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsStart(controller))
         settingsButton.image = settingsImage
-        
         titleLabel.grid(row = 0, column = 0, sticky = tk.SE, padx = (95,15), pady = (150,10))
         bannerLabel.place(x=550,y=140)
         overallButton.grid(row = 1, column = 0, sticky= tk.NE, padx = 10, pady = 0)
         singleButton.grid(row = 1, column = 1, sticky= tk.NW, padx = 10, pady = 0)
         settingsButton.place(x=875, y=500)
-  
-        # User feedback button - brings user to another screen to give feedback
-        feedbackImage = tk.PhotoImage(file='App/images/Feedback.png')
+        feedbackImage = tk.PhotoImage(file='App/images/Feedback.png') # User Feedback
         feedbackImage = feedbackImage.subsample(3)
         feedbackButton = tk.Button(self, text="Give Feedback", image=feedbackImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(FeedbackPage))
         feedbackButton.place(x=750, y=500)
@@ -439,62 +308,40 @@ class Page1(tk.Frame):
      
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
-        
         stopImage = tk.PhotoImage(file='App/images/Stop.png')
         stopImage = stopImage.subsample(2)
         startImage = tk.PhotoImage(file='App/images/Start.png')
         startImage = startImage.subsample(2)
-
         def toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage):
             if toggleButton["text"] == "Running":
                 toggleButton.configure(text="Not Running")
                 toggleButton["image"] = startImage
-                
                 controller.stop()
             else:
                 toggleButton.configure(text="Running")
                 toggleButton["image"] = stopImage
-                
                 controller.getContinuousData(canvas,values,powerBreakdownImage)
-
         def backToStartPage(controller):
             toggleButton.configure(text="Not Running")
             toggleButton["image"] = startImage
             controller.stop()
             controller.show_frame(StartPage)
-
-        durationLabel = tk.Label(self, text="Measuring Live Data" , font=('Arial Light', 18), bg=backgroundColour, fg="black")
+        durationLabel = tk.Label(self, text="Measuring Live Data" , font=('Arial Light', 18), bg=backgroundColour, fg="black") # This is the Continuous Live Data screen
         titleLabel = tk.Label(self, text="Overall Power Usage", font=('Arial Bold', 32), bg=backgroundColour, fg="black")
-
         backImage = tk.PhotoImage(file='App/images/Return.png')
         backImage = backImage.subsample(2)
-        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : backToStartPage(controller))
+        backButton = tk.Button(self, image=backImage, height = 50, width = 100, borderwidth = 0, command = lambda : backToStartPage(controller))
         backButton.image = backImage
-
         startImage = tk.PhotoImage(file='App/images/Start.png')
         startImage = startImage.subsample(2)
         toggleButton = tk.Button(self, text="Start", image=startImage, height = 150, width = 150, borderwidth=0,command = lambda : toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage))
-        
-        
-
-
-
         graphImage = tk.PhotoImage(file='App/images/Graph.png')
         graphImage = graphImage.subsample(2)
         graphButton = tk.Button(self, text="View Graph", image=graphImage, height = 150, width = 150, borderwidth=0,command = lambda : controller.graphToDisplay(data))
         graphButton.image = graphImage
-
         powerBreakdownImage = tk.PhotoImage(file='App/images/PowerBreakdown.png')
         powerBreakdownImage = powerBreakdownImage.subsample(2)
         values = tk.Canvas(self, background=backgroundColour,height=100, width=250, highlightthickness=0)
-        # values.create_image(200,50,image=powerBreakdownImage)
-        # values.create_text(295,67,text = "Start Test",font =('Arial Bold', 10),fill="black", justify="left")
-
-        # settingsImage = tk.PhotoImage(file='App/images/images/Settings.png')
-        # settingsImage = settingsImage.subsample(3)
-        # settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsPage1(controller))
-
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
@@ -504,12 +351,8 @@ class Page1(tk.Frame):
         canvas.image = carbonImage
         canvas.create_image(200,240,anchor=tk.S,image=carbonImage)
         canvas.update()
-
-        # settingsButton.image = settingsImage
-        
         durationLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
         titleLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
-        # settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         backButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
         toggleButton.grid(row = 1, column = 0,sticky = tk.SE, padx = 30, pady = (30,50))
         graphButton.grid(row = 1, column = 1,sticky = tk.SW, pady = (30,50))
@@ -519,40 +362,28 @@ class Page1(tk.Frame):
 class Page2(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
-
         style = ttk.Style(self)
         style.theme_use('clam')
         style.configure('Test.TLabel', background= backgroundColour)
-
-        # startCountdown()
-
         settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.settingsPage2(controller))
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsPage2(controller))
         settingsButton.image = settingsImage
-
         baselineImage = tk.PhotoImage(file='App/images/Baseline.png')
         baselineImage = baselineImage.subsample(2)
-        baselineButton = tk.Button(self,text="Start", image = baselineImage, height = 150, width = 150, borderwidth = 0, 
-                                 command = lambda : controller.baselineCountdown(canvas, titleCanvas, True, controller))
+        baselineButton = tk.Button(self,text="Start", image = baselineImage, height = 150, width = 150, borderwidth = 0, command = lambda : controller.baselineCountdown(canvas, titleCanvas, True, controller))
         baselineButton.image = baselineImage
-
         appTestImage = tk.PhotoImage(file='App/images/AppTest.png')
         appTestImage = appTestImage.subsample(2)
         appTestButton = tk.Button(self,text="Start", image = appTestImage, height = 150, width = 150, borderwidth = 0, command= lambda : controller.baselineCountdown(canvas, titleCanvas, False, controller))
         appTestButton.image = appTestImage
-
         returnImage = tk.PhotoImage(file='App/images/Return.png')
         returnImage = returnImage.subsample(2)
         returnButton = tk.Button(self, text ="Return",image=returnImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.show_frame(StartPage))
         returnButton.image = returnImage
-
         titleCanvas = tk.Canvas(self, background=backgroundColour, height=200, width=400, highlightthickness=0)
         titleLabel = tk.Label(self, background=backgroundColour, text="App Power Usage",font=('Arial Bold', 32))
         infoLabel = tk.Label(self,background=backgroundColour, text="Measure the idle energy use of your device with the\nmeasure baseline function while no applications are\nopen and then test the app for statistics.", font=('Arial Light', 14), justify=LEFT)
-
-
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
         canvas.create_text(200, 200, text="0:10", font=('Arial Bold', 56),fill='#93A78A', justify="center")
@@ -561,7 +392,6 @@ class Page2(tk.Frame):
         carbonImage = carbonImage.subsample(4)
         canvas.image = carbonImage
         canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
-        #canvas.create_text(200, 200, text=countdownDisplay, font=('Arial Bold', 40), fill='#DAEFD2', justify="center")
         canvas.update()
         infoLabel.grid(row = 1, column = 0, columnspan = 2, rowspan = 1, sticky = tk.NW, padx = 40, pady = 0)
         titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = (20,0))
@@ -574,29 +404,22 @@ class Page2(tk.Frame):
 class IndividualResultsPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent, background=backgroundColour)
-
         settingsImage = tk.PhotoImage(file='App/images/Settings.png')
         settingsImage = settingsImage.subsample(3)
-        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, 
-                                   command = lambda : controller.settingsAppTestHome(controller))
+        settingsButton = tk.Button(self, text="Settings", image=settingsImage, height = 50, width = 100, borderwidth = 0, command = lambda : controller.settingsAppTestHome(controller))
         settingsButton.image = settingsImage
-
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         titleLabel = ttk.Label(self, text="Results",style= 'Test.TLabel',font=('Arial Bold', 32), padding=(0,22,0,0))
-
         canvas = tk.Canvas(self, background=backgroundColour, height=400, width=400, highlightthickness=0)
         canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=6, start=315, extent="270")
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
-
         carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(6)
         canvas.image = carbonImage
         canvas.create_image(200,350,anchor=tk.S,image=carbonImage)
-        
         titleLabel.grid(row = 0, column = 0, columnspan = 2, rowspan = 1, sticky = tk.SW, padx = 40, pady = 0)
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
-
 
 class AppTesting(tk.Frame):
     def __init__(self, parent, controller):
@@ -648,7 +471,6 @@ class AppTesting(tk.Frame):
         settingsButton.grid(row = 3, column = 3, padx = 10, pady = 10, sticky = tk.SE)
         canvas.grid(row = 0, column = 2, columnspan = 2, rowspan = 3, padx = 40, pady = 40)
         returnButton.grid(row = 0, column = 0,sticky=tk.NW, padx = 5, pady = 5)
-    
 
 class SettingsPage(tk.Frame):
     def __init__(self, parent, controller):
