@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import requests
 import time
 
+# Global variables used in the setup
 backgroundColour = '#DAEFD2'
 country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
 countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
@@ -13,8 +14,10 @@ previousScreen = tk.Frame
 intCountry = 0
 checkBaseline = False
 
-
+# Housing class for setup of the GUI
 class tkinterApp(tk.Tk):
+
+    # Initialise the Tkinter-based GUI
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self) 
@@ -29,10 +32,12 @@ class tkinterApp(tk.Tk):
             frame.grid(row = 0, column = 0, sticky ="nsew")
         self.show_frame(StartPage)
 
+    # Code used to switch to a certain screen
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
 
+    # This function shows the results in the widget in continuous data display
     def showResults(self, canvas, baseLine) :
         print("Showing Results")
         canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
@@ -53,7 +58,7 @@ class tkinterApp(tk.Tk):
             else :
                 appValuesGpu = str(appValuesGpu) + " W"
             gpuInc = round((appValues[2]/baseValues[2])*100,1) 
-        canvas.create_image(200,165,anchor=tk.S,image=headerImage)
+        canvas.create_image(200,165,anchor=tk.S,image=headerImage) # Below code breaks down usage component by component
         canvas.create_text(75, 170, text="CPU:", font=('Arial Bold', 12), fill="black", justify=LEFT)
         canvas.create_text(75, 205, text="GPU:", font=('Arial Bold', 12), fill="black", justify=LEFT)
         canvas.create_text(75, 240, text="RAM:", font=('Arial Bold', 12), fill="black", justify=LEFT)
@@ -66,7 +71,7 @@ class tkinterApp(tk.Tk):
         if appValuesCpu >= 0 :
             appValuesCpu = "+" + str(appValuesCpu) + " W"
         else :
-            appValuesCpu = str(appValuesCpu) + " W"
+            appValuesCpu = str(appValuesCpu) + " W" # Negative power, i.e. less used while app test running
         appValuesRam = round(appValues[4], 2)
         if appValuesRam >= 0 :
             appValuesRam = "+" + str(appValuesRam) + " W"
@@ -99,16 +104,18 @@ class tkinterApp(tk.Tk):
         if currCarb == "API CONNECTION ERROR" :
             currCarb = 0
         else :
-            currCarb = currCarb*1000000
+            currCarb = currCarb*1000000 # This is the current carbon emissions factor
         canvas.create_text(200, 320, text="Using "+ str(round(((baseValues[2]+baseValues[3]+baseValues[4]+appValues[2]+appValues[3]+appValues[4])*currCarb)/1000,2)) + " gCO₂eq/hr\n" + str(round(currCarb,2)) + " mgCO₂eq/Wh", font=('Arial Bold', 12), fill="#93A78A", justify="center")
         carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(4)
         canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
 
+    # Called when user selects country to update the global integer variable
     def updateCountry(self, newCountry):
         global intCountry
         intCountry = newCountry
 
+    # This function shows the countdown animation when using the app test
     def countdownFunction(self, canvas, countDown, isBaseline):
         carbonImage = tk.PhotoImage(file='App/images/Carbon.png')
         carbonImage = carbonImage.subsample(4)
@@ -139,21 +146,25 @@ class tkinterApp(tk.Tk):
             appData, baseLineData, oData = backend_analysis.getApp(countryID[intCountry])
             return appData
 
+    # Navigate to settings screen, remembering current screen for return
     def settingsStart(self,controller):
         global previousScreen
         previousScreen = StartPage
         controller.show_frame(SettingsPage)
 
+    # Set the return screen from settings to the continuous power usage
     def settingsContinuousPowerPage(self,controller):
         global previousScreen
         previousScreen = ContinuousPowerPage
         controller.show_frame(SettingsPage)
 
+    # Set the return screen from settings to the app power usage
     def settingsIndividualPowerPage(self,controller):
         global previousScreen
         previousScreen = IndividualPowerPage
         controller.show_frame(SettingsPage)
 
+    # This function displays passed data as a pop-up graph
     def graphToDisplay(self,data):
         time = []
         power = []
@@ -168,7 +179,9 @@ class tkinterApp(tk.Tk):
                 time.append(i)
             plt.plot(time, power,color='#516E4C')
             plt.show()
-    
+
+    # This function retrives data from the backend and then displays the
+    # power breakdown by component as well as carbon info in the dial
     def getContinuousData(self,canvas,values,powerBreakdownImage):
         global run
         run = True
@@ -222,12 +235,13 @@ class tkinterApp(tk.Tk):
         global run
         run = False
     
+    # Function calls an end to running tests when navigating to the home screen
     def stopRun(controller):
         global run
         run = False
         controller.show_frame(StartPage)
-    
 
+    # Start getting data for either baseline or app test, this calls the backend
     def baselineCountdown(self, canvas, titleCanvas, isApp, controller):
         countDown = 10
         global checkBaseline
@@ -264,14 +278,7 @@ class tkinterApp(tk.Tk):
             canvas.create_image(200,370,anchor=tk.S,image=carbonImage)
             controller.showResults(canvas, baseLine)
 
-    def measureApp(controller):
-        global checkBaseline
-        if checkBaseline:
-            controller.show_frame(AppTesting)
-
-    def startCountdown(canvas):
-        print("timer")
-
+# This class defines the GUI of the screen shown at launch
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         backgroundColour = '#DAEFD2'
@@ -304,19 +311,12 @@ class StartPage(tk.Frame):
         feedbackButton.place(x=750, y=500)
         feedbackButton.image = feedbackImage
 
+# This class defines the GUI of the screen for checking the continuous power usage
 class ContinuousPowerPage(tk.Frame):
-     
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent,background=backgroundColour)
-<<<<<<< HEAD
-        stopImage = tk.PhotoImage(file='App/images/Stop.png')
-        stopImage = stopImage.subsample(2)
-        startImage = tk.PhotoImage(file='App/images/Start.png')
-        startImage = startImage.subsample(2)
-=======
 
         # Function to test whether to continuously update the power consumption
->>>>>>> 128a74550403d0c8d7adddbdf0441700a8ce729b
         def toggleButtonTest(toggleButton, controller, canvas, values, powerBreakdownImage):
             if toggleButton["text"] == "Running":
                 toggleButton.configure(text="Not Running")
