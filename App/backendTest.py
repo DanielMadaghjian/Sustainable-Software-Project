@@ -1,6 +1,6 @@
 from backend_analysis import getPower
 
-
+##  Test function that creates a list of 10 samples on the backend_analysis.py file
 def testFunction():
     gpuList = []
     cpuList = []
