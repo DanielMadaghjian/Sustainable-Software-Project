@@ -4,6 +4,12 @@ file = os.getcwd() + '/App/OpenHardwareMonitorLib'
 clr.AddReference(file)
 from OpenHardwareMonitor import Hardware
 
+# OpenHardwareMonitor is a program that monitors the hardware of your computer, and provides a way to access the data through a library.
+# It can be used to get the CPU, GPU and RAM power. However GPU has to be a dedicated card to get values,
+# if its integrated the gpu power draw will be included with CPU, and the functions will retrun 0 for GPU power draw.
+
+
+## Initialize OpenHardwareMonitor,
 def initialize_openhardwaremonitor():
     c = Hardware.Computer()
     c.MainboardEnabled = True
@@ -14,6 +20,9 @@ def initialize_openhardwaremonitor():
     ##c.HDDEnabled = True
     c.Open()
     return c
+
+# Fetches the data from OpenHardwareMonitor and returns a dictionary with the data, in the form cpu usage, ram usage, gpu usage, 
+# where usage is power draw in watts
 
 def fetch_dict():
     c = initialize_openhardwaremonitor()
