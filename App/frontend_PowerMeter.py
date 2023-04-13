@@ -286,11 +286,11 @@ class StartPage(tk.Frame):
         titleLabel = ttk.Label(self, text="Sustainable Software",style= 'Test.TLabel',font=('Arial Bold', 28))
         overallImage = tk.PhotoImage(file='App/images/OverallUsage.png')
         overallImage = overallImage.subsample(4)
-        overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 148, width = 382, borderwidth = 0, command = lambda : controller.show_frame(Page1))
+        overallButton = tk.Button(self,text="Continuous Usage", image = overallImage, height = 148, width = 382, borderwidth = 0, command = lambda : controller.show_frame(ContinuousPowerPage))
         overallButton.image = overallImage
         singleImage = tk.PhotoImage(file='App/images/SingleApp.png')
         singleImage = singleImage.subsample(4)
-        singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 148, width = 382, borderwidth = 0, command = lambda : controller.show_frame(Page2))
+        singleButton = tk.Button(self,text="Individual Usage", image = singleImage, height = 148, width = 382, borderwidth = 0, command = lambda : controller.show_frame(IndividualPowerPage))
         singleButton.image = singleImage
         bannerImage = tk.PhotoImage(file='App/images/TrinityCisco.png')
         bannerImage = bannerImage.subsample(4)
