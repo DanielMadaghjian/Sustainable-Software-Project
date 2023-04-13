@@ -32,8 +32,19 @@ def getCarbon(region):#add a country here
   #remove after finish
   try:
     response = requests.post('https://beta3.api.climatiq.io/estimate', headers=headers, data=data)
+    if(str(response)=='<Response [400]>'):
+    print("The request was unacceptable, probably due to missing a required parameter")
+    exit()
+    if(str(response)=='<Response [401]>'):
+      print("No valid API key was provided")
+      exit()
+    if(str(response)=='<Response [404]>'):
+      print("The requested resource doesn't exist")
+      exit()
+    if(str(response)=='<Response [5xx]>'):
+      print("Something went wrong on our servers")
+      exit()
     output = response.json()
-
     with open('{}.json'.format("test"), 'w', encoding='utf-8') as f:
       json.dump(output, f, ensure_ascii=False, indent=4)
     f = open('test.json')
