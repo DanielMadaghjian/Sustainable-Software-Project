@@ -33,8 +33,8 @@ def getCarbon(region):#add a country here
   try:
     response = requests.post('https://beta3.api.climatiq.io/estimate', headers=headers, data=data)
     if(str(response)=='<Response [400]>'):
-    print("The request was unacceptable, probably due to missing a required parameter")
-    exit()
+      print("The request was unacceptable, probably due to missing a required parameter")
+      exit()
     if(str(response)=='<Response [401]>'):
       print("No valid API key was provided")
       exit()
