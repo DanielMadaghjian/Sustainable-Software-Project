@@ -11,13 +11,15 @@ gpuBaseLine = []
 cpuBaseLine = []
 ramBaseLine = []
 
-# Method that calculates the average power 
+# Method that calculates the average power usaage from gpu, cpu and ram
 def getPower(gpuList, cpuList, ramList):
   gpuAverage = mean(gpuList)
   cpuAverage = mean(cpuList)
   ramAverage = mean(ramList)
   power = gpuAverage + cpuAverage + ramAverage
   return power
+
+## Method that gets the carbon emissions from the Climatiq API
 
 def getCarbon(region):#add a country here
   headers = {
@@ -40,9 +42,10 @@ def getCarbon(region):#add a country here
     #print(emission)
   except:
     emission = "API CONNECTION ERROR"
+  print(emission)
   return emission
 
-
+## Method that measures the power and emissions of laptop, used to get a baseline
 def getBaseLine(region):
   baseLineData.clear()
   power = getPower(gpuBaseLine, cpuBaseLine, ramBaseLine)
@@ -63,7 +66,8 @@ def getBaseLine(region):
   ramBaseLine.clear()
 
   return baseLineData
-  
+
+## Method that measures the power and emissions of an app, baseline has to be called first
 def getApp(region):
 
   data2 = []
@@ -83,7 +87,8 @@ def getApp(region):
 
   appData = []
   appData.append(data2[0]- baseLineData[0]) ## overall power for the app
-  if isinstance(data2[1], str) or isinstance(baseLineData[1], str):
+
+  if isinstance(data2[1], str) or isinstance(baseLineData[1],str):
     appData.append("API Connection Error")
   else:
     appData.append(data2[1]-baseLineData[1]) ## emissions
@@ -97,17 +102,14 @@ def getApp(region):
 
   return appData, baseLineData, data2
   
-
+## Method that collects the raw data and filters it
 def dataGathering():
   currentData = backend_getData.fetch_dict()
   gpuBaseLine.append(currentData.get("gpu usage"))
   cpuBaseLine.append(currentData.get("cpu usage"))
   ramBaseLine.append(currentData.get("ram usage"))
 
-
-
-
-# Method that collects the raw data and filters it
+## Method that calls functions to get data, and converts it to emissions and power, also returns the raw data from graphing
 def dataAnalysis(t, country):#add a country here
   gpuList = [] 
   cpuList = [] 
@@ -116,12 +118,8 @@ def dataAnalysis(t, country):#add a country here
     graphList.clear()
   while t:
       print(t)
-      #time.sleep(0.01)
       currentData = backend_getData.fetch_dict()
       graphList.append(currentData.get("gpu usage") + currentData.get("cpu usage") + currentData.get("ram usage"))
-      #gpuList.append(currentData.get("gpu usage"))
-      #cpuList.append(currentData.get("cpu usage"))
-      #ramList.append(currentData.get("ram usage"))
       t -= 2    
 
   currentData = backend_getData.fetch_dict()
@@ -146,14 +144,6 @@ def dataAnalysis(t, country):#add a country here
   values.append(len(graphList))
   values = values + graphList
 
-
-  #print(values[0])
-  #print(values[1])
-  #print("Auxiliary Values")
-  #print(values[2])
-  #print(values[3])
-  #print(values[4])
-  #print(values)
   return values
 
-dataAnalysis(2,'IE')
+##dataAnalysis(2,'IE')
