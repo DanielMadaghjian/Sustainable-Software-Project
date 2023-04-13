@@ -26,7 +26,7 @@ class tkinterApp(tk.Tk):
         container.grid_rowconfigure(0, weight = 1)
         container.grid_columnconfigure(0, weight = 1)
         self.frames = {}
-        for F in (StartPage, Page1, Page2, SettingsPage, FeedbackPage):
+        for F in (StartPage, ContinuousPowerPage, IndividualPowerPage, SettingsPage, FeedbackPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row = 0, column = 0, sticky ="nsew")
