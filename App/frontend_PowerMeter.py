@@ -8,9 +8,26 @@ import time
 
 # Global variables used in the setup
 backgroundColour = '#DAEFD2'
+
 country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
 countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
 previousScreen = tk.Frame
+=======
+root.configure(background=backgroundColour)
+# root.configure(background='white')
+root.resizable(False, False)
+
+durationInput = 5
+wattInput = 175
+peakWattInput = 200
+
+country = ["Ireland", "France", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "United States", "Spain", "Portugal", "Italy","Germany"]
+countryID = ["IE", "FR", "GB", "RU", "AU", "BR", "NZ", "US", "ES", "PT", "IT", "DE"]
+=======
+country = ["Ireland", "France", "Germany", "Great Britain", "Russia", "Australia", "Brazil", "New Zealand", "Spain", "Portugal", "Germany", "Italy", "United States"]
+countryID = ["IE", "FR", "GR", "GB", "RU", "AU", "BR", "NZ", "ES", "PT", "DE", "IT", "US"]
+
+
 intCountry = 0
 checkBaseline = False
 
@@ -235,6 +252,7 @@ class tkinterApp(tk.Tk):
         global run
         run = False
     
+
     # Function calls an end to running tests when navigating to the home screen
     def stopRun(controller):
         global run
@@ -655,3 +673,32 @@ app.resizable(False,False)
 app.title("ecoCheck")
 app.iconphoto(False,tk.PhotoImage(file='App/images/ecoCheck.png'))
 app.mainloop()
+=======
+def startTest(durationInput):
+    ##Calling the analysis function
+    backendData = backend_analysis.dataAnalysis(durationInput, countryID[intCountry])
+    wattInput = backendData[0]
+    carbonEmissions = (((backendData[1])/60)/12)*1000000
+    ##
+    canvas.create_oval(15, 15, 385, 385, outline="white", fill="white")
+    canvas.create_text(200, 200, text=str(round(wattInput, 2)) + " W", font=('Arial Bold', boldFontSize+16), fill="black", justify="center")
+    canvas.create_text(200, 245, text=str(round(carbonEmissions, 2)) + " mgCO₂", font=('Arial Light', 18), fill="gray", justify="center")
+    canvas.create_text(200, 160, text="Ø", font=('Arial Light', 18), fill="gray", justify="center")
+    # backArc
+    canvas.create_arc(5, 5, 395, 395, outline="black", style=tk.ARC, width=6, start=315, extent="270")
+    # The arc starts from the right and is a total of 270°, so 270-((avg/peak) * 270) in grey will give the percentage visually
+    # progressArc
+    canvas.create_arc(5, 5, 395, 395, outline="white", style=tk.ARC, width=8, start=315, extent="%d" % round(270-((wattInput/peakWattInput)*270)))
+    print(round(270-((wattInput/peakWattInput)*270)))
+    values.create_rectangle(5, 5, 150, 250, outline=backgroundColour,fill=backgroundColour)
+    values.create_text(40,40,text = "GPU : ",font =('Arial Bold', 18),fill="black", justify="center")
+    values.create_text(40,80,text = "CPU :",font =('Arial Bold', 18),fill="black", justify="center")
+    values.create_text(40,120,text = "RAM :",font =('Arial Bold', 18),fill="black", justify="center")
+    if backendData[2] == 0:
+        values.create_text(100,40,text = "N/A",font =('Arial Light', 12),fill="black", justify="center")
+    else:
+        values.create_text(100,40,text = str(round(backendData[2],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
+    values.create_text(100,80,text = str(round(backendData[3],2)) + " W",font =('Arial Light', 12),fill="black", justify="center")
+    values.create_text(100,120,text = str(round(backendData[4],2))+ " W",font =('Arial Light', 12),fill="black", justify="center")
+
+root.mainloop()
