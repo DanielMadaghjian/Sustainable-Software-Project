@@ -87,6 +87,7 @@ def getApp(region):
 
   appData = []
   appData.append(data2[0]- baseLineData[0]) ## overall power for the app
+
   if isinstance(data2[1], str) or isinstance(baseLineData[1],str):
     appData.append("API Connection Error")
   else:
